@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trainee Dashboard</title>
+    <link rel="stylesheet" href="~/css/trainee_dashboard.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <div class="d_container">
+        <aside>
+            <div class="toggle">
+                    <div class="logo">
+                    <img src="~/assets/dashboard/logo-black.png" />
+                </div>
+                <!--
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </div>
+                -->
+            </div>
+
+            <!--SIDEBAR!!-->
+            <div class="sidebar">
+                <a asp-controller="Dashboard" asp-action="FileManagement">
+                    <span class="material-symbols-outlined">
+                        topic
+                    </span>
+                    <h2>Files</h2>
+                </a>
+                <a href="#" class="active">
+                    <span class="material-symbols-outlined">
+                        analytics
+                    </span>
+                    <h2>Prediction</h2>
+                </a>
+                <a href="#">
+                    <span class="material-symbols-outlined">
+                        mail
+                    </span>
+                    <h2>Mails</h2>
+                    <span class="message-count">3</span>
+                </a>
+                <a href="#">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+                    <h2>Log Out</h2>
+                </a>
+            </div>
+            <!--END OF SIDEBAR-->
+
+        </aside>
+
+        <!--Main Content-->
+        <main>
+            <!--start of task analytics-->
+            <h1> Analytics</h1>
+            <div class="analysis">
+                <div class="hrs-remaining">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Hours Remaining</h3>
+                            <h1>200 Hours</h1>
+                        </div>
+                        <div class="progress">
+                            <svg> 
+                                <circle cx="38" cy="40" r="36"></circle>
+                            </svg>
+                            <div class="percentage">
+                                <p>80%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hrs-completed">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Hours Completed</h3>
+                            <h1>5 Hours</h1>
+                        </div>
+                        <div class="progress">
+                            <svg>
+                                <circle cx="38" cy="40" r="36"></circle>
+                            </svg>
+                            <div class="percentage">
+                                <p>2%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-completed">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Task Completed</h3>
+                            <h1>5 Modules</h1>
+                        </div>
+                        <div class="progress">
+                            <span class="material-symbols-outlined">
+                                task
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-completed">
+                    <div class="status">
+                        <div class="info">
+                            <h3>Reports Remaining</h3>
+                            <h1>15 Weekly Report</h1>
+                        </div>
+                        <div class="task-progress">
+                            <span class="material-symbols-outlined">
+                                pending
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!--end of task analytics-->
+
+            <div class="charts">
+                <h2> Performance Progress</h2>
+                <p> By Week</p>
+                <div class="pulse"></div>
+                <div class="chart-area">
+                    <div class="grid"></div>
+                </div>
+            </div>
+        </main>
+        <!-- end of main content-->
+
+    </div>
+    <script href="~/js/site.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</body>
+</html>

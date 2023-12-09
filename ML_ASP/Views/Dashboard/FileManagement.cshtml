@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewData["Title"] = "FileManagement";
+}
+
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trainee Dashboard</title>
+    <link rel="stylesheet" href="~/css/trainee_dashboard.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <div class="d_container">
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="~/assets/dashboard/logo-black.png" />
+                </div>
+                <!--
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </div>
+                -->
+            </div>
+
+            <!--SIDEBAR!!-->
+            <div class="sidebar">
+                <a asp-controller="Dashboard" asp-action="FileManagement" class="active">
+                    <span class="material-symbols-outlined">
+                        topic
+                    </span>
+                    <h2>Files</h2>
+                </a>
+                <a sp-controller="Dashboard" asp-action="Dashboard">
+                    <span class="material-symbols-outlined">
+                        analytics
+                    </span>
+                    <h2>Prediction</h2>
+                </a>
+                <a href="#">
+                    <span class="material-symbols-outlined">
+                        mail
+                    </span>
+                    <h2>Mails</h2>
+                    <span class="message-count">3</span>
+                </a>
+                <a href="#">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+                    <h2>Log Out</h2>
+                </a>
+            </div>
+            <!--END OF SIDEBAR-->
+
+        </aside>
+
+        <!--Main Content-->
+        <main>
+            
+        </main>
+        <!-- end of main content-->
+
+    </div>
+    <script href="~/js/site.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</body>
+</html>
