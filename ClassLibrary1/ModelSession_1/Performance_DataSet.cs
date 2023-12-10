@@ -1,7 +1,7 @@
 ﻿using Microsoft.ML.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ML_net
+namespace ML_net.ModelSession_1
 {
     public class Performance_DataSet
     {

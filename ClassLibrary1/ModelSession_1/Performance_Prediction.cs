@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace ML_net
+namespace ML_net.ModelSession_1
 {
     public class Performance_Prediction
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
-using ML_net;
+using ML_net.ModelSession_1;
 
 namespace ML_ASP.Controllers
 {
@@ -14,7 +14,7 @@ namespace ML_ASP.Controllers
             _context = new MLContext();
 
             // load the trained model
-            var modelPath = "path/to/your/saved/model";
+            var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\bin\\Debug\\net7.0\\ModelSession_1\\PerformancePrediction.zip";
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
             // prediction engine
@@ -36,6 +36,23 @@ namespace ML_ASP.Controllers
             return View();
         }
 
-        //TODO try fix when auto grading is integrated to not crash
+        [HttpPost]
+        public IActionResult MakePrediction(Performance_DataSet input)
+        {
+            var definput = new Performance_DataSet
+            {
+                CompletionTime = 30,
+                PerformanceScore = 86,
+                FeedbackScore = 3.2f,
+                EmployeeID = 1
+            };
+            // Use the loaded model to make predictions
+            var prediction = _predictionEngine.Predict(definput);
+
+            // You can do something with the prediction, e.g., pass it to the view
+            ViewBag.Prediction = prediction.PerformancePrediciton_Score;
+
+            return View("FileManagement");
+        }
     }
 }
