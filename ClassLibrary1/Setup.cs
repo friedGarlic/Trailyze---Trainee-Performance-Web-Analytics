@@ -8,6 +8,7 @@ namespace Setup
     {
         public static void Main(string[] args)
         {
+            Demo.Execute();
         }
     }
 }

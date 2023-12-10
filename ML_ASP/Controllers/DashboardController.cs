@@ -37,22 +37,15 @@ namespace ML_ASP.Controllers
         }
 
         [HttpPost]
-        public IActionResult MakePrediction(Performance_DataSet input)
+        public IActionResult FileManagement(Performance_DataSet input)
         {
-            var definput = new Performance_DataSet
-            {
-                CompletionTime = 30,
-                PerformanceScore = 86,
-                FeedbackScore = 3.2f,
-                EmployeeID = 1
-            };
             // Use the loaded model to make predictions
-            var prediction = _predictionEngine.Predict(definput);
+            var prediction = _predictionEngine.Predict(input);
 
             // You can do something with the prediction, e.g., pass it to the view
             ViewBag.Prediction = prediction.PerformancePrediciton_Score;
 
-            return View("FileManagement");
+            return View(input);
         }
     }
 }
