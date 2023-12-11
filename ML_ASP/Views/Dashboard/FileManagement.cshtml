@@ -77,6 +77,15 @@
 
             <h2>Prediction Result:</h2>
             <p>@ViewBag.Prediction</p>
+
+            <form method="post" enctype="multipart/form-data" asp-controller="Dashboard" asp-action="FileManagement">
+                <span>Select File:</span>
+                <input type="file" name="postedFiles" multiple />
+                <input type="submit" value="Upload" />
+                <br/>
+                <span style="color:green">@Html.Raw(ViewBag.Message)</span>
+            </form>
+
         </main>
         <!-- end of main content-->
 

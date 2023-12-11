@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Accord.MachineLearning" Version="3.8.0" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.64.0.3245" />
+    <PackageReference Include="itext7" Version="8.0.2" />
     <PackageReference Include="Microsoft.ML" Version="3.0.0" />
   </ItemGroup>
 

@@ -29,4 +29,10 @@
     <ProjectReference Include="..\ClassLibrary1\ML_net.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\" />
+    <Folder Include="Repositories\" />
+    <Folder Include="wwwroot\Uploads\" />
+  </ItemGroup>
+
 </Project>
