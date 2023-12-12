@@ -85,7 +85,7 @@ namespace ML_ASP.Controllers
 
                 // Rest of your code...
                 Random rnd = new Random();
-                int num = rnd.Next(10, 50);
+                int num = rnd.Next(80, 90);
 
                 var new_data = new Object_DataSet
                 {

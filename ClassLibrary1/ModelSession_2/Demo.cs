@@ -55,14 +55,18 @@ namespace ML_net.ModelSession_2
 
             var newdata = new Object_DataSet
             {
-                NumberOfWords = 1200,
-                Grade = 90
+                NumberOfWords = 500,
+                Grade = 70
             };
 
             //predict engine
             var predictFunc = context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(model);
 
             var prediction = predictFunc.Predict(newdata);
+
+            //Console.WriteLine($"Predicted Grade: {prediction.Prediciton}");
+
+            //Console.ReadLine();
 
             var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
 
