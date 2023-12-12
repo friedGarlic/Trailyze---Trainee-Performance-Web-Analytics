@@ -119,7 +119,7 @@ b{
     grid-template-columns: repeat(auto-fit, minmax(23rem, 1fr));
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (max-width: 1200px) {
     aside {
         transform: translate(-12%, 0);
     }
