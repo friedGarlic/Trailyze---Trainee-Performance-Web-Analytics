@@ -39,7 +39,7 @@ namespace ML_net.ModelSession_2
             var context = new MLContext();
 
             //load data
-            var trainData = context.Data.LoadFromTextFile<Performance_DataSet>("./ModelSession_2/report_grade.csv",
+            var trainData = context.Data.LoadFromTextFile<Object_DataSet>("C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\report_grade.csv",
                 hasHeader: true, separatorChar: ',');
 
             var testTrainSplit = context.Data.TrainTestSplit(trainData, testFraction: 0.1);
@@ -53,20 +53,18 @@ namespace ML_net.ModelSession_2
 
             var metrics = context.Regression.Evaluate(predictions);
 
-            var newdata = new Performance_DataSet
+            var newdata = new Object_DataSet
             {
-                CompletionTime = 30,
-                PerformanceScore = 86,
-                FeedbackScore = 3.2f,
-                EmployeeID = 1
+                NumberOfWords = 1200,
+                Grade = 90
             };
 
             //predict engine
-            var predictFunc = context.Model.CreatePredictionEngine<Performance_DataSet, Performance_Prediction>(model);
+            var predictFunc = context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(model);
 
             var prediction = predictFunc.Predict(newdata);
 
-            var modelPath = "ModelSession_1/PerformancePrediction.zip";
+            var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
 
             context.Model.Save(model, trainData.Schema, modelPath);
         }
