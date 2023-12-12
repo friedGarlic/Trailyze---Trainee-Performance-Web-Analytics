@@ -11,7 +11,7 @@ const chartOptions = {
         zoom: { enable: false }
     },
     colors: ['#3498db'],
-    series: [{ name: 'Grade', data: [0, 5, 7, 8, 9, 9, 7] }],
+    series: [{ name: 'Grade', data: [0, 8, 7, 8] }],
     dataLabels: { enable: false },
     stroke: { width: 5, curve: 'smooth' },
     fill: {
@@ -24,7 +24,7 @@ const chartOptions = {
         }
     },
     xaxis: {
-        categories: ['June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
         axisBorder: { show: false },
         labels: { style: { colors: '#a7a7a7', fontFamily: 'system-ui' } }
     },

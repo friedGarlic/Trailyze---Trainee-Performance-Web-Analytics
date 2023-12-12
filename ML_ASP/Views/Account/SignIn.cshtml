@@ -1,4 +1,4 @@
-﻿
+﻿@model Account_Model
 @{
     ViewData["Title"] = "SignIn";
 }
@@ -158,16 +158,16 @@
 
 
     <main class="form-signin w-50 m-auto">
-        <form class="py-5">
+        <form class="py-5" method="post">
             <img class="mb-4" src="~/assets/brand/analysis.png" alt="" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
             <div class="mb-4 form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input asp-for="Username" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput">Email address</label>
             </div>
             <div class="mb-4 form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword">Password</label>
             </div>
 

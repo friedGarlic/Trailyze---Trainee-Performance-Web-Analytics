@@ -19,9 +19,34 @@ namespace ML_ASP.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult SignIn()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult SignIn(Account_Model model)
+        {
+            // Check the username and password against your database or any authentication logic
+            if (IsValidUser(model.Username, model.Password))
+            {
+                // Successful sign-in
+                // You might redirect to a dashboard or another page
+                return RedirectToAction("Dashboard", "Dashboard");
+            }
+
+            // Failed sign-in
+            ModelState.AddModelError(string.Empty, "Invalid username or password");
+            return View(model);
+        }
+
+        private bool IsValidUser(string username, string password)
+        {
+            var user = _dbContext.Accounts.FirstOrDefault(u => u.Username == username && u.Password == password);
+
+            // If the user is found, consider it a valid user
+            return user != null;
         }
 
         public IActionResult SignUp()
