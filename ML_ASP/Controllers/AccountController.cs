@@ -9,6 +9,11 @@ namespace ML_ASP.Controllers
     {
         private readonly ML_DBContext _dbContext;
 
+        void Page_PreInit(Object sender, EventArgs e)
+        {
+            
+        }
+
         public AccountController(ML_DBContext dbContext)
         {
             _dbContext = dbContext;

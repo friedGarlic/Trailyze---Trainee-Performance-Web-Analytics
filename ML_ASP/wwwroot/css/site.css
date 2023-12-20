@@ -1,5 +1,7 @@
-html {
-  font-size: 14px;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
@@ -17,10 +19,34 @@ html {
   min-height: 100%;
 }
 
-.navbar{
+header{
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3;
 }
 
-body {
+.navbar {
+    width: 100%;
+    box-shadow: 1px 10px 10px #888888;
+}
+
+.navbar-nav {
+    padding: 10px 40%;
+}
+
+.navbar-nav li{
+    font-weight: 500;
+    font-size: 19px;
+}
+
+.navbar img {
+    position: absolute;
+    left: 90px;
+    width: 150px;
+    height: 50px;
 }
 
 #footer {
