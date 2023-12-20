@@ -1,8 +1,9 @@
 ﻿body {
     margin: 0;
     padding: 0;
-    height: 300vh;
+    height: 395vh;
     font-family: Graphik,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    width: 94vw;
 }
 
 .button {
@@ -42,7 +43,7 @@
 
 .slider {
     width: 100%;
-    height: 500px;
+    height: 600px;
     overflow: hidden;
 }
 
@@ -63,7 +64,7 @@
 
 .slide img{
     width: 1400px;
-    height: 700px;
+    height: 800px;
 }
 
 .slide .content{
@@ -146,13 +147,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px;
+    padding: 50px;
     left: 0;
+    transform: translate(0, 0);
+    z-index: 3;
 }
 
-h1 {
+.statement h3{
     color: #282C33;
-    font-size: 40px;
+    font-size: 60px;
     font-weight: 600;
 }
 
@@ -216,7 +219,7 @@ p {
 .wave {
     background: url(../assets/dashboard/wave2.png);
     position: absolute;
-    transform: translate(0,130%);
+    transform: translate(0,180%);
     left: 0;
     width: 100%;
     height: 11rem;
@@ -289,25 +292,81 @@ p {
 .info-graphics .row .info-content{
     position: absolute;
     text-align: left;
-    transform: translate(-15%, 45%);
+    transform: translate(-15%, 65%);
 }
 
 .info-graphics .row .image img{
     width: 40vw;
     position: absolute;
     justify-content: flex-end;
-    transform: translate(20%, 0);
+    transform: translate(30%, 6%);
 }
 
 .info-graphics .row2 .info-content2{
     position: absolute;
     text-align: left;
-    transform: translate(25%, 195%);
+    transform: translate(25%, 225%);
 }
 
 .info-graphics .row2 .image img{
     width: 30vw;
     position: absolute;
     left: 0;
-    transform: translate(-55%, 85%);
+    transform: translate(-55%, 115%);
+}
+
+.contact{
+    position: absolute;
+    left: 0;
+    right: 0;
+    transform: translate(0, 140%);
+    background: #333;
+    display: inline-block;
+}
+
+.contact h1,h3{
+    padding: 10px;
+    text-align: center;
+    color: crimson;
+    margin-top: 4px;
+}
+
+.contact .row{
+    display: flex;
+    justify-content: flex-end;
+    padding: 5rem 0;
+    width: 100%;
+}
+
+.contact .row .contact-image img{
+    width: 50vw;
+    height: 70vh;
+}
+
+.contact .row .form-container{
+    width: 50%;
+    padding-right: 6rem;
+    position: absolute;
+}
+
+.contact .row .form-container input, textarea{
+    height: 4rem;
+    width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: 5rem;
+    padding: 0 1rem;
+    margin: 1rem 0;
+    font-size: 1.7rem;
+    transition: .2s linear;
+}
+
+.contact .row .form-container input:focus, textarea:focus {
+    border: .2rem solid crimson;
+}
+.contact .row .form-container textarea {
+    height: 20rem;
+    border-radius: 1rem;
+    padding: 1rem;
+    resize: none;
 }

@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Home Page</title>
     <link rel="stylesheet" href="~/css/homepage.css" />
+    <link rel="stylesheet" href="~/css/homepage1.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 </head>
@@ -72,10 +73,10 @@
     </div>
 
     <div class="statement">
-        <h3>Welcome to Trailyze</h3>
+        <h3 class="size">Welcome to <spanc class="typing-text"></spanc></h3>
         <p>
             Discover a new way to analyze your performance. Trailyze is your go-to destination
-            for monitoring, reminding, storing, predicting. your all-in-one solution for elevating trainee 
+            for monitoring, reminding, storing, predicting. <br />Your all-in-one solution for elevating trainee 
             performance monitoring and prediction.Let's embark on a journey of enhanced training 
             experiences and informed 
             decision-making.
@@ -131,6 +132,76 @@
             </div>
         </div>
     </section>
-        <script src="~/js/slider.js"></script>
+    <!-- -----INFO GRAPHIC ENDS----- -->
+    <section id="features">
+    <h1 class="features-heading">Our Features</h1>
+
+    <div class="box-container">
+        <div class="box">
+            <img class="up" src="~/assets/dashboard/analyzing.png" />
+                <h3>
+                    Performance Metric
+                </h3>
+                <p>Trailyze isn't just about monitoring; it's about deep-dive performance analysis. 
+                    Our robust analytics engine provides real-time insights into trainee progress, 
+                    strengths, and areas for improvement. Visualize trends, track achievements, and 
+                    make informed decisions to enhance individual and group performance.</p>
+        </div>
+        <div class="box">
+            <img src="~/assets/dashboard/envelope.png" />
+            <h3>
+                Mail
+            </h3>
+                <p>Stay in the loop with Trailyze's email monitoring feature. 
+                    Seamlessly integrate your email accounts to centralize communication related to training activities. 
+                    Keep track of important discussions, feedback, and updates right from the platform.</p>
+        </div>
+        <div class="box">
+            <img src="~/assets/dashboard/folder.png" />
+                <h3>
+                    File Management
+                </h3>
+                <p>Trailyze simplifies file management, 
+                    ensuring all your training materials are organized and easily accessible. 
+                    Upload, organize, and share files effortlessly. 
+                    Whether it's training documents, presentations, or multimedia resources, 
+                    everything is just a click away.</p>
+        </div>
+    </div>
+    </section>
+    <!-- ---- FEATURES END! ---- -->
+
+    <section class="contact" id="contact">
+        <h1>Contact Us</h1>
+        <h3>Let's have a conversation.</h3>
+        <div class="row">
+            <div class="contact-image">
+                <img src="~/assets/dashboard/Contact-us-amico.png" />
+            </div>
+
+            <div class="form-container">
+                <form action="">
+                    <input type="text" placeholder="Full name">
+                    <input type="email" placeholder="Email">
+                    <textarea name="" id="" cols="30" rows="10" placeholder="Message"></textarea>
+
+                    <input type="submit" value="Submit Message">
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ---- scripts ---- -->
+    <script src="~/js/slider.js"></script>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script>
+        var typed = new Typed('.typing-text', {
+            strings: ['Trailyze', 'Train', 'Analyze'],
+            typeSpeed: 240,
+            loop: true
+        });
+    </script>
+    <!-- ---- scripts ---- -->
+
     </body>
 </html>
