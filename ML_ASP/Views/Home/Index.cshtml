@@ -1,6 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,7 +8,6 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="~/css/homepage.css" />
     <link rel="stylesheet" href="~/css/homepage1.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 </head>
     <body>
@@ -71,6 +68,7 @@
             <label for="radio4" class="manual-btn"></label>
         </div>
     </div>
+    <!-- SLIDER ENDS _------------->
 
     <div class="statement">
         <h3 class="size">Welcome to <spanc class="typing-text"></spanc></h3>
@@ -84,54 +82,56 @@
             ones performance, ride the wave of platform, we've got you covered.
         </p>
         <button class="button"><a asp-controller="Account" asp-action="SignUp">Sign Up for Free</a></button>
+
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
     </div>
+    <!-- ---------- HOME SLIDER & WAVE ENDS ---------- -->
 
-    <div class="wave wave1"></div>
-    <div class="wave wave2"></div>
-    <div class="wave wave3"></div>
+    <section class="about" id="about">
+        <h1 class="heading"> About Us</h1>
 
-    
-    <section class="info-graphics" id="about">
-        
         <div class="row">
-            <div class="info-content">
-                <h1 class="heading">
-                    About Us
-                </h1>
-                <h3>We analyze and monitor your performance</h3>
-                <p>Imagine having a centralized dashboard that provides a comprehensive view of trainee performance - 
-                    <br />from progress tracking to assessment results. 
-                    With Trailyze, it's not just about monitoring; it's about predicting future success.</p>
-                <p>At Trailyze, we believe in the power of data-driven insights to unlock the full potential of 
-                    trainees.<br /> Our platform combines cutting-edge technology <br />with user-friendly design, 
-                    making it the go-to choice for organizations committed to maximizing training outcomes.</p>
+
+            <div class="content">
+                <h3>Elevating Performance Monitoring for Trainees</h3>
+                <p>Trailyze is not just a platform; 
+                    <br />it's your dedicated partner in optimizing training and development programs. 
+                    <br />Designed with precision, Trailyze takes performance monitoring to a whole new level, 
+                    <br />providing insights that are not just informative but predictive.</p>
             </div>
+
             <div class="image">
-            <img src="~/assets/dashboard/Charts-bro.png" />
-             </div>
-        </div>
-        <div class="row2">
-            <div class="info-content2">
-                <h1 class="heading">
-                    UI and UX
-                </h1>
-                <h3>Let's take a peek at the UI that makes navigating our platform a breeze.</h3>
-                <p>
-                    Trailyze boasts a clean, modern design that puts everything you 
-                    need right at your fingertips. The dashboard is not just informative; 
-                    it's visually stunning, providing a clear snapshot of your trainee's 
-                    progress and achievements.
-                </p>
-                <p>
-                    Join us on this journey of redefining training experiences. 
-                    Welcome to Trailyze - where UI and UX excellence meet the future of performance monitoring.
-                </p>
+                <img src="~/assets/dashboard/Charts-bro.svg" alt="" />
             </div>
-            <div class="image">
-                <img src="~/assets/dashboard/User-flow-pana.png" />
-            </div>
+
         </div>
     </section>
+
+    <section class="services" id="services">
+        <h1 class="heading"> UI & UX</h1>
+
+        <div class="row">
+
+            <div class="image">
+                <img src="~/assets/dashboard/Softwareintegration-bro.svg" alt="" />
+            </div>
+
+            <div class="content">
+                <h3>Elevate Your Training Experience</h3>
+                <p>
+                    Trailyze boasts a clean, modern design that puts everything  
+                    <br />you need right at your fingertips. The dashboard is not just informative; 
+                    <br />it's visually stunning,
+                    <br />providing a clear snapshot of your trainee's progress and achievements.
+                </p>
+            </div>
+
+
+        </div>
+    </section>
+
     <!-- -----INFO GRAPHIC ENDS----- -->
     <section id="features">
     <h1 class="features-heading">Our Features</h1>
@@ -172,8 +172,8 @@
     <!-- ---- FEATURES END! ---- -->
 
     <section class="contact" id="contact">
-        <h1>Contact Us</h1>
-        <h3>Let's have a conversation.</h3>
+        <h1 class="tae">Contact Us</h1>
+        <h3 class="tae">Let's have a conversation.</h3>
         <div class="row">
             <div class="contact-image">
                 <img src="~/assets/dashboard/Contact-us-amico.png" />

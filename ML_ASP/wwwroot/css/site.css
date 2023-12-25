@@ -1,8 +1,4 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
 
 @media (min-width: 768px) {
   html {
@@ -15,8 +11,6 @@
 }
 
 html {
-  position: relative;
-  min-height: 100%;
 }
 
 header{
@@ -31,6 +25,7 @@ header{
 .navbar {
     width: 100%;
     box-shadow: 1px 10px 10px #888888;
+    z-index: 3;
 }
 
 .navbar-nav {
@@ -42,15 +37,14 @@ header{
     font-size: 19px;
 }
 
-.navbar .logo{
+.navbar .logo {
     position: absolute;
     left: 90px;
     width: 150px;
     height: 50px;
 }
 
-
-.profile-icon{
+.profile-icon {
     position: absolute;
     right: 90px;
     width: 50px;
