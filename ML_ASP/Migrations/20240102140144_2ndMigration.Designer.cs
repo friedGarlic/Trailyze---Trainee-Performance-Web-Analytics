@@ -12,8 +12,8 @@ using ML_ASP.Data;
 namespace ML_ASP.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20231130213911_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240102140144_2ndMigration")]
+    partial class _2ndMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,6 +49,35 @@ namespace ML_ASP.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("ML_ASP.Models.SubmissionModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApprovalStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DueStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Submissions");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Trainee_Model", b =>

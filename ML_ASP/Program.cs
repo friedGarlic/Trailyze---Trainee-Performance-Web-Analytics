@@ -1,20 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using ML_ASP.Data;
 using ML_ASP.Repositories;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+using ML_ASP.DataAccess;
+using ML_ASP.DataAccess.Repositories.IRepositories;
+using ML_ASP.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDataProtection();
-builder.Services.Configure<CookiePolicyOptions>(options =>
-{
-    options.Secure = CookieSecurePolicy.Always;
-});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
 
 builder.Services.AddAuthentication(option =>
 {
@@ -26,16 +21,13 @@ builder.Services.AddAuthentication(option =>
     option.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value; 
 });
 
-builder.Services.AddAuthorization(option =>
-{
-    option.DefaultPolicy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-});
+//SCOPES
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
-
-builder.Services.AddDbContext<ML_DBContext>(options => 
+builder.Services.AddDbContext<ApplicationDBContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 builder.Services.AddSession();

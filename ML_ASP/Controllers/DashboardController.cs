@@ -1,13 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
+using ML_ASP.Models;
 //using ML_net.ModelSession_1;
 using ML_net.ModelSession_2;
-using Google.Apis.Drive.v3;
-using ML_ASP.Repositories;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using System.Web;
-using Accord.IO;
 
 namespace ML_ASP.Controllers
 {
@@ -20,17 +15,12 @@ namespace ML_ASP.Controllers
         public DashboardController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment)
         {
             _environment = environment;
-            _context = new MLContext();
+            _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
             var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public IActionResult Dashboard()
@@ -40,27 +30,39 @@ namespace ML_ASP.Controllers
 
         public IActionResult FileManagement()
         {
-
+            //TODO Make a project for DataAccess NTier Architecture of Database
+            //TODO List view of file uploaded
+            //pass the SubmissionModel but currently null
             return View();
         }
 
+        public ActionResult DeleteFile(string fileName)
+        {
+            string path = Path.Combine(_environment.ContentRootPath + "\\Uploads", fileName);
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+            return RedirectToAction("FileManagement");
+        }
+
         [HttpPost]
-        public IActionResult FileManagement(List<IFormFile> postedFiles)
+        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel)
         {
             string uploadFolderName = "Uploads";
             string projectPath = _environment.ContentRootPath;
             string path = Path.Combine(projectPath, uploadFolderName);
 
             if (!Directory.Exists(path))
-            {
+            { 
                 Directory.CreateDirectory(path);
             }
 
             List<string> uploadedFiles = new List<string>();
-
+            string? fileName = null;
             foreach (IFormFile postedFile in postedFiles)
             {
-                string fileName = Path.GetFileName(postedFile.FileName);
+                fileName = Path.GetFileName(postedFile.FileName);
                 string filePath = Path.Combine(path, fileName);
 
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -70,10 +72,8 @@ namespace ML_ASP.Controllers
                     ViewBag.Message += string.Format("<b>{0}</b> uploaded.<br />", fileName);
                 }
 
-                // Read the number of spaces in the PDF
                 int numWordsInPdf = Demo.CountSpacesInPdf(filePath);
 
-                // Rest of your code...
                 Random rnd = new Random();
                 int num = rnd.Next(80, 90);
 
@@ -87,8 +87,22 @@ namespace ML_ASP.Controllers
 
                 ViewBag.Prediction = prediction.Prediciton;
             }
+            //var fileModel = SubmissionInjection(submissionModel,fileName,_dbContext.Accounts.FirstOrDefault());
+            //_dbContext.Add(fileModel);
+            //save ONLY IF admin approve it
+            //_dbContext.SaveChanges();
 
             return View();
+        }
+
+        public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, Account_Model accModel)
+        {
+            submissionModel.Date = DateTime.Now;
+            submissionModel.Name = accModel.FullName;
+            submissionModel.FileName = filename;
+            submissionModel.ApprovalStatus = "Pending";
+
+            return submissionModel;
         }
     }
 }

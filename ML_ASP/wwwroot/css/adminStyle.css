@@ -170,8 +170,8 @@ body {
 /* CONTENT */
 #content {
 	position: relative;
-	width: calc(100% - 280px);
-	left: 280px;
+	width: calc(100% - 60px);
+	left: 180px;
 	transition: .3s ease;
 }
 
@@ -485,7 +485,9 @@ body {
 	color: var(--light);
 	border-radius: 20px;
 	font-weight: 700;
+	z-index: 3;
 }
+
 #content main .table-data .order table tr td .status.completed {
 	background: var(--blue);
 }
@@ -495,7 +497,9 @@ body {
 #content main .table-data .order table tr td .status.pending {
 	background: var(--orange);
 }
-
+#content main .table-data .order table tr td .status.approved {
+	background: #00FF00;
+}
 
 #content main .table-data .todo {
 	flex-grow: 1;

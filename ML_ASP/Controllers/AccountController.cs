@@ -1,22 +1,14 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ML_ASP.Data;
 using ML_ASP.Models;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authentication.Google;
-using Google.Apis.Auth.OAuth2;
-using Microsoft.AspNetCore.Http;
-using Accord;
-using iText.IO.Source;
 
 namespace ML_ASP.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ML_DBContext _dbContext;
+        private readonly ApplicationDBContext _dbContext;
 
-        public AccountController(ML_DBContext dbContext)
+        public AccountController(ApplicationDBContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -26,29 +18,17 @@ namespace ML_ASP.Controllers
             return View();
         }
 
-        public async Task SignIn()
+        public IActionResult SignIn()
         {
-            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
-                new AuthenticationProperties
-                {
-                    RedirectUri = Url.Action("GoogleResponse")
-                });
+
+            return View();
         }
 
-        public async Task<IActionResult> GoogleResponse()
-        {
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //public async Task SignIn()
+        //{
+        //    await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,new AuthenticationProperties{RedirectUri = Url.Action("GoogleResponse")});
+        //}
 
-            var claim = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
-            {
-                claim.Issuer,
-                claim.OriginalIssuer,
-                claim.Type,
-                claim.Value
-            });
-
-            return RedirectToAction("FileManagement", "Dashboard", new { area = "" });
-        }
 
         [HttpPost]
         public IActionResult SignIn(Account_Model model)
@@ -88,5 +68,21 @@ namespace ML_ASP.Controllers
             }
             return View(obj);
         }
+
+        //for google drive that failed
+        /*public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var claim = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+
+            return RedirectToAction("FileManagement", "Dashboard", new { area = "" });
+        }*/
     }
 }

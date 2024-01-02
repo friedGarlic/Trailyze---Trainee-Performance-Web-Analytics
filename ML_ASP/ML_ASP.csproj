@@ -40,6 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClassLibrary1\ML_net.csproj" />
+    <ProjectReference Include="..\ML_ASP.DataAccess\ML_ASP.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
