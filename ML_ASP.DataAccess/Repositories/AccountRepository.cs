@@ -17,7 +17,12 @@ namespace ML_ASP.DataAccess.Repositories
 			_dbContext = dbContext;
 		}
 
-		public void Save()
+        public Account_Model GetFirstAndDefault()
+        {
+			return _dbContext.Accounts.FirstOrDefault();
+        }
+
+        public void Save()
 		{
 			_dbContext.SaveChanges();
 		}

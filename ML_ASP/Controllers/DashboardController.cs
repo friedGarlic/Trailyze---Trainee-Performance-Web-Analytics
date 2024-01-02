@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
+using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
 //using ML_net.ModelSession_1;
 using ML_net.ModelSession_2;
@@ -8,12 +9,17 @@ namespace ML_ASP.Controllers
 {
     public class DashboardController : Controller
     {
+        private readonly ISubmissionRepository _submissionRepository;
+        private readonly IAccountRepository _accRepository;
         private readonly MLContext _context;
         private readonly PredictionEngine<Object_DataSet, Prediction> _predictionEngine;
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
 
-        public DashboardController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment)
+        public DashboardController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment, ISubmissionRepository submissionRepository
+            , IAccountRepository accRepository)
         {
+            _accRepository = accRepository;
+            _submissionRepository = submissionRepository;
             _environment = environment;
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
@@ -30,10 +36,8 @@ namespace ML_ASP.Controllers
 
         public IActionResult FileManagement()
         {
-            //TODO Make a project for DataAccess NTier Architecture of Database
-            //TODO List view of file uploaded
-            //pass the SubmissionModel but currently null
-            return View();
+            IEnumerable<SubmissionModel> modelList = _submissionRepository.GetAll();
+            return View(modelList);
         }
 
         public ActionResult DeleteFile(string fileName)
@@ -47,7 +51,7 @@ namespace ML_ASP.Controllers
         }
 
         [HttpPost]
-        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel)
+        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel,Account_Model accModel)
         {
             string uploadFolderName = "Uploads";
             string projectPath = _environment.ContentRootPath;
@@ -87,18 +91,23 @@ namespace ML_ASP.Controllers
 
                 ViewBag.Prediction = prediction.Prediciton;
             }
-            //var fileModel = SubmissionInjection(submissionModel,fileName,_dbContext.Accounts.FirstOrDefault());
-            //_dbContext.Add(fileModel);
-            //save ONLY IF admin approve it
-            //_dbContext.SaveChanges();
 
-            return View();
+            var fileModel = SubmissionInjection(submissionModel,fileName,_accRepository.GetFirstAndDefault());
+            _submissionRepository.Add(fileModel);
+            //TODO save ONLY IF admin approve it
+            _submissionRepository.Save();
+
+
+            IEnumerable<SubmissionModel> modelList = _submissionRepository.GetAll();
+            return View(modelList);
         }
 
         public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, Account_Model accModel)
         {
             submissionModel.Date = DateTime.Now;
-            submissionModel.Name = accModel.FullName;
+
+            submissionModel.Name = submissionModel.Name ?? accModel.FullName;
+
             submissionModel.FileName = filename;
             submissionModel.ApprovalStatus = "Pending";
 

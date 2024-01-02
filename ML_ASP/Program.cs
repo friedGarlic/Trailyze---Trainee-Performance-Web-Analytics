@@ -22,6 +22,7 @@ builder.Services.AddAuthentication(option =>
 });
 
 //SCOPES
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => 

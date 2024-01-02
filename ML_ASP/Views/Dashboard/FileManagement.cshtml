@@ -1,4 +1,4 @@
-﻿@model SubmissionModel
+﻿@model IEnumerable<SubmissionModel>
 
 @{
     Layout = "_AMasterPage_3";
@@ -56,8 +56,30 @@
                     <span>Select File:</span> <input type="file" name="postedFiles" multiple /> 
                     <input type="submit" value="Upload" /> <br /> 
                     <span style="color:green">@Html.Raw(ViewBag.Message)</span> 
-                </form> 
+                </form>
             </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Yas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var i in Model)
+                    {
+                        <tr>
+                            <td>
+                                @i.FileName
+                            </td>
+                            <td>
+                                @i.ApprovalStatus
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
         </main>
         <!-- End of Main Content -->

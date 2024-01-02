@@ -163,7 +163,7 @@
 
 
     <main class="form-signin w-50 m-auto">
-        <form class="py-5" method="post">
+        <form class="py-5" asp-controller="Account" asp-action="SignIn" method="post">
             <img class="mb-4" src="~/assets/brand/analysis.png" alt="" width="72" height="57">
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
@@ -184,7 +184,7 @@
             </div>
 
             <div class="w-100 py-2 mb-3 col-5 text-end">
-                <a asp-controller="Account" asp-action="SignIn" class="btn btn-primary form-control">Google Signin</a>
+                <button class="btn-bd-primary" type="submit">Sign In</button>
             </div>
 
             <a asp-controller="Dashboard" asp-action="Dashboard"> to trainee</a>

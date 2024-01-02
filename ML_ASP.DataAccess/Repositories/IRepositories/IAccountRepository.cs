@@ -11,5 +11,6 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 	{
 		public void Update(Account_Model model);
 		public void Save();
+		public Account_Model GetFirstAndDefault();
 	}
 }
