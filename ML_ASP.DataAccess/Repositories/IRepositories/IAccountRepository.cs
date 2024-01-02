@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ML_ASP.DataAccess.Repositories.IRepositories
 {
-	public interface ISubmissionRepository : IRepository<SubmissionModel>
+	public interface IAccountRepository : IRepository<Account_Model>
 	{
-		public void Update(SubmissionModel model);
+		public void Update(Account_Model model);
 		public void Save();
 	}
 }

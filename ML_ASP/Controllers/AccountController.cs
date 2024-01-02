@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
 
 namespace ML_ASP.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IAccountRepository _accRepository;
 
-        public AccountController()
+        public AccountController(IAccountRepository accRepository)
         {
+            _accRepository = accRepository;
         }
 
         public IActionResult Index()
@@ -41,10 +44,9 @@ namespace ML_ASP.Controllers
 
         private bool IsValidUser(string username, string password)
         {
-            //var user = _dbContext.Accounts.FirstOrDefault(u => u.Username == username && u.Password == password);
+            var user = _accRepository.GetFirstOrDefault(u => u.Username == username && u.Password == password);
 
-            //return user != null;
-            return false;
+            return user != null;
         }
 
         public IActionResult SignUp()
@@ -59,8 +61,8 @@ namespace ML_ASP.Controllers
         {
             if (ModelState.IsValid)
             {
-                //_dbContext.Accounts.Add(obj);
-                //_dbContext.SaveChanges();
+				_accRepository.Add(obj);
+				_accRepository.Save();
                 TempData["success"] = "Account in successfuly created";
                 return RedirectToAction("SignIn");
             }
