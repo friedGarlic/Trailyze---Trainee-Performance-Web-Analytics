@@ -6,7 +6,7 @@
 const chartOptions = {
     chart: {
         type: 'area',
-        height: 180,
+        height: 280,
         toolbar: { show: false },
         zoom: { enable: false }
     },
@@ -40,3 +40,4 @@ const chartOptions = {
 
 const chart = new ApexCharts(document.querySelector('.chart-area'), chartOptions);
 chart.render();
+

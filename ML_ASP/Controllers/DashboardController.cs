@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 //using ML_net.ModelSession_1;
 using ML_net.ModelSession_2;
+using Google.Apis.Drive.v3;
+using ML_ASP.Repositories;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.Web;
+using Accord.IO;
 
 namespace ML_ASP.Controllers
 {
@@ -19,11 +22,9 @@ namespace ML_ASP.Controllers
             _environment = environment;
             _context = new MLContext();
 
-            // load the trained model
             var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
-            // prediction engine
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
         }
 
@@ -39,20 +40,9 @@ namespace ML_ASP.Controllers
 
         public IActionResult FileManagement()
         {
+
             return View();
         }
-
-        /*[HttpPost]
-        public IActionResult FileManagement(Performance_DataSet input)
-        {
-            // Use the loaded model to make predictions
-            var prediction = _predictionEngine.Predict(input);
-
-            // You can do something with the prediction, e.g., pass it to the view
-            ViewBag.Prediction = prediction.PerformancePrediciton_Score;
-
-            return View(input);
-        }*/
 
         [HttpPost]
         public IActionResult FileManagement(List<IFormFile> postedFiles)
@@ -100,7 +90,5 @@ namespace ML_ASP.Controllers
 
             return View();
         }
-
-
     }
 }

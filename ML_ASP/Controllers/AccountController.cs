@@ -1,18 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using ML_ASP.Data;
 using ML_ASP.Models;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authentication.Google;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Http;
+using Accord;
+using iText.IO.Source;
 
 namespace ML_ASP.Controllers
 {
     public class AccountController : Controller
     {
         private readonly ML_DBContext _dbContext;
-
-        void Page_PreInit(Object sender, EventArgs e)
-        {
-            
-        }
 
         public AccountController(ML_DBContext dbContext)
         {
@@ -24,24 +26,38 @@ namespace ML_ASP.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult SignIn()
+        public async Task SignIn()
         {
-            return View();
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
+                new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action("GoogleResponse")
+                });
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var claim = result.Principal.Identities.FirstOrDefault().Claims.Select(claim => new
+            {
+                claim.Issuer,
+                claim.OriginalIssuer,
+                claim.Type,
+                claim.Value
+            });
+
+            return RedirectToAction("FileManagement", "Dashboard", new { area = "" });
         }
 
         [HttpPost]
         public IActionResult SignIn(Account_Model model)
         {
-            // Check the username and password against your database or any authentication logic
             if (IsValidUser(model.Username, model.Password))
             {
-                // Successful sign-in
-                // You might redirect to a dashboard or another page
                 return RedirectToAction("Dashboard", "Dashboard");
             }
 
-            // Failed sign-in
             ModelState.AddModelError(string.Empty, "Invalid username or password");
             return View(model);
         }
@@ -50,7 +66,6 @@ namespace ML_ASP.Controllers
         {
             var user = _dbContext.Accounts.FirstOrDefault(u => u.Username == username && u.Password == password);
 
-            // If the user is found, consider it a valid user
             return user != null;
         }
 

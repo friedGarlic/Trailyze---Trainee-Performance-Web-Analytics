@@ -182,7 +182,10 @@
                     Remember me
                 </label>
             </div>
-            <button class="btn btn-primary w-100 py-2 mb-3" type="submit">Sign in</button>
+
+            <div class="w-100 py-2 mb-3 col-5 text-end">
+                <a asp-controller="Account" asp-action="SignIn" class="btn btn-primary form-control">Google Signin</a>
+            </div>
 
             <a asp-controller="Dashboard" asp-action="Dashboard"> to trainee</a>
             <p class="auth-link color-deep-blue-sea-light-20">
