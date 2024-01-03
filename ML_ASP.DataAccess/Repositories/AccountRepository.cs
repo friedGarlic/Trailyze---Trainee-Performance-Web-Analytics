@@ -22,11 +22,6 @@ namespace ML_ASP.DataAccess.Repositories
 			return _dbContext.Accounts.FirstOrDefault();
         }
 
-        public void Save()
-		{
-			_dbContext.SaveChanges();
-		}
-
 		public void Update(Account_Model model)
 		{
 			_dbContext.Update(model);

@@ -6,11 +6,11 @@ namespace ML_ASP.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IAccountRepository _accRepository;
+        private readonly IUnitOfWork _unit;
 
-        public AccountController(IAccountRepository accRepository)
+        public AccountController(IUnitOfWork unit)
         {
-            _accRepository = accRepository;
+            _unit = unit;
         }
 
         public IActionResult Index()
@@ -44,7 +44,7 @@ namespace ML_ASP.Controllers
 
         private bool IsValidUser(string username, string password)
         {
-            var user = _accRepository.GetFirstOrDefault(u => u.Username == username && u.Password == password);
+            var user = _unit.Account.GetFirstOrDefault(u => u.Username == username && u.Password == password);
 
             return user != null;
         }
@@ -61,8 +61,8 @@ namespace ML_ASP.Controllers
         {
             if (ModelState.IsValid)
             {
-				_accRepository.Add(obj);
-				_accRepository.Save();
+				_unit.Account.Add(obj);
+				_unit.Save();
                 TempData["success"] = "Account in successfuly created";
                 return RedirectToAction("SignIn");
             }

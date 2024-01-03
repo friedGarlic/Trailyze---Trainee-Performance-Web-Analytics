@@ -18,11 +18,6 @@ namespace ML_ASP.DataAccess.Repositories
 			_dbContext = dbContext;
 		}
 
-		public void Save()
-		{
-			_dbContext.SaveChanges();
-		}
-
 		public void Update(SubmissionModel model)
 		{
 			_dbContext.Update(model);

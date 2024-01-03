@@ -10,7 +10,6 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 	public interface IAccountRepository : IRepository<Account_Model>
 	{
 		public void Update(Account_Model model);
-		public void Save();
 		public Account_Model GetFirstAndDefault();
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
+using ML_ASP.DataAccess.Repositories;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
 //using ML_net.ModelSession_1;
@@ -9,17 +10,15 @@ namespace ML_ASP.Controllers
 {
     public class DashboardController : Controller
     {
-        private readonly ISubmissionRepository _submissionRepository;
-        private readonly IAccountRepository _accRepository;
+        private readonly IUnitOfWork _unit;
         private readonly MLContext _context;
         private readonly PredictionEngine<Object_DataSet, Prediction> _predictionEngine;
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
 
-        public DashboardController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment, ISubmissionRepository submissionRepository
-            , IAccountRepository accRepository)
+        public DashboardController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment, 
+            IUnitOfWork unit)
         {
-            _accRepository = accRepository;
-            _submissionRepository = submissionRepository;
+            _unit = unit;
             _environment = environment;
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
@@ -36,9 +35,9 @@ namespace ML_ASP.Controllers
 
         public IActionResult FileManagement()
         {
-            IEnumerable<SubmissionModel> modelList = _submissionRepository.GetAll();
+            IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
             return View(modelList);
-        }
+        } 
 
         public ActionResult DeleteFile(string fileName)
         {
@@ -92,13 +91,14 @@ namespace ML_ASP.Controllers
                 ViewBag.Prediction = prediction.Prediciton;
             }
 
-            var fileModel = SubmissionInjection(submissionModel,fileName,_accRepository.GetFirstAndDefault());
-            _submissionRepository.Add(fileModel);
+            //TODO TRY TO FIX WHERE THE _accRepo.GetFirstAndDefault is filtering using the acc.username passed in accountcontroller
+            var fileModel = SubmissionInjection(submissionModel,fileName,_unit.Account.GetFirstAndDefault()); 
+            _unit.Submission.Add(fileModel);
             //TODO save ONLY IF admin approve it
-            _submissionRepository.Save();
 
+            _unit.Save();
 
-            IEnumerable<SubmissionModel> modelList = _submissionRepository.GetAll();
+            IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
             return View(modelList);
         }
 

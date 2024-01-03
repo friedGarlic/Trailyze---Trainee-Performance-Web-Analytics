@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication(option =>
+/*builder.Services.AddAuthentication(option =>
 {
     option.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
@@ -19,11 +19,11 @@ builder.Services.AddAuthentication(option =>
 {
     option.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
     option.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value; 
-});
+});*/
 
 //SCOPES
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
