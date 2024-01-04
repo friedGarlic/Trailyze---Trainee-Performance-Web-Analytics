@@ -10,5 +10,6 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 	public interface ISubmissionRepository : IRepository<SubmissionModel>
 	{
 		public void Update(SubmissionModel model);
+		public void ChangeApprovalStatus(int id, string status);
 	}
 }

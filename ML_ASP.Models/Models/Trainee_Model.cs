@@ -1,8 +1,11 @@
-﻿namespace ML_ASP.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ML_ASP.Models
 {
     public class Trainee_Model
     {
-        public Guid Id { get; set; }
+        [Key]
+        public int Id { get; set; }
         
         public int TrainingSequence { get; set; }
 

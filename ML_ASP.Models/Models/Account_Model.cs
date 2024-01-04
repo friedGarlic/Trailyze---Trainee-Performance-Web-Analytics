@@ -6,7 +6,7 @@ namespace ML_ASP.Models
     public class Account_Model
     {
         [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Range(18,50)]
         public int Age { get; set; }

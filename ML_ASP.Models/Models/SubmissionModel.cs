@@ -6,7 +6,7 @@ namespace ML_ASP.Models
     public class SubmissionModel
     {
         [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string? FileName { get; set; }
 
