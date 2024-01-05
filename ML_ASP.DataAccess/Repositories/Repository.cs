@@ -20,13 +20,18 @@ namespace ML_ASP.DataAccess.Repositories
 			_dbSet.Add(entity);
 		}
 
-		public IEnumerable<T> GetAll()
+		public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter=null)
 		{
 			IQueryable<T> query = _dbSet;
-			return query.ToList();
+
+			if (filter != null)
+			{
+				query = query.Where(filter);
+			}
+            return query.ToList();
 		}
 
-		public T GetFirstOrDefault(Expression<Func<T, bool>> filter)
+        public T GetFirstOrDefault(Expression<Func<T, bool>> filter)
 		{
 			IQueryable<T> query = _dbSet;
 			query = query.Where(filter);

@@ -8,6 +8,8 @@ namespace ML_ASP.Models
         [Key]
         public int Id { get; set; }
 
+        public string SubmissionUserId { get; set; }
+
         public string? FileName { get; set; }
 
         public string? Name { get; set; }

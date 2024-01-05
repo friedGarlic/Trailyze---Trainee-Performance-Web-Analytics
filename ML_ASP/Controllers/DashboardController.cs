@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
 using ML_ASP.DataAccess.Repositories;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
+using ML_ASP.Models.ViewModel;
 //using ML_net.ModelSession_1;
 using ML_net.ModelSession_2;
+using System.Security.Claims;
 
 namespace ML_ASP.Controllers
 {
@@ -14,6 +17,8 @@ namespace ML_ASP.Controllers
         private readonly MLContext _context;
         private readonly PredictionEngine<Object_DataSet, Prediction> _predictionEngine;
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
+
+        public SubmissionVM submissionVM { get; set; }
 
         public DashboardController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment, 
             IUnitOfWork unit)
@@ -33,11 +38,19 @@ namespace ML_ASP.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult FileManagement()
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            submissionVM = new SubmissionVM()
+            {
+                SubmissionList = _unit.Submission.GetAll(u=> u.SubmissionUserId == claim.Value)
+            };
+
             //TODO show all submission of an guid that is equal to the guid of login
-            IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
-            return View(modelList);
+            return View(submissionVM);
         } 
 
         public ActionResult DeleteFile(string fileName)
@@ -51,8 +64,10 @@ namespace ML_ASP.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel,Account_Model accModel)
         {
+            // --UPLOADING FILE --
             string uploadFolderName = "Uploads";
             string projectPath = _environment.ContentRootPath;
             string path = Path.Combine(projectPath, uploadFolderName);
@@ -91,8 +106,14 @@ namespace ML_ASP.Controllers
 
                 ViewBag.Prediction = prediction.Prediciton;
             }
+            // --UPLOADING FILE -- END
 
-            //TODO TRY TO FIX WHERE THE _accRepo.GetFirstAndDefault is filtering using the acc.username passed in accountcontroller
+
+            //adding identity for the one who upload the file
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            submissionModel.SubmissionUserId = claim.Value;
+
             var fileModel = SubmissionInjection(submissionModel,fileName,_unit.Account.GetFirstAndDefault()); 
             _unit.Submission.Add(fileModel);
 
