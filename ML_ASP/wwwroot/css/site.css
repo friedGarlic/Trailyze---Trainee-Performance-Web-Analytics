@@ -29,7 +29,7 @@ header{
 }
 
 .navbar-nav {
-    padding: 10px 40%;
+    padding: 10px 1%;
 }
 
 .navbar-nav li{
@@ -40,7 +40,7 @@ header{
 .navbar a .logo {
     position: absolute;
     top: 13px;
-    left: 90px;
+    left: 690px;
     width: 150px;
     height: 50px;
 }

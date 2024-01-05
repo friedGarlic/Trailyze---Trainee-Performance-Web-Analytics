@@ -35,6 +35,7 @@ namespace ML_ASP.Controllers
 
         public IActionResult FileManagement()
         {
+            //TODO show all submission of an guid that is equal to the guid of login
             IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
             return View(modelList);
         } 
@@ -46,7 +47,7 @@ namespace ML_ASP.Controllers
             {
                 System.IO.File.Delete(path);
             }
-            return RedirectToAction("FileManagement");
+            return RedirectToAction(nameof(FileManagement));
         }
 
         [HttpPost]
@@ -94,9 +95,9 @@ namespace ML_ASP.Controllers
             //TODO TRY TO FIX WHERE THE _accRepo.GetFirstAndDefault is filtering using the acc.username passed in accountcontroller
             var fileModel = SubmissionInjection(submissionModel,fileName,_unit.Account.GetFirstAndDefault()); 
             _unit.Submission.Add(fileModel);
-            //TODO save ONLY IF admin approve it
 
             _unit.Save();
+            TempData["success"] = "Uploaded Succesfully!";
 
             IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
             return View(modelList);

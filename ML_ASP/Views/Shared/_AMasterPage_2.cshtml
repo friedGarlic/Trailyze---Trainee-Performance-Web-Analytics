@@ -12,11 +12,11 @@
 <body>
     <div class="container">
         <main role="main" class="pb-3">
-            <partial name="_Notification" />
             @RenderBody()
         </main>
     </div>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

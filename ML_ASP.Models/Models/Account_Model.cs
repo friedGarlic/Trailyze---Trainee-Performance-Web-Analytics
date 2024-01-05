@@ -1,22 +1,15 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace ML_ASP.Models
 {
-    public class Account_Model
+    public class Account_Model : IdentityUser
     {
-        [Key]
-        public int Id { get; set; }
-
         [Range(18,50)]
         public int Age { get; set; }
 
         [DisplayName("Full Name")]
         public string FullName { get; set; }
-
-        [Required]
-        public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
     }
 }

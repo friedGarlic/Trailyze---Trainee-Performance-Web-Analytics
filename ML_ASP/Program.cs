@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using ML_ASP.DataAccess;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.DataAccess.Repositories;
+using Microsoft.AspNetCore.Identity;
+using ML_ASP.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,11 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<ApplicationDBContext>();
+
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -54,6 +62,7 @@ app.UseAuthorization();
 
 app.UseSession();
 
+app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id = UrlParameter.Optional }");
