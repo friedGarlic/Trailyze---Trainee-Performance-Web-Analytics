@@ -1,17 +1,17 @@
 ﻿@{
     if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
     {
-        Layout = "_AMasterPage_3";
+        Layout = parentLayout.ToString();
     }
     else
     {
-        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+        Layout = "_AMasterPage_3";
     }
 }
 
 <h1>Manage your account</h1>
 
-<div>
+<div style="position: relative; top: 150px;">
     <h2>Change your account settings</h2>
     <hr />
     <div class="row">

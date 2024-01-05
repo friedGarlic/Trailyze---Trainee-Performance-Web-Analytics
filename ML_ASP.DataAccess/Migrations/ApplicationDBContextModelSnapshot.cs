@@ -54,7 +54,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Submissions");
+                    b.ToTable("Submissions", (string)null);
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Trainee_Model", b =>
@@ -82,7 +82,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trainees");
+                    b.ToTable("Trainees", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

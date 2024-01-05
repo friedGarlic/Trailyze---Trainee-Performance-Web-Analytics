@@ -76,6 +76,12 @@
                             <td>
                                 @i.ApprovalStatus
                             </td>
+                            <td>
+                                <form method="post" asp-controller="Dashboard" asp-action="DeleteFile" asp-route-id="@i.Id">
+                                    <input type="hidden" name="fileName" value="@i.FileName" />
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     }
                 </tbody>

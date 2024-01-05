@@ -51,15 +51,20 @@ namespace ML_ASP.Controllers
 
             //TODO show all submission of an guid that is equal to the guid of login
             return View(submissionVM);
-        } 
+        }
 
-        public ActionResult DeleteFile(string fileName)
+        [HttpPost]
+        public ActionResult DeleteFile(int id, string fileName)
         {
+            var killFile = _unit.Submission.GetFirstOrDefault(u => u.Id == id);
+            _unit.Submission.Remove(killFile);
+            _unit.Save();
             string path = Path.Combine(_environment.ContentRootPath + "\\Uploads", fileName);
             if (System.IO.File.Exists(path))
             {
                 System.IO.File.Delete(path);
             }
+
             return RedirectToAction(nameof(FileManagement));
         }
 
@@ -114,14 +119,14 @@ namespace ML_ASP.Controllers
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             submissionModel.SubmissionUserId = claim.Value;
 
+
             var fileModel = SubmissionInjection(submissionModel,fileName,_unit.Account.GetFirstAndDefault()); 
             _unit.Submission.Add(fileModel);
 
             _unit.Save();
             TempData["success"] = "Uploaded Succesfully!";
 
-            IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
-            return View(modelList);
+            return RedirectToAction(nameof(FileManagement));
         }
 
         public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, Account_Model accModel)

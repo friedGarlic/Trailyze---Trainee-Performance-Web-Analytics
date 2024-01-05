@@ -39,5 +39,5 @@ namespace ML_ASP.DataAccess.Repositories
 				objFromDb.ApprovalStatus = status;
 			}
 		}
-	}
+    }
 }

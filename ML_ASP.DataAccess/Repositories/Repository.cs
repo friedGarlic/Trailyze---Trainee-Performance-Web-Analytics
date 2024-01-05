@@ -44,7 +44,7 @@ namespace ML_ASP.DataAccess.Repositories
 			_dbSet.Remove(entity);
 		}
 
-		public void RemoveRange(IEnumerable<T> entities)
+        public void RemoveRange(IEnumerable<T> entities)
 		{
 			_dbSet.RemoveRange(entities);
 		}
