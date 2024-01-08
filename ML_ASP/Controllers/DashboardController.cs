@@ -70,24 +70,35 @@ namespace ML_ASP.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel,Account_Model accModel)
+        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel, Account_Model accModel)
         {
             // --UPLOADING FILE --
             string uploadFolderName = "Uploads";
             string projectPath = _environment.ContentRootPath;
             string path = Path.Combine(projectPath, uploadFolderName);
+            string fileName = "";
 
             if (!Directory.Exists(path))
-            { 
+            {
                 Directory.CreateDirectory(path);
             }
 
             List<string> uploadedFiles = new List<string>();
-            string? fileName = null;
             foreach (IFormFile postedFile in postedFiles)
             {
                 fileName = Path.GetFileName(postedFile.FileName);
                 string filePath = Path.Combine(path, fileName);
+
+                int attempt = 1;
+                while (System.IO.File.Exists(filePath))
+                {
+                    // If file exists, prompt user for a new name
+                    string extension = Path.GetExtension(fileName);
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                    fileName = $"{fileNameWithoutExtension}_{attempt}{extension}";
+                    filePath = Path.Combine(path, fileName);
+                    attempt++;
+                }
 
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
                 {
@@ -111,8 +122,6 @@ namespace ML_ASP.Controllers
 
                 ViewBag.Prediction = prediction.Prediciton;
             }
-            // --UPLOADING FILE -- END
-
 
             //adding identity for the one who upload the file
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -120,13 +129,13 @@ namespace ML_ASP.Controllers
             submissionModel.SubmissionUserId = claim.Value;
 
 
-            var fileModel = SubmissionInjection(submissionModel,fileName,_unit.Account.GetFirstAndDefault()); 
+            var fileModel = SubmissionInjection(submissionModel, fileName, _unit.Account.GetFirstAndDefault());
             _unit.Submission.Add(fileModel);
 
             _unit.Save();
             TempData["success"] = "Uploaded Succesfully!";
 
-            return RedirectToAction(nameof(FileManagement));
+            return RedirectToAction(nameof(FileManagement)); // Make sure to return a view or redirect after the upload
         }
 
         public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, Account_Model accModel)

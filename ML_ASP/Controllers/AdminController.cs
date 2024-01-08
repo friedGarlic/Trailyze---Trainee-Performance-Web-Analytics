@@ -39,13 +39,23 @@ namespace ML_ASP.Controllers
         }
 
 		[HttpPost]
-		public IActionResult UpdateApprovalStatus(string approvalStatus, int id)
+		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> originalApprovalStatus)
 		{
-			
-			_unit.Submission.ChangeApprovalStatus(id, approvalStatus);
+			for (int i = 0; i < id.Count; i++)
+			{
+				if (originalApprovalStatus[i] != approvalStatus[i])
+				{
+					int changedId = id[i];
+					string newApprovalStatus = approvalStatus[i];
+
+					_unit.Submission.ChangeApprovalStatus(changedId, newApprovalStatus);
+				}
+			}
+
 			_unit.Save();
 
 			return RedirectToAction("Admin");
 		}
+
 	}
 }
