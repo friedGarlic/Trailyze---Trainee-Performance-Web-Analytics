@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ML_ASP.Models.ViewModel.SubmissionVM
+
+@{
     Layout = "_AMasterPage_3";
 }
 
@@ -38,12 +40,6 @@
                     </span>
                     <h2>Mails</h2>
                     <span class="message-count">3</span>
-                </a>
-                <a href="#">
-                    <span class="material-symbols-outlined">
-                        logout
-                    </span>
-                    <h2>Log Out</h2>
                 </a>
             </div>
         </aside>
@@ -149,7 +145,15 @@
             <div class="nav">
                 <div class="profile">
                     <div class="info">
-                        <p>Hey, <b>Reza</b></p>
+                        @if (Model.SubmissionList != null && Model.SubmissionList.Any())
+                        {
+                            <h1>Welcome, @Model.SubmissionList.First().Name!</h1>
+                        }
+                        else
+                        {
+                            <h1>Welcome</h1>
+                            <p>No submissions found.</p>
+                        }
                         <small class="text-muted">Trainee</small>
                     </div>
                     <div class="profile-photo">

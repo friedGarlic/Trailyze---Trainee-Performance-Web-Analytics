@@ -38,12 +38,6 @@
                     <h2>Mails</h2>
                     <span class="message-count">3</span>
                 </a>
-                <a href="#">
-                    <span class="material-symbols-outlined">
-                        logout
-                    </span>
-                    <h2>Log Out</h2>
-                </a>
             </div>
         </aside>
         <!-- End of Sidebar Section -->
@@ -62,24 +56,24 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Yas</th>
+                        <th class="p-4">Name</th>
+                        <th class="p-4">Approval Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var i in Model.SubmissionList)
                     {
                         <tr>
-                            <td>
+                            <td class="p-4">
                                 @i.FileName
                             </td>
-                            <td>
+                            <td class="p-4">
                                 @i.ApprovalStatus
                             </td>
                             <td>
-                                <form method="post" asp-controller="Dashboard" asp-action="DeleteFile" asp-route-id="@i.Id">
+                                <form id="approvalForm" method="post" asp-controller="Dashboard" asp-action="DeleteFile" asp-route-id="@i.Id">
                                     <input type="hidden" name="fileName" value="@i.FileName" />
-                                    <button type="submit">Delete</button>
+                                    <button id="deleteButton" type="button">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -96,7 +90,15 @@
 
                 <div class="profile">
                     <div class="info">
-                        <p>Hey, <b>Reza</b></p>
+                        @if (Model.SubmissionList != null && Model.SubmissionList.Any())
+                        {
+                            <h1>Welcome, @Model.SubmissionList.First().Name!</h1>
+                        }
+                        else
+                        {
+                            <h1>Welcome!</h1>
+                            <p>No submissions found.</p>
+                        }
                         <small class="text-muted">Trainee</small>
                     </div>
                     <div class="profile-photo">
@@ -170,3 +172,31 @@
     <script src="~/js/index.js"></script>
 </body>
 </html>
+
+@section Scripts{
+    @{
+        <partial name="_Confirmation" />
+    }
+    <script>
+        document.getElementById('deleteButton').addEventListener('click', function () {
+            confirmDelete();
+        });
+
+        function confirmDelete() {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Manually trigger the form submission
+                    document.getElementById('approvalForm').submit();
+                }
+            });
+        }
+    </script>
+}

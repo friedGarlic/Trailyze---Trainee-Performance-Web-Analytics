@@ -34,7 +34,6 @@ namespace ML_ASP.Controllers
 
 			ViewBag.submissionList = submissionList;
 
-
 			return View(modelList);
         }
 

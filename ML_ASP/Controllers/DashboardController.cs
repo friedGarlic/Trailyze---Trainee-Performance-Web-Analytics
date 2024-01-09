@@ -33,9 +33,19 @@ namespace ML_ASP.Controllers
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
         }
 
+        [Authorize]
         public IActionResult Dashboard()
         {
-            return View();
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            submissionVM = new SubmissionVM()
+            {
+                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value)
+            };
+
+            return View(submissionVM);
         }
 
         [Authorize]
@@ -48,6 +58,7 @@ namespace ML_ASP.Controllers
             {
                 SubmissionList = _unit.Submission.GetAll(u=> u.SubmissionUserId == claim.Value)
             };
+
 
             //TODO show all submission of an guid that is equal to the guid of login
             return View(submissionVM);
@@ -65,6 +76,8 @@ namespace ML_ASP.Controllers
                 System.IO.File.Delete(path);
             }
 
+            TempData["failed"] = "File Deleted";
+
             return RedirectToAction(nameof(FileManagement));
         }
 
@@ -77,6 +90,8 @@ namespace ML_ASP.Controllers
             string projectPath = _environment.ContentRootPath;
             string path = Path.Combine(projectPath, uploadFolderName);
             string fileName = "";
+
+            
 
             if (!Directory.Exists(path))
             {
@@ -92,7 +107,7 @@ namespace ML_ASP.Controllers
                 int attempt = 1;
                 while (System.IO.File.Exists(filePath))
                 {
-                    // If file exists, prompt user for a new name
+                    // if file exists, prompt user for a new name
                     string extension = Path.GetExtension(fileName);
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                     fileName = $"{fileNameWithoutExtension}_{attempt}{extension}";
@@ -123,6 +138,13 @@ namespace ML_ASP.Controllers
                 ViewBag.Prediction = prediction.Prediciton;
             }
 
+            if (postedFiles.Count <= 0)
+            {
+                TempData["failed"] = "No File was Uploaded";
+
+                return RedirectToAction(nameof(FileManagement));
+            }
+
             //adding identity for the one who upload the file
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -151,3 +173,4 @@ namespace ML_ASP.Controllers
         }
     }
 }
+
