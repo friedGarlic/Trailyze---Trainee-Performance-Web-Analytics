@@ -12,6 +12,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 
         IAccountRepository Account { get; }
 
+        ILogRepository Log { get; }
+
         void Save();
     }
 }

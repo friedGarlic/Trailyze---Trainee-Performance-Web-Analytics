@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Accord.IO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.ML;
 using ML_ASP.DataAccess.Repositories;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
+using ML_ASP.Models.Models;
 using ML_ASP.Models.ViewModel;
 //using ML_net.ModelSession_1;
 using ML_net.ModelSession_2;
@@ -59,7 +61,6 @@ namespace ML_ASP.Controllers
                 SubmissionList = _unit.Submission.GetAll(u=> u.SubmissionUserId == claim.Value)
             };
 
-
             //TODO show all submission of an guid that is equal to the guid of login
             return View(submissionVM);
         }
@@ -83,15 +84,13 @@ namespace ML_ASP.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel, Account_Model accModel)
+        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel)
         {
             // --UPLOADING FILE --
             string uploadFolderName = "Uploads";
             string projectPath = _environment.ContentRootPath;
             string path = Path.Combine(projectPath, uploadFolderName);
             string fileName = "";
-
-            
 
             if (!Directory.Exists(path))
             {
@@ -109,6 +108,12 @@ namespace ML_ASP.Controllers
                 {
                     // if file exists, prompt user for a new name
                     string extension = Path.GetExtension(fileName);
+                    if(extension != ".pdf")
+                    {
+                        TempData["failed"] = "Can Only Upload PDF FILES!!";
+
+                        return RedirectToAction(nameof(FileManagement));
+                    }
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                     fileName = $"{fileNameWithoutExtension}_{attempt}{extension}";
                     filePath = Path.Combine(path, fileName);
@@ -151,7 +156,7 @@ namespace ML_ASP.Controllers
             submissionModel.SubmissionUserId = claim.Value;
 
 
-            var fileModel = SubmissionInjection(submissionModel, fileName, _unit.Account.GetFirstAndDefault());
+            var fileModel = SubmissionInjection(submissionModel, fileName);
             _unit.Submission.Add(fileModel);
 
             _unit.Save();
@@ -160,16 +165,44 @@ namespace ML_ASP.Controllers
             return RedirectToAction(nameof(FileManagement)); // Make sure to return a view or redirect after the upload
         }
 
-        public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, Account_Model accModel)
+        public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename)
         {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+
             submissionModel.Date = DateTime.Now;
 
-            submissionModel.Name = submissionModel.Name ?? accModel.FullName;
+            submissionModel.Name = account.FullName;
 
             submissionModel.FileName = filename;
             submissionModel.ApprovalStatus = "Pending";
 
             return submissionModel;
+        }
+
+        [HttpPost]
+        public IActionResult TimeIn()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+
+            LogModel logModel = new LogModel
+            {
+                LogId = account.Id,
+                DateTime = DateTime.Now,
+                Log = "Log In",
+                FullName = account.FullName  // Assuming FullName is a property in AccountModel
+            };
+
+            TempData["success"] = "Logged In Succesfully!";
+
+            //_unit.Log.Add(logModel);
+            //_unit.Save();
+
+            //TODO this function is not adding to db for development purposes
+            return RedirectToAction(nameof(Dashboard)); 
         }
     }
 }

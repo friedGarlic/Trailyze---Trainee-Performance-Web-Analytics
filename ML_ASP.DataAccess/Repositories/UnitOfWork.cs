@@ -17,10 +17,12 @@ namespace ML_ASP.DataAccess.Repositories
             _dbContext = dbContext;
             Submission = new SubmissionRepository(_dbContext);
             Account = new AccountRepository(_dbContext);
+            Log = new LogRepository(_dbContext);
         }
 
         public ISubmissionRepository Submission { get; private set; }
         public IAccountRepository Account { get; private set; }
+        public ILogRepository Log { get; private set; }
 
         public void Save()
         {

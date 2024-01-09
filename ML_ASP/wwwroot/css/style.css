@@ -412,12 +412,25 @@ main .recent-orders a{
 
 .right-section .nav{
     display: flex;
-    justify-content: end;
     gap: 2rem;
 }
 
-.right-section .nav button{
-    display: none;
+.right-section .nav .profile button{
+    background-color: #4CAF50;
+    position: relative;
+    top: 25px;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 45px;
+    width: 90px;
+}
+
+.right-section .nav .profile button:hover {
+    background-color: #45a049;
 }
 
 .right-section .dark-mode{
@@ -449,7 +462,7 @@ main .recent-orders a{
 .right-section .nav .profile{
     display: flex;
     gap: 2rem;
-    text-align: right;
+    text-align: start;
 }
 
 .right-section .nav .profile .profile-photo{

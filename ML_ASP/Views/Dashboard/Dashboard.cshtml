@@ -41,6 +41,12 @@
                     <h2>Mails</h2>
                     <span class="message-count">3</span>
                 </a>
+                <a href="#">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+                    <h2></h2>
+                </a>
             </div>
         </aside>
         <!-- End of Sidebar Section -->
@@ -122,12 +128,12 @@
             <!-- End of Analyses -->
             <!-- Recent Orders Table -->
             <div class="recent-orders">
-                <h2>Recent Sumbission</h2>
+                <h2>Recent Log In's</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>Report</th>
-                            <th>Due Status</th>
+                            <th>DateTime</th>
+                            <th>Evidence</th>
                             <th>Approval Status</th>
                             <th></th>
                         </tr>
@@ -144,6 +150,17 @@
         <div class="right-section">
             <div class="nav">
                 <div class="profile">
+                    <div class="button">
+                        <form method="post" asp-action="TimeIn" asp-controller="Dashboard">
+                            <button type="submit">
+                                <span class="material-symbols-outlined">
+                                    timer
+                                </span>
+                                Time In
+                            </button>
+                        </form>
+                        
+                    </div>
                     <div class="info">
                         @if (Model.SubmissionList != null && Model.SubmissionList.Any())
                         {
