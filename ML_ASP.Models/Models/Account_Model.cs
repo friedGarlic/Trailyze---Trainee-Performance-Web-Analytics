@@ -11,5 +11,8 @@ namespace ML_ASP.Models
 
         [DisplayName("Full Name")]
         public string FullName { get; set; }
+
+        //for viewing
+        public int? WeeklyReportRemaining { get; set; }
     }
 }

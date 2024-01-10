@@ -799,12 +799,10 @@ main .recent-orders a{
     height: 34px;
 }
 
-/* Style for the input checkbox */
 .toggle-input {
     display: none;
 }
 
-/* Style for the slider (the actual toggle button) */
 .toggle-slider {
     position: absolute;
     cursor: pointer;
@@ -817,33 +815,30 @@ main .recent-orders a{
     border-radius: 34px;
 }
 
-    /* Style for the slider when the toggle is switched on */
-    .toggle-slider::before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
+.toggle-slider::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
 
-/* Style for the checkbox when it is checked (slider on the right) */
 .toggle-input:checked + .toggle-slider {
     background-color: #2196F3;
 }
 
-    /* Style for the checkbox when it is checked (slider on the right) */
-    .toggle-input:checked + .toggle-slider::before {
-        transform: translateX(26px);
-    }
-
-.toggle-slider.on {
-    background-color: #2196F3; /* Set the background color for the "on" state */
+.toggle-input:checked + .toggle-slider::before {
+    transform: translateX(26px);
 }
 
-    .toggle-slider.on::before {
-        transform: translateX(26px); /* Move the slider to the right for the "on" state */
-    }
+.toggle-slider.on {
+    background-color: #2196F3;
+}
+
+.toggle-slider.on::before {
+    transform: translateX(26px);
+}

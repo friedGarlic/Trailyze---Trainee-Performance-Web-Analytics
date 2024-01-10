@@ -40,18 +40,25 @@ namespace ML_ASP.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value); //userid
 
-            var accountName = account.FullName;
+			var userId = claim.Value;
+			var accountName = account.FullName;
 
-            ViewBag.AccountName = accountName;
+			ViewBag.AccountName = accountName;
 
             submissionVM = new SubmissionVM()
             {
-                
+                LogList = _unit.Log.GetAll(u => u.LogId == claim.Value)
             };
+            //Get Account List and name ends --------------------------
 
-            return View(submissionVM);
+           var submission = _unit.Submission.GetAll(u => u.SubmissionUserId == userId);
+           int submissionCount = submission.Count();
+
+           ViewBag.SubmissionCount = submissionCount;
+
+           return View(submissionVM);
         }
 
 
@@ -92,11 +99,12 @@ namespace ML_ASP.Controllers
 
             submissionVM = new SubmissionVM()
             {
-                TimeLog = logModel.Log
+                TimeLog = logModel.Log,
+                LogList = _unit.Log.GetAll(u => u.LogId == claim.Value)
             };
 
-            //_unit.Log.Add(logModel);
-            //_unit.Save();
+            _unit.Log.Add(logModel);
+            _unit.Save();
 
             //TODO this function is not adding to db for development purposes
 
@@ -195,6 +203,7 @@ namespace ML_ASP.Controllers
 
                 ViewBag.Prediction = prediction.Prediciton;
             }
+            //UPLOADING FILES ENDS-------------
 
             if (postedFiles.Count <= 0)
             {
@@ -202,17 +211,20 @@ namespace ML_ASP.Controllers
 
                 return RedirectToAction(nameof(FileManagement));
             }
+            //VERIFICATION OF NO UPLOAD SUBMIT ENDS--------------
+
 
             //adding identity for the one who upload the file
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             submissionModel.SubmissionUserId = claim.Value;
 
-
             var fileModel = SubmissionInjection(submissionModel, fileName);
-            _unit.Submission.Add(fileModel);
 
+            _unit.Submission.Add(fileModel);
             _unit.Save();
+            //DATABASE COLLERATION ENDS------------
+
             TempData["success"] = "Uploaded Succesfully!";
 
             return RedirectToAction(nameof(FileManagement)); // Make sure to return a view or redirect after the upload

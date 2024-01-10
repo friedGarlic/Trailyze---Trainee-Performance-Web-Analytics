@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.etc;
 using ML_ASP.Models;
 using System.CodeDom;
+using System.Security.Claims;
 
 namespace ML_ASP.Controllers
 {
@@ -21,8 +23,13 @@ namespace ML_ASP.Controllers
         }
 
         public IActionResult Admin()
-        {
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+			IEnumerable<IdentityUser> accountList = _unit.Account.GetAll();
 			IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
+
 			List<string> options = new List<string> { "Approved", "Declined", "Remake" };
 
 			IEnumerable<SelectListItem> submissionList = options.Select(option => new SelectListItem
@@ -31,8 +38,12 @@ namespace ML_ASP.Controllers
 				Value = option
 			});
 
+			var submissionCount = modelList.Count();
+			int accountCount = accountList.Select(u => u.Id).Distinct().Count();
 
-			ViewBag.submissionList = submissionList;
+			ViewBag.AccountCount = accountCount;
+			ViewBag.SubmissionCount = submissionCount;
+            ViewBag.submissionList = submissionList;
 
 			return View(modelList);
         }

@@ -91,7 +91,7 @@
                     <div class="status">
                         <div class="info">
                             <h3>Task Completed</h3>
-                            <h1>5 Modules</h1>
+                            <h1>@ViewBag.SubmissionCount Submission</h1>
                         </div>
                         <div class="progress">
                             <span class="material-symbols-outlined">
@@ -132,13 +132,32 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>DateTime</th>
-                            <th>Evidence</th>
-                            <th>Approval Status</th>
-                            <th></th>
+                            <th class="p-4">FullName</th>
+                            <th class="p-4">DateTime</th>
+                            <th class="p-4">Log Status</th>
+                            <th class="p-4">Evidence</th>
+                            <th class="p-4"></th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        @foreach (var i in Model.LogList)
+                        {
+                            <tr>
+                                <td class="p-4">
+                                    @i.FullName
+                                </td>
+                                <td class="p-4">
+                                    @i.DateTime
+                                </td>
+                                <td class="p-4">
+                                    @i.Log
+                                </td>
+                                <td>
+                                   <!-- REMAINING SPACE FOR DELETING BUTTON-->
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
                 <a href="#">Show All</a>
             </div>
@@ -151,10 +170,7 @@
             <div class="nav">
                 <div class="profile">
                     <div class="button">
-
-                        
-
-
+                        <!-- reverse pyschology of default returns in toggle buttons see controller for and put debug break to understand -->
                         <form method="post" id="toggleForm" asp-action="Dashboard" asp-controller="Dashboard">
                             @if(Model.TimeLog == "Timed In")
                             {
@@ -169,14 +185,8 @@
                                 <span class="toggle-slider"></span>
                             </label>
                             }
-
                         </form>
-
-
-
-
-
-
+                        <!-- TIME LOG TOGGLE BUTTON ENDS -->
                     </div>
                     <div class="info">
                         <h3>Welcome, <b>@ViewBag.AccountName</b></h3>

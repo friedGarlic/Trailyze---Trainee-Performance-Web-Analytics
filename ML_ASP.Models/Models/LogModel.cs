@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace ML_ASP.Models.Models
 {
     public class LogModel
     {
+        [Key]
         public int Id { get; set; }
 
         public string LogId { get; set; }
@@ -23,5 +25,9 @@ namespace ML_ASP.Models.Models
 
         [DisplayName("Full Name")]
         public string FullName { get; set; }
+
+        //for viewing
+        public double? HoursRemaining { get; set; }
+        public double? HoursCompleted { get; set; }
     }
 }
