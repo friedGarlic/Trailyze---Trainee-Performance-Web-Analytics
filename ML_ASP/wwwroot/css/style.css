@@ -418,14 +418,14 @@ main .recent-orders a{
 .right-section .nav .profile button{
     background-color: #4CAF50;
     position: relative;
-    top: 25px;
+    top: -15px;
     color: white;
     font-size: 14px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    height: 45px;
+    height: 75px;
     width: 90px;
 }
 
@@ -748,46 +748,102 @@ main .recent-orders a{
 
 }
 
-    .charts{
-        top: 15px;
-        position: relative;
-        background-color: var(--color-background);
-        padding: 25px;
-        border-radius: var(--border-radius-1);
-        box-shadow: 16px;
-        box-shadow: var(--box-shadow);
-    }
+.charts{
+    top: 15px;
+    position: relative;
+    background-color: var(--color-background);
+    padding: 25px;
+    border-radius: var(--border-radius-1);
+    box-shadow: 16px;
+    box-shadow: var(--box-shadow);
+}
 
-    .charts .pulse{
-        background: #3498db;
-        width: 14px;
-        height: 14px;
-        border-radius: var(--border-radius-2);
-    }
+.charts .pulse{
+    background: #3498db;
+    width: 14px;
+    height: 14px;
+    border-radius: var(--border-radius-2);
+}
 
-    .charts .pulse::after
-    {
-        content: "";
-        position: absolute;
-        left: -1px;
-        top: -1px;
-        height: 100%;
-        width: 100%;
-        border-radius: var(--border-radius-1);
-        border: 0.1px solid #3498db;
-        transform-origin: center;
-        opacity: 0.8;
+.charts .pulse::after
+{
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    height: 100%;
+    width: 100%;
+    border-radius: var(--border-radius-1);
+    border: 0.1px solid #3498db;
+    transform-origin: center;
+    opacity: 0.8;
+    scale: 0;
+    animation: pulse 3s center;
+}
+
+@keyframes pulse{
+    70%{
         scale: 0;
-        animation: pulse 3s center;
+        opacity: 0.8;
+    }
+    100%{
+        scale: 3;
+        opacity: 0;
+    }
+}
+
+.toggle-container {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 34px;
+}
+
+/* Style for the input checkbox */
+.toggle-input {
+    display: none;
+}
+
+/* Style for the slider (the actual toggle button) */
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    /* Style for the slider when the toggle is switched on */
+    .toggle-slider::before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
     }
 
-    @keyframes pulse{
-        70%{
-            scale: 0;
-            opacity: 0.8;
-        }
-        100%{
-            scale: 3;
-            opacity: 0;
-        }
+/* Style for the checkbox when it is checked (slider on the right) */
+.toggle-input:checked + .toggle-slider {
+    background-color: #2196F3;
+}
+
+    /* Style for the checkbox when it is checked (slider on the right) */
+    .toggle-input:checked + .toggle-slider::before {
+        transform: translateX(26px);
+    }
+
+.toggle-slider.on {
+    background-color: #2196F3; /* Set the background color for the "on" state */
+}
+
+    .toggle-slider.on::before {
+        transform: translateX(26px); /* Move the slider to the right for the "on" state */
     }

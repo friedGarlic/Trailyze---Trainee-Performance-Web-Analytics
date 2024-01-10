@@ -151,26 +151,35 @@
             <div class="nav">
                 <div class="profile">
                     <div class="button">
-                        <form method="post" asp-action="TimeIn" asp-controller="Dashboard">
-                            <button type="submit">
-                                <span class="material-symbols-outlined">
-                                    timer
-                                </span>
-                                Time In
-                            </button>
-                        </form>
+
                         
+
+
+                        <form method="post" id="toggleForm" asp-action="Dashboard" asp-controller="Dashboard">
+                            @if(Model.TimeLog == "Timed In")
+                            {
+                                <label class="toggle-container" for="IsTimedIn">
+                                    <input type="checkbox" class="toggle-input" id="IsTimedIn" name="IsTimedIn" value="true">
+                                    <span class="toggle-slider on"></span>
+                                </label>
+                            }
+                            @if(Model.TimeLog != "Timed In"){
+                            <label class="toggle-container" for="IsTimedIn">
+                                <input type="checkbox" class="toggle-input" id="IsTimedIn" name="IsTimedIn" value="false">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            }
+
+                        </form>
+
+
+
+
+
+
                     </div>
                     <div class="info">
-                        @if (Model.SubmissionList != null && Model.SubmissionList.Any())
-                        {
-                            <h1>Welcome, @Model.SubmissionList.First().Name!</h1>
-                        }
-                        else
-                        {
-                            <h1>Welcome</h1>
-                            <p>No submissions found.</p>
-                        }
+                        <h3>Welcome, <b>@ViewBag.AccountName</b></h3>
                         <small class="text-muted">Trainee</small>
                     </div>
                     <div class="profile-photo">
@@ -245,7 +254,13 @@
     <script src="~/js/orders.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="~/js/site.js"></script>
-
+    <script>
+        document.getElementById("IsTimedIn").addEventListener("click", function () {
+            var slider = document.querySelector(".toggle-slider");
+            slider.classList.toggle("on");
+            document.getElementById("toggleForm").submit();
+        });
+    </script>
 </body>
 
 </html>

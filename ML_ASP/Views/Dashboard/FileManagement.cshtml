@@ -98,7 +98,7 @@
                     <div class="info">
                         @if (Model.SubmissionList != null && Model.SubmissionList.Any())
                         {
-                            <h1>Welcome, @Model.SubmissionList.First().Name!</h1>
+                            <h1>Welcome, @ViewBag.AccountName</h1>
                         }
                         else
                         {

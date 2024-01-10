@@ -38,14 +38,67 @@ namespace ML_ASP.Controllers
         [Authorize]
         public IActionResult Dashboard()
         {
-
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+
+            var accountName = account.FullName;
+
+            ViewBag.AccountName = accountName;
 
             submissionVM = new SubmissionVM()
             {
-                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value)
+                
             };
+
+            return View(submissionVM);
+        }
+
+
+        // --------- ONLY FOR TIME LOG PURPOSES-----------------
+        [HttpPost]
+        [Authorize]
+        public IActionResult Dashboard(bool IsTimedIn)
+        {
+            //stuck 2nd when trying to time out IsTimedIn stays true
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+
+            var accountName = account.FullName;
+
+            ViewBag.AccountName = accountName;
+
+            LogModel logModel = new LogModel();
+
+            if (IsTimedIn == false)
+            {
+                logModel.LogId = account.Id;
+                logModel.DateTime = DateTime.Now;
+                logModel.Log = "Timed In";
+                logModel.FullName = account.FullName;
+
+                TempData["success"] = "Timed In Succesfully!";
+            }
+            else
+            {
+                logModel.LogId = account.Id;
+                logModel.DateTime = DateTime.Now;
+                logModel.Log = "Timed Out";
+                logModel.FullName = account.FullName;
+
+                TempData["success"] = "Timed Out Succesfully!";
+            }
+
+            submissionVM = new SubmissionVM()
+            {
+                TimeLog = logModel.Log
+            };
+
+            //_unit.Log.Add(logModel);
+            //_unit.Save();
+
+            //TODO this function is not adding to db for development purposes
 
             return View(submissionVM);
         }
@@ -181,29 +234,6 @@ namespace ML_ASP.Controllers
             return submissionModel;
         }
 
-        [HttpPost]
-        public IActionResult TimeIn()
-        {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
-
-            LogModel logModel = new LogModel
-            {
-                LogId = account.Id,
-                DateTime = DateTime.Now,
-                Log = "Log In",
-                FullName = account.FullName  // Assuming FullName is a property in AccountModel
-            };
-
-            TempData["success"] = "Logged In Succesfully!";
-
-            //_unit.Log.Add(logModel);
-            //_unit.Save();
-
-            //TODO this function is not adding to db for development purposes
-            return RedirectToAction(nameof(Dashboard)); 
-        }
     }
 }
 
