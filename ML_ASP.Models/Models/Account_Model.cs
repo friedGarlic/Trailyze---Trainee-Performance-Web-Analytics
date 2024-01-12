@@ -14,5 +14,8 @@ namespace ML_ASP.Models
 
         //for viewing
         public int? WeeklyReportRemaining { get; set; }
+
+        public double? HoursRemaining { get; set; }
+        public double? HoursCompleted { get; set; }
     }
 }

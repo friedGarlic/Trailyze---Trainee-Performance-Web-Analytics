@@ -64,22 +64,25 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
-            public int RemainingHours { get; set; }
+            public double? RemainingHours { get; set; }
+            public int? WeeklyReportRemaining { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            
+            var remainingHours = _unit.Account.GetRemainingHours(user);
+            var remainingReports = _unit.Account.GetRemainingReports(user);
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                RemainingHours = remainingHours,
+                WeeklyReportRemaining = remainingReports
             };
-
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -118,6 +121,30 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            if (Input.RemainingHours != null || Input.RemainingHours != 0)
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+                account.Id = claim.Value;
+
+                account.HoursRemaining = Input.RemainingHours;
+                _unit.Account.Update(account,account.Id);
+                _unit.Save();
+            }
+            if (Input.WeeklyReportRemaining != null || Input.WeeklyReportRemaining != 0)
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+                account.Id = claim.Value;
+
+                account.WeeklyReportRemaining = Input.WeeklyReportRemaining;
+                _unit.Account.Update(account, account.Id);
+                _unit.Save();
+            }
+
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

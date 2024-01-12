@@ -1,4 +1,5 @@
-﻿using ML_ASP.DataAccess.Repositories.IRepositories;
+﻿using Microsoft.AspNetCore.Identity;
+using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,32 @@ namespace ML_ASP.DataAccess.Repositories
 			return _dbContext.Accounts.FirstOrDefault();
         }
 
-		public void Update(Account_Model model)
+		public void Update(Account_Model model, string id)
 		{
-			_dbContext.Update(model);
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
+            if (objFromDb != null)
+            {
+                objFromDb.HoursRemaining = model.HoursRemaining;
+				objFromDb.WeeklyReportRemaining = model.WeeklyReportRemaining;
+            }
 		}
-	}
+
+		public double? GetRemainingHours(IdentityUser user)
+		{
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
+
+			var remain = objFromDb.HoursRemaining;
+
+            return remain;
+        }
+
+        public int? GetRemainingReports(IdentityUser user)
+        {
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
+
+            var remain = objFromDb.WeeklyReportRemaining;
+
+            return remain;
+        }
+    }
 }

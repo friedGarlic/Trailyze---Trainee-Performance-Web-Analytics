@@ -18,5 +18,7 @@ namespace ML_ASP.Models.ViewModel
 		public IEnumerable<LogModel> LogList { get; set; }
 
 		public LogModel LogModel { get; set; }
+
+		public string Prediction { get; set; }
 	}
 }

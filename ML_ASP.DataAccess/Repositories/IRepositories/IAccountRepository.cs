@@ -1,4 +1,5 @@
-﻿using ML_ASP.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using ML_ASP.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 {
 	public interface IAccountRepository : IRepository<Account_Model>
 	{
-		public void Update(Account_Model model);
+		public void Update(Account_Model model, string id);
 		public Account_Model GetFirstAndDefault();
-	}
+		public double? GetRemainingHours(IdentityUser user);
+		public int? GetRemainingReports(IdentityUser user);
+    }
 }

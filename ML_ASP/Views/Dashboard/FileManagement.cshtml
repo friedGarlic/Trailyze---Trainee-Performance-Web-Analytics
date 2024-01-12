@@ -50,12 +50,11 @@
         <!-- Main Content -->
         <main style="width: 700px;">
             <div class="prediction"> 
-                <h2>Prediction Result:</h2> 
-                <p>@ViewBag.Prediction</p> 
+                <h2>Prediction Result: @Model.Prediction </h2> 
+                
                 <form method="post" enctype="multipart/form-data" asp-controller="Dashboard" asp-action="FileManagement"> 
                     <span>Select File:</span> <input type="file" name="postedFiles" multiple /> 
                     <input type="submit" value="Upload" /> <br /> 
-                    <span style="color:green">@Html.Raw(ViewBag.Message)</span> 
                 </form>
             </div>
 
@@ -174,8 +173,6 @@
 
         </div>
     </div>
-
-    <script src="~/js/index.js"></script>
 </body>
 </html>
 
@@ -187,7 +184,6 @@
         document.getElementById('deleteButton').addEventListener('click', function () {
             confirmDelete();
         });
-
         function confirmDelete() {
             Swal.fire({
                 title: "Are you sure?",

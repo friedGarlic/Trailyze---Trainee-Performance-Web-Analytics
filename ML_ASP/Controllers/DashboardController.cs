@@ -53,10 +53,13 @@ namespace ML_ASP.Controllers
             };
             //Get Account List and name ends --------------------------
 
-           var submission = _unit.Submission.GetAll(u => u.SubmissionUserId == userId);
-           int submissionCount = submission.Count();
+            var submission = _unit.Submission.GetAll(u => u.SubmissionUserId == userId);
+            int submissionCount = submission.Count();
 
-           ViewBag.SubmissionCount = submissionCount;
+            ViewBag.SubmissionCount = submissionCount;
+            //
+            ViewBag.RemainingHours = account.HoursRemaining;
+            ViewBag.RemainingReports = account.WeeklyReportRemaining;
 
             //for development purposes
             //if(account.WeeklyReportRemaining == null)
@@ -134,6 +137,7 @@ namespace ML_ASP.Controllers
             return View(submissionVM);
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult DeleteFile(int id, string fileName)
         {
@@ -160,6 +164,7 @@ namespace ML_ASP.Controllers
             string projectPath = _environment.ContentRootPath;
             string path = Path.Combine(projectPath, uploadFolderName);
             string fileName = "";
+            Prediction prediction = null;
 
             if (!Directory.Exists(path))
             {
@@ -177,7 +182,7 @@ namespace ML_ASP.Controllers
                 {
                     // if file exists, prompt user for a new name
                     string extension = Path.GetExtension(fileName);
-                    if(extension != ".pdf")
+                    if (extension != ".pdf")
                     {
                         TempData["failed"] = "Can Only Upload PDF FILES!!";
 
@@ -207,9 +212,8 @@ namespace ML_ASP.Controllers
                     Grade = num
                 };
 
-                var prediction = _predictionEngine.Predict(new_data);
+                prediction = _predictionEngine.Predict(new_data);
 
-                ViewBag.Prediction = prediction.Prediciton;
             }
             //UPLOADING FILES ENDS-------------
 
@@ -235,7 +239,13 @@ namespace ML_ASP.Controllers
 
             TempData["success"] = "Uploaded Succesfully!";
 
-            return RedirectToAction(nameof(FileManagement)); // Make sure to return a view or redirect after the upload
+            submissionVM = new SubmissionVM()
+            {
+                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value),
+                Prediction = prediction.Prediciton.ToString()
+            };
+
+            return View(submissionVM);
         }
 
         public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename)
