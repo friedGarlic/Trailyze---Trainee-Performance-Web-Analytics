@@ -58,6 +58,14 @@ namespace ML_ASP.Controllers
 
            ViewBag.SubmissionCount = submissionCount;
 
+            //for development purposes
+            //if(account.WeeklyReportRemaining == null)
+            //{
+            //    account.WeeklyReportRemaining = 20;
+            //    _unit.Account.Add(account);
+            //    _unit.Save();
+            //}
+
            return View(submissionVM);
         }
 
@@ -246,6 +254,107 @@ namespace ML_ASP.Controllers
             return submissionModel;
         }
 
+        public ActionResult ViewImage(string fileName)
+        {
+            string path = Path.Combine(_environment.ContentRootPath + "\\Images", fileName);
+            string contentType = GetContentType(fileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                return File(System.IO.File.ReadAllBytes(path), contentType);
+            }
+            else
+            {
+                TempData["failed"] = "File Not Found";
+                return NotFound();
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult UploadImage(List<IFormFile> postedImages, int id)
+        {
+            string uploadFolderName = "Images";
+            string projectPath = _environment.ContentRootPath;
+            string path = Path.Combine(projectPath, uploadFolderName);
+            string fileName = "";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            List<string> uploadedImages = new List<string>();
+            foreach (IFormFile postedImage in postedImages)
+            {
+                fileName = Path.GetFileName(postedImage.FileName);
+                string filePath = Path.Combine(path, fileName);
+
+                int attempt = 1;
+                while (System.IO.File.Exists(filePath))
+                {
+                    // If the file exists, prompt the user for a new name
+                    string extension = Path.GetExtension(fileName);
+                    if (!IsImageFile(extension))
+                    {
+                        TempData["failed"] = "Can Only Upload Image FILES!!";
+
+                        return RedirectToAction(nameof(Dashboard));
+                    }
+
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+                    fileName = $"{fileNameWithoutExtension}_{attempt}{extension}";
+                    filePath = Path.Combine(path, fileName);
+                    attempt++;
+                }
+
+                using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                {
+                    postedImage.CopyTo(stream);
+                    uploadedImages.Add(fileName);
+                    ViewBag.Message += string.Format("<b>{0}</b> uploaded.<br />", fileName);
+                }
+            }
+
+            LogModel logModel = new LogModel();
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier); 
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+            var accountName = account.FullName;
+
+            logModel.ImageUrl = claim.Value;
+
+            _unit.Log.Update(logModel, fileName,accountName, id);
+            _unit.Save();
+
+            return RedirectToAction(nameof(Dashboard));
+        }
+        // ------------------------ HELPER METHODS ------------------------------------//
+        private bool IsImageFile(string extension)
+        {
+            string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+            return imageExtensions.Contains(extension.ToLower());
+        }
+
+        private string GetContentType(string fileName)
+        {
+            string extension = Path.GetExtension(fileName)?.ToLowerInvariant();
+
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+                case ".png":
+                    return "image/png";
+                case ".gif":
+                    return "image/gif";
+                // add more cases for other image formats as needed
+                default:
+                    return "application/octet-stream";
+            }
+        }
     }
 }
 

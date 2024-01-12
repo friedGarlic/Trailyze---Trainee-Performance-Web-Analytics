@@ -11,5 +11,6 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
     public interface ILogRepository : IRepository<LogModel>
     {
         public void Update(LogModel logModel);
+        public void Update(LogModel logModel, string fileName, string fullName, int id);
     }
 }

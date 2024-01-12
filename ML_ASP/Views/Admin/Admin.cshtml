@@ -14,7 +14,6 @@
 	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 	<!-- My CSS -->
 	<link rel="stylesheet" href="~/css/adminStyle.css">
-
 	<title>AdminHub</title>
 </head>
 <body>
@@ -39,26 +38,14 @@
 					<span class="text">Analytics</span>
 				</a>
 			</li>
-			<li>
-				<a href="#">
-					<i class='bx bxs-message-dots'></i>
-					<span class="text">Message</span>
-				</a>
-			</li>
-			<li>
-				<a href="#">
-					<i class='bx bxs-group'></i>
-					<span class="text">Team</span>
-				</a>
-			</li>
 		</ul>
 		<ul class="side-menu">
-			<li>
+			<!--<li>
 				<a href="#" class="logout">
 					<i class='bx bxs-log-out-circle'></i>
 					<span class="text">Logout</span>
 				</a>
-			</li>
+			</li>-->
 		</ul>
 	</section>
 	<!-- SIDEBAR -->
@@ -102,7 +89,7 @@
 				</div>
 				<a href="#" class="btn-download">
 					<i class='bx bxs-cloud-download'></i>
-					<span class="text">Download PDF</span>
+					<span>Download PDF</span>
 				</a>
 			</div>
 
@@ -139,14 +126,13 @@
 						<i class='bx bx-filter'></i>
 					</div>
 					<form id="approvalForm" asp-controller="Admin" asp-action="UpdateApprovalStatusBulk" method="post">
-						<table>
+						<table id="submissionTable">
 							<thead>
 								<tr>
 									<th>User</th>
 									<th>Date Submitted</th>
 									<th>Status</th>
 									<th>Approval</th>
-									<th>Grade</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -162,6 +148,9 @@
 											</select>
 											<input type="hidden" name="originalApprovalStatus" value="@i.ApprovalStatus" />
 											<input type="hidden" name="id" value="@i.Id" />
+										</td>
+										<td>
+											<a href="../Admin/ViewPdf?fileName=@i.FileName" target="_blank">View</a>
 										</td>
 									</tr>
 								}
@@ -189,8 +178,6 @@
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
-
-
 	<script src="~/js/adminScript.js"></script>
 </body>
 </html>
@@ -218,5 +205,7 @@
 				}
 			});
 		}
+
+		
 	</script>
 }

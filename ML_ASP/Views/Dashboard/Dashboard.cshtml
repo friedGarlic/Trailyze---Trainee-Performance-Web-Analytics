@@ -153,6 +153,21 @@
                                     @i.Log
                                 </td>
                                 <td>
+                                    @if (i.LogImageUrl == null)
+                                    {
+                                        <form method="post" enctype="multipart/form-data" asp-controller="Dashboard" asp-action="UploadImage" asp-route-id="@i.Id">
+                                            <input type="file" name="postedImages" multiple />
+                                            <input type="submit" value="Upload" />
+                                            <span style="color:green">@Html.Raw(ViewBag.Message)</span>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        @i.LogImageUrl
+                                    }
+                                </td>
+                                <td><a href="../Dashboard/ViewImage?fileName=@i.LogImageUrl" target="_blank">View</a></td>
+                                <td>
                                    <!-- REMAINING SPACE FOR DELETING BUTTON-->
                                 </td>
                             </tr>

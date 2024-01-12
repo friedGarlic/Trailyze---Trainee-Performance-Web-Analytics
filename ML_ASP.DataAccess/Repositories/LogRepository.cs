@@ -18,6 +18,18 @@ namespace ML_ASP.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
+        public void Update(LogModel logModel, string fileName, string fullName, int id)
+        {
+            var objFromDb = _dbContext.Logs.FirstOrDefault(u => u.Id == id);
+            if (objFromDb != null)
+            {
+                objFromDb.LogImageUrl = fileName;
+                objFromDb.FullName = fullName;
+            }
+
+            _dbContext.Update(objFromDb);
+        }
+
         public void Update(LogModel logModel)
         {
             _dbContext.Update(logModel);

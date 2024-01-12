@@ -13,8 +13,10 @@ namespace ML_ASP.Models.ViewModel
 
 		public string AccountName { get; set; }
 
-		public string TimeLog { get; set; } = "Timed Out";
+		public string TimeLog { get; set; }
 
 		public IEnumerable<LogModel> LogList { get; set; }
+
+		public LogModel LogModel { get; set; }
 	}
 }

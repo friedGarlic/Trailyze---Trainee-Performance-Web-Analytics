@@ -26,8 +26,5 @@ namespace ML_ASP.Models.Models
         [DisplayName("Full Name")]
         public string FullName { get; set; }
 
-        //for viewing
-        public double? HoursRemaining { get; set; }
-        public double? HoursCompleted { get; set; }
     }
 }

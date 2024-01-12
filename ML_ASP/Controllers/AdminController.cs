@@ -1,19 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using iText.Layout.Element;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.etc;
 using ML_ASP.Models;
 using System.CodeDom;
+using System.Drawing;
 using System.Security.Claims;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace ML_ASP.Controllers
 {
     public class AdminController : Controller
     {
         private readonly IUnitOfWork _unit;
-        public AdminController(IUnitOfWork unit)
+		private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
+
+		public AdminController(IUnitOfWork unit,
+			Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment)
         {
+			_environment = environment;
             _unit = unit;
         }
 
@@ -65,6 +72,21 @@ namespace ML_ASP.Controllers
 			_unit.Save();
 
 			return RedirectToAction("Admin");
+		}
+
+		public ActionResult ViewPdf(string fileName)
+		{
+			string path = Path.Combine(_environment.ContentRootPath + "\\Uploads", fileName);
+
+			if (System.IO.File.Exists(path))
+			{
+				return File(System.IO.File.ReadAllBytes(path), "application/pdf");
+			}
+			else
+			{
+				TempData["failed"] = "File Not Found";
+				return NotFound();
+			}
 		}
 
 	}

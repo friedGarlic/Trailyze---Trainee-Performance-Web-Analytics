@@ -4,11 +4,13 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ML_ASP.DataAccess.Repositories.IRepositories;
 
 namespace ML_ASP.Areas.Identity.Pages.Account.Manage
 {
@@ -16,13 +18,16 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IUnitOfWork _unit;
 
         public IndexModel(
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<IdentityUser> signInManager,
+            IUnitOfWork unit)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _unit = unit;
         }
 
         /// <summary>
@@ -58,12 +63,15 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            public int RemainingHours { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            
 
             Username = userName;
 
@@ -71,6 +79,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
             {
                 PhoneNumber = phoneNumber
             };
+
         }
 
         public async Task<IActionResult> OnGetAsync()
