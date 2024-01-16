@@ -1,6 +1,7 @@
 ﻿using Accord.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.ML;
 using ML_ASP.DataAccess.Repositories;
 using ML_ASP.DataAccess.Repositories.IRepositories;
@@ -42,10 +43,11 @@ namespace ML_ASP.Controllers
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value); //userid
 
-			var userId = claim.Value;
+            var userId = claim.Value;
 			var accountName = account.FullName;
 
-			ViewBag.AccountName = accountName;
+            
+            ViewBag.AccountName = accountName;
 
             submissionVM = new SubmissionVM()
             {
@@ -61,13 +63,6 @@ namespace ML_ASP.Controllers
             ViewBag.RemainingHours = account.HoursRemaining;
             ViewBag.RemainingReports = account.WeeklyReportRemaining;
 
-            //for development purposes
-            //if(account.WeeklyReportRemaining == null)
-            //{
-            //    account.WeeklyReportRemaining = 20;
-            //    _unit.Account.Add(account);
-            //    _unit.Save();
-            //}
 
            return View(submissionVM);
         }
