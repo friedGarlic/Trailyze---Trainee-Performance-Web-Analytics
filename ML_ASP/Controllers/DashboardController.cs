@@ -55,6 +55,17 @@ namespace ML_ASP.Controllers
             };
             //Get Account List and name ends --------------------------
 
+            //retrieve last entry
+            //so it stays as Timed in if timed in
+            var lastLogEntry = _unit.Log.GetAll(u => u.LogId == claim.Value)
+                                   .OrderByDescending(u => u.DateTime)
+                                   .FirstOrDefault();
+
+            bool initialIsTimedIn = lastLogEntry != null && lastLogEntry.Log == "Timed In";
+
+            ViewBag.InitialIsTimedIn = initialIsTimedIn;
+
+            //getters
             var submission = _unit.Submission.GetAll(u => u.SubmissionUserId == userId);
             int submissionCount = submission.Count();
 
@@ -62,7 +73,6 @@ namespace ML_ASP.Controllers
             //
             ViewBag.RemainingHours = account.HoursRemaining;
             ViewBag.RemainingReports = account.WeeklyReportRemaining;
-
 
            return View(submissionVM);
         }
