@@ -37,6 +37,7 @@ namespace ML_ASP.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public IActionResult Dashboard()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -124,7 +125,7 @@ namespace ML_ASP.Controllers
 
             //TODO this function is not adding to db for development purposes
 
-            return View(submissionVM);
+            return RedirectToAction(nameof(Dashboard));
         }
 
         [Authorize]
@@ -271,18 +272,27 @@ namespace ML_ASP.Controllers
 
         public ActionResult ViewImage(string fileName)
         {
-            string path = Path.Combine(_environment.ContentRootPath + "\\Images", fileName);
-            string contentType = GetContentType(fileName);
-
-            if (System.IO.File.Exists(path))
+            if (fileName != null)
             {
-                return File(System.IO.File.ReadAllBytes(path), contentType);
+                string path = Path.Combine(_environment.ContentRootPath + "\\Images", fileName);
+                string contentType = GetContentType(fileName);
+
+                if (System.IO.File.Exists(path))
+                {
+                    return File(System.IO.File.ReadAllBytes(path), contentType);
+                }
+                else
+                {
+                    TempData["failed"] = "File Not Found";
+                    return NotFound();
+                }
             }
             else
             {
-                TempData["failed"] = "File Not Found";
-                return NotFound();
+                RedirectToAction(nameof(Dashboard));
             }
+
+            RedirectToAction(nameof(Dashboard));
         }
 
         [Authorize]
