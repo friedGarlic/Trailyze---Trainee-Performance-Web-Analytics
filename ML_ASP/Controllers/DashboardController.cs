@@ -289,10 +289,8 @@ namespace ML_ASP.Controllers
             }
             else
             {
-                RedirectToAction(nameof(Dashboard));
+                return RedirectToAction(nameof(Dashboard));
             }
-
-            RedirectToAction(nameof(Dashboard));
         }
 
         [Authorize]
