@@ -163,8 +163,11 @@ namespace ML_ASP.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult FileManagement(List<IFormFile> postedFiles, SubmissionModel submissionModel)
+        public IActionResult FileManagement(List<IFormFile> postedFiles)
         {
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             // --UPLOADING FILE --
             string uploadFolderName = "Uploads";
             string projectPath = _environment.ContentRootPath;
@@ -180,6 +183,7 @@ namespace ML_ASP.Controllers
             List<string> uploadedFiles = new List<string>();
             foreach (IFormFile postedFile in postedFiles)
             {
+                var submissionModel = new SubmissionModel();
                 fileName = Path.GetFileName(postedFile.FileName);
                 string filePath = Path.Combine(path, fileName);
 
@@ -220,6 +224,13 @@ namespace ML_ASP.Controllers
 
                 prediction = _predictionEngine.Predict(new_data);
 
+                //adding identity for the one who upload the file
+                submissionModel.SubmissionUserId = claim.Value;
+
+                var fileModel = SubmissionInjection(submissionModel, fileName);
+
+                _unit.Submission.Add(fileModel);
+                _unit.Save();
             }
             //UPLOADING FILES ENDS-------------
 
@@ -231,25 +242,13 @@ namespace ML_ASP.Controllers
             }
             //VERIFICATION OF NO UPLOAD SUBMIT ENDS--------------
 
-
-            //adding identity for the one who upload the file
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-            submissionModel.SubmissionUserId = claim.Value;
-
-            var fileModel = SubmissionInjection(submissionModel, fileName);
-
-            _unit.Submission.Add(fileModel);
-            _unit.Save();
+            submissionVM = new SubmissionVM()
+            {
+                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value)
+            };
             //DATABASE COLLERATION ENDS------------
 
             TempData["success"] = "Uploaded Succesfully!";
-
-            submissionVM = new SubmissionVM()
-            {
-                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value),
-                Prediction = prediction.Prediciton.ToString()
-            };
 
             return View(submissionVM);
         }

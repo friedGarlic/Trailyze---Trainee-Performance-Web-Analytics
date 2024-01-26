@@ -22,5 +22,6 @@ namespace ML_ASP.Models
 
         public string? Details { get; set; }
 
+        public string? Grade { get; set; }
     }
 }
