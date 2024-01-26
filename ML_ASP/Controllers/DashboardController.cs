@@ -165,42 +165,58 @@ namespace ML_ASP.Controllers
         [Authorize]
         public IActionResult FileManagement(List<IFormFile> postedFiles)
         {
-
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             // --UPLOADING FILE --
             string uploadFolderName = "Uploads";
+            string submissionFolderName = "Submission";
             string projectPath = _environment.ContentRootPath;
-            string path = Path.Combine(projectPath, uploadFolderName);
-            string fileName = "";
+            string uploadPath = Path.Combine(projectPath, uploadFolderName);
+            string submissionPath = uploadPath; // Default to the Uploads folder
             Prediction prediction = null;
 
-            if (!Directory.Exists(path))
+
+            bool submissionIsGreaterThan1 = false;
+
+            if (postedFiles.Count > 1)
             {
-                Directory.CreateDirectory(path);
+                submissionIsGreaterThan1 = true;
+                submissionPath = Path.Combine(uploadPath, submissionFolderName);
+
+                if (!Directory.Exists(submissionPath))
+                {
+                    Directory.CreateDirectory(submissionPath);
+                }
+                else
+                {
+                    // If "Submission" folder already exists, find the next available name
+                    int attempt = 1;
+                    while (Directory.Exists(submissionPath))
+                    {
+                        submissionFolderName = $"Submission_{attempt}";
+                        submissionPath = Path.Combine(uploadPath, submissionFolderName);
+                        attempt++;
+                    }
+
+                    Directory.CreateDirectory(submissionPath);
+                }
             }
 
             List<string> uploadedFiles = new List<string>();
             foreach (IFormFile postedFile in postedFiles)
             {
                 var submissionModel = new SubmissionModel();
-                fileName = Path.GetFileName(postedFile.FileName);
-                string filePath = Path.Combine(path, fileName);
+                string fileName = Path.GetFileName(postedFile.FileName);
+                string filePath = Path.Combine(submissionPath, fileName);
 
                 int attempt = 1;
                 while (System.IO.File.Exists(filePath))
                 {
-                    // if file exists, prompt user for a new name
+                    // Handle file name conflict as needed
                     string extension = Path.GetExtension(fileName);
-                    if (extension != ".pdf")
-                    {
-                        TempData["failed"] = "Can Only Upload PDF FILES!!";
-
-                        return RedirectToAction(nameof(FileManagement));
-                    }
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                     fileName = $"{fileNameWithoutExtension}_{attempt}{extension}";
-                    filePath = Path.Combine(path, fileName);
+                    filePath = Path.Combine(submissionPath, fileName);
                     attempt++;
                 }
 
@@ -223,14 +239,25 @@ namespace ML_ASP.Controllers
                 };
 
                 prediction = _predictionEngine.Predict(new_data);
-
+                string predGrade = prediction.Prediciton.ToString();
                 //adding identity for the one who upload the file
                 submissionModel.SubmissionUserId = claim.Value;
 
-                var fileModel = SubmissionInjection(submissionModel, fileName);
 
-                _unit.Submission.Add(fileModel);
-                _unit.Save();
+                if (postedFiles.Count > 1)
+                {
+                    var fileModel = SubmissionInjection(submissionModel, fileName, predGrade, submissionFolderName, submissionIsGreaterThan1);
+
+                    _unit.Submission.Add(fileModel);
+                    _unit.Save();
+                }
+                else
+                {
+                    var fileModel = SubmissionInjection(submissionModel, fileName, predGrade, submissionIsGreaterThan1);
+
+                    _unit.Submission.Add(fileModel);
+                    _unit.Save();
+                }
             }
             //UPLOADING FILES ENDS-------------
 
@@ -244,7 +271,8 @@ namespace ML_ASP.Controllers
 
             submissionVM = new SubmissionVM()
             {
-                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value)
+                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value),
+                IsMultipleFile = true
             };
             //DATABASE COLLERATION ENDS------------
 
@@ -253,7 +281,7 @@ namespace ML_ASP.Controllers
             return View(submissionVM);
         }
 
-        public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename)
+        public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, string grade, string submissionFolderName, bool submissionIsGreaterThan1)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -265,6 +293,26 @@ namespace ML_ASP.Controllers
 
             submissionModel.FileName = filename;
             submissionModel.ApprovalStatus = "Pending";
+            submissionModel.Grade = grade;
+            submissionModel.FolderId = submissionFolderName;
+            submissionModel.IsMultipleFile = submissionIsGreaterThan1;
+
+            return submissionModel;
+        }
+        public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, string grade, bool submissionIsGreaterThan1)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+
+            submissionModel.Date = DateTime.Now;
+
+            submissionModel.Name = account.FullName;
+
+            submissionModel.FileName = filename;
+            submissionModel.ApprovalStatus = "Pending";
+            submissionModel.Grade = grade;
+            submissionModel.IsMultipleFile = submissionIsGreaterThan1;
 
             return submissionModel;
         }

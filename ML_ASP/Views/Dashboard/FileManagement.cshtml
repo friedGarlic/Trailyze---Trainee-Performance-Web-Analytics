@@ -62,37 +62,51 @@
             <table>
                 <thead>
                     <tr>
+                        @if (Model.IsMultipleFile == true)
+                        {
+                            <th class="p-4"></th>
+                        }
                         <th class="p-4">Name</th>
                         <th class="p-4">Approval Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var i in Model.SubmissionList)
+                    @foreach (var folderIdGroup in Model.SubmissionList.Where(x => x.IsMultipleFile).GroupBy(x => x.FolderId))
                     {
-                        <tr>
+                        var firstItem = folderIdGroup.First();
+                        <tr class="expandable-row" data-folderid="@firstItem.FolderId">
+                            <td class="p-4"> > </td>
                             <td class="p-4">
-                                @i.FileName
+                                @firstItem.FolderId
                             </td>
                             <td class="p-4">
-                                @i.ApprovalStatus
-                            </td>
-                            <td>
-                                <form id="approvalForm" method="post" asp-controller="Dashboard" asp-action="DeleteFile" asp-route-id="@i.Id">
-                                    <input type="hidden" name="fileName" value="@i.FileName" />
-                                    <button id="deleteButton" type="button">Delete</button>
-                                </form>
+                                Click arrow to expand and see details
                             </td>
                         </tr>
+                        foreach (var i in folderIdGroup)
+                        {
+                            <tr class="content-row" style="display: none;" data-folderid="@i.FolderId">
+                                <td colspan="3">
+                                    <!-- Expanded content for FolderId = i.FolderId -->
+                                    @i.FileName
+                                </td>
+                                <td colspan="3">
+                                    <!-- You can add more details or nested tables, etc. -->
+                                    @i.ApprovalStatus
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
-            </table>
 
+
+            </table>
+            
         </main>
         <!-- End of Main Content -->
         <!-- Right Section -->
         <div class="right-section">
             <div class="nav">
-
 
                 <div class="profile">
                     <div class="info">
@@ -174,6 +188,8 @@
 
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </body>
 </html>
 
@@ -201,5 +217,14 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.expandable-row').click(function () {
+                var folderId = $(this).data('folderid');
+                $('.content-row[data-folderid="' + folderId + '"]').toggle();
+            });
+        });
     </script>
 }

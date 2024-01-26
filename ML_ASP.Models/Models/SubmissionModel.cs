@@ -23,5 +23,9 @@ namespace ML_ASP.Models
         public string? Details { get; set; }
 
         public string? Grade { get; set; }
+
+        public string? FolderId { get; set; }
+
+        public bool IsMultipleFile { get; set; } = false;
     }
 }

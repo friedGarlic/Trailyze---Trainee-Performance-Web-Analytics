@@ -20,5 +20,7 @@ namespace ML_ASP.Models.ViewModel
 		public LogModel LogModel { get; set; }
 
 		public string Prediction { get; set; }
+
+		public bool IsMultipleFile { get; set; }
 	}
 }
