@@ -49,13 +49,15 @@
         <!-- End of Sidebar Section -->
         <!-- Main Content -->
         <main style="width: 700px;">
+            <h2>Prediction Result: @Model.Prediction </h2> 
             <div class="prediction"> 
-                <h2>Prediction Result: @Model.Prediction </h2> 
-                
-                <form method="post" enctype="multipart/form-data" asp-controller="Dashboard" asp-action="FileManagement"> 
-                    <span>Select File:</span> <input type="file" name="postedFiles" multiple /> 
-                    <input type="submit" value="Upload" /> <br /> 
-                </form>
+                <div class="forme">
+                    <form method="post" enctype="multipart/form-data" asp-controller="Dashboard" asp-action="FileManagement"> 
+                        <span>Select File:</span> 
+                        <input type="file" name="postedFiles" multiple /> 
+                        <input type="submit" value="Upload" /> <br /> 
+                    </form>
+                </div>
             </div>
 
             <table>

@@ -842,3 +842,26 @@ main .recent-orders a{
 .toggle-slider.on::before {
     transform: translateX(26px);
 }
+
+.container .prediction{
+    background-color: var(--color-white);
+    border: 2px dashed var(--color-primary);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 50px;
+    border-radius: 15px;
+}
+
+.container .prediction:hover {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.container .prediction .forme div {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
