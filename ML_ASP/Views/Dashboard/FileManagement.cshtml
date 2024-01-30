@@ -87,11 +87,11 @@
                         {
                             <tr class="content-row" style="display: none;" data-folderid="@i.FolderId">
                                 <td colspan="3">
-                                    <!-- Expanded content for FolderId = i.FolderId -->
+                                    <!-- expanded content for FolderId = i.FolderId -->
                                     @i.FileName
                                 </td>
                                 <td colspan="3">
-                                    <!-- You can add more details or nested tables, etc. -->
+                                    <!-- you can add more details or nested tables, etc. -->
                                     @i.ApprovalStatus
                                 </td>
                             </tr>
@@ -212,7 +212,7 @@
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Manually trigger the form submission
+                    // manually trigger the form submission
                     document.getElementById('approvalForm').submit();
                 }
             });
