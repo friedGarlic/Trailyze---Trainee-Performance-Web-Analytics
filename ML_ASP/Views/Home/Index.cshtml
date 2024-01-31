@@ -24,29 +24,37 @@
                 <div class="slide first">
                 <img src="~/assets/brand/UMISO.jpg" />
                     <div class="content">
-                        <h1>TesTech Inc</h1>
-                    <button class="button">See Location</button>
+                        <h1>UMISO</h1>
+                    <form style="display: inline" action="https://www.bing.com/maps?mepi=127%7EDirections%7EUnknown%7EDirection_Button&ty=0&rtp=pos.15.319609642028809_119.9843978881836__President+Ramon+Magsaysay+State+University__e_%7E&mode=d&v=2&sV=1&cp=15.319479%7E119.987976&lvl=16.5" method="get">
+                        <button class="button">See Location</button>
+                    </form>
                     </div>
                 </div>
                 <div class="slide">
                     <img src="~/assets/brand/toyota.jpg" />
                     <div class="content">
                     <h1 style ="color: crimson; opacity: 0.5;">Toyota</h1>
-                    <button class="button">See Location</button>
+                    <form style="display: inline" action="https://www.bing.com/search?q=Toyota+branch+in+olongapo+google+map&PC=U316&FORM=CHROMN" method="get">
+                        <button class="button">See Location</button>
+                    </form>
                     </div>
                 </div>
                 <div class="slide">
                     <img src="~/assets/brand/PSA.jpg" />
                     <div class="content">
                     <h1 style="color: blue; opacity: 0.5;">PSA Olongapo</h1>
-                    <button class="button">See Location</button>
+                    <form style="display: inline" action="https://www.bing.com/search?q=PSA+olongapo+googlemap&PC=U316&FORM=CHROMN" method="get">
+                        <button class="button">See Location</button>
+                    </form>
                     </div>
                 </div>
                 <div class="slide">
                 <img src="~/assets/brand/testech.jpg" />
                     <div class="content">
-                        <h1>Brngy Municipal</h1>
-                    <button class="button">See Location</button>
+                    <h1>TesTech Inc</h1>
+                    <form style="display: inline" action="https://www.testech-group.com/" method="get">
+                        <button class="button">Visit Website</button>
+                    </form>
                     </div>
                 </div>
                 <!-- slides end-->
@@ -180,10 +188,10 @@
             </div>
 
             <div class="form-container">
-                <form action="">
-                    <input type="text" placeholder="Full name">
-                    <input type="email" placeholder="Email">
-                    <textarea name="" id="" cols="30" rows="10" placeholder="Message"></textarea>
+                <form action="@Url.Action("SendEmail", "Home")" method="post">
+                    <input type="text" name="fullName" placeholder="Full name">
+                    <input type="email" name="email" placeholder="Email">
+                    <textarea name="message" id="" cols="30" rows="10" placeholder="Message"></textarea>
 
                     <input type="submit" value="Submit Message">
                 </form>
