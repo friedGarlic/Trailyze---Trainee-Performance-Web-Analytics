@@ -14,18 +14,26 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using ML_ASP.Utility;
+using Google.Apis.Drive.v3.Data;
+using System.Security.Claims;
 
 namespace ML_ASP.Areas.Identity.Pages.Account
 {
+    
     public class LoginModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager,
+            ILogger<LoginModel> logger,
+            UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -103,7 +111,18 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl ??= Url.Content("~/Dashboard/Dashboard");
+            var user = await _userManager.FindByEmailAsync(Input.Email);
+            //
+            bool isAdmin = await _userManager.IsInRoleAsync(user, SD.Role_Admin);
+
+            if (isAdmin)
+            {
+                returnUrl ??= Url.Content("~/Admin/Admin");
+            }
+            else
+            {
+                returnUrl ??= Url.Content("~/Dashboard/Dashboard");
+            }
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
@@ -135,6 +154,30 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        public async Task<IdentityUser> GetUserFromClaimsAsync(ClaimsPrincipal claimsPrincipal)
+        {
+            // Get the user's ID claim from the ClaimsPrincipal
+            var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim != null)
+            {
+                // Find the user by ID using UserManager
+                var user = await _userManager.FindByIdAsync(userIdClaim.Value);
+
+                // Optionally, you can also load additional user information if needed
+                if (user != null)
+                {
+                    // Load additional claims if necessary
+                    var additionalClaims = claimsPrincipal.Claims.Where(c => c.Type != ClaimTypes.NameIdentifier);
+                    await _userManager.AddClaimsAsync(user, additionalClaims);
+                }
+
+                return user;
+            }
+
+            return null;
         }
     }
 }
