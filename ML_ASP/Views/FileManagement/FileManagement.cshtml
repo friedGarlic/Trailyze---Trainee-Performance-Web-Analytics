@@ -13,19 +13,20 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="container">
         <!-- Sidebar Section -->
         <aside>
             <div class="sidebar">
-                <a asp-controller="Dashboard" asp-action="FileManagement" class="active">
+                <a asp-controller="FileManagement" asp-action="FileManagement" class="active">
                     <span class="material-symbols-outlined">
                         topic
                     </span>
                     <h2>Files</h2>
                 </a>
-                <a sp-controller="Dashboard" asp-action="Dashboard">
+                <a asp-controller="Dashboard" asp-action="Dashboard">
                     <span class="material-symbols-outlined">
                         analytics
                     </span>
@@ -49,59 +50,28 @@
         <!-- End of Sidebar Section -->
         <!-- Main Content -->
         <main style="width: 700px;">
-            <div class="prediction"> 
+            <div class="prediction" style="margin-bottom: 20px;">
                 <div class="forme">
-                    <form method="post" enctype="multipart/form-data" asp-controller="Dashboard" asp-action="FileManagement"> 
-                        <span>Select File:</span> 
-                        <input type="file" name="postedFiles" multiple /> 
-                        <input type="submit" value="Upload" /> <br /> 
+                    <form method="post" enctype="multipart/form-data" asp-controller="Dashboard" asp-action="FileManagement">
+                        <span>Select File:</span>
+                        <input type="file" name="postedFiles" multiple />
+                        <input type="submit" value="Upload" /> <br />
                     </form>
                 </div>
             </div>
 
-            <table>
+            <table id="tblData">
                 <thead>
                     <tr>
-                        @if (Model.IsMultipleFile == true)
-                        {
-                            <th class="p-4"></th>
-                        }
                         <th class="p-4">Name</th>
                         <th class="p-4">Approval Status</th>
+                        <th class="p-4">File Name</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var folderIdGroup in Model.SubmissionList.Where(x => x.IsMultipleFile).GroupBy(x => x.FolderId))
-                    {
-                        var firstItem = folderIdGroup.First();
-                        <tr class="expandable-row" data-folderid="@firstItem.FolderId">
-                            <td class="p-4"> > </td>
-                            <td class="p-4">
-                                @firstItem.FolderId
-                            </td>
-                            <td class="p-4">
-                                Click arrow to expand and see details
-                            </td>
-                        </tr>
-                        foreach (var i in folderIdGroup)
-                        {
-                            <tr class="content-row" style="display: none;" data-folderid="@i.FolderId">
-                                <td colspan="3">
-                                    <!-- expanded content for FolderId = i.FolderId -->
-                                    @i.FileName
-                                </td>
-                                <td colspan="3">
-                                    <!-- you can add more details or nested tables, etc. -->
-                                    @i.ApprovalStatus
-                                </td>
-                            </tr>
-                        }
-                    }
                 </tbody>
-
-
             </table>
-            
+
         </main>
         <!-- End of Main Content -->
         <!-- Right Section -->
@@ -110,15 +80,13 @@
 
                 <div class="profile">
                     <div class="info">
-                        @if (Model.SubmissionList != null && Model.SubmissionList.Any())
-                        {
-                            <h1>Welcome, @ViewBag.AccountName</h1>
-                        }
-                        else
-                        {
-                            <h1>Welcome!</h1>
-                            <p>No submissions found.</p>
-                        }
+
+                        <h1>Welcome, @ViewBag.AccountName</h1>
+
+
+                        <h1>Welcome!</h1>
+                        <p>No submissions found.</p>
+
                         <small class="text-muted">Trainee</small>
                     </div>
                     <div class="profile-photo">
@@ -189,42 +157,9 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </body>
 </html>
 
 @section Scripts{
-    @{
-        <partial name="_Confirmation" />
-    }
-    <script>
-        document.getElementById('deleteButton').addEventListener('click', function () {
-            confirmDelete();
-        });
-        function confirmDelete() {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "This action cannot be undone!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // manually trigger the form submission
-                    document.getElementById('approvalForm').submit();
-                }
-            });
-        }
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('.expandable-row').click(function () {
-                var folderId = $(this).data('folderid');
-                $('.content-row[data-folderid="' + folderId + '"]').toggle();
-            });
-        });
-    </script>
+    <script src="~/js/fileManagement/submissiont.js"></script>
 }
