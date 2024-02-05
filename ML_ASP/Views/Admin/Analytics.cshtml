@@ -1,0 +1,168 @@
+﻿@model IEnumerable<SubmissionModel>
+@{
+	Layout = "_AMasterpage_2";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Boxicons -->
+	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<!-- popup modal -->
+	
+	<!-- My CSS -->
+	<link rel="stylesheet" href="~/css/adminStyle.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+	<title>AdminHub</title>
+</head>
+<body>
+
+
+	<!-- SIDEBAR -->
+	<section id="sidebar">
+		<a href="#" class="brand">
+			<i class='bx bxs-smile'></i>
+			<span class="text">AdminHub</span>
+		</a>
+		<ul class="side-menu top">
+			<li>
+				<a asp-controller="Admin" asp-action="Admin">
+					<i class='bx bxs-dashboard'></i>
+					<span class="text">Dashboard</span>
+				</a>
+			</li>
+			<li class="active">
+				<a asp-controller="Admin" asp-action="Analytics">
+					<i class='bx bxs-doughnut-chart'></i>
+					<span class="text">Analytics</span>
+				</a>
+			</li>
+		</ul>
+		<ul class="side-menu">
+			<!--<li>
+				<a href="#" class="logout">
+					<i class='bx bxs-log-out-circle'></i>
+					<span class="text">Logout</span>
+				</a>
+			</li>-->
+		</ul>
+	</section>
+	<!-- SIDEBAR -->
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav>
+			<i class='bx bx-menu'></i>
+			<a href="#" class="nav-link">Categories</a>
+			<form action="#">
+				<div class="form-input">
+					<input type="search" placeholder="Search...">
+					<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+				</div>
+			</form>
+			<input type="checkbox" id="switch-mode" hidden>
+			<label for="switch-mode" class="switch-mode"></label>
+			<a href="#" class="notification">
+				<i class='bx bxs-bell'></i>
+				<span class="num">8</span>
+			</a>
+			<a href="#" class="profile">
+				<img src="img/people.png">
+			</a>
+		</nav>
+		<!-- NAVBAR -->
+		<!-- MAIN -->
+		<main>
+			<div class="head-title">
+				<div class="left">
+					<h1>Analytics</h1>
+					<ul class="breadcrumb">
+						<li>
+							<a href="#">Analytics</a>
+						</li>
+						<li><i class='bx bx-chevron-right'></i></li>
+						<li>
+							<a class="active" href="#">Home</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- USER PROFILE SETTINGS START -->
+			<div class="profile">
+			<h1 class="heading"> USER PROFILES </h1>
+			<h3 class="title"> Changes and Updates </h3>
+
+				<div class="box-container">
+					<div class="box">
+						<img src="~/assets/profile_example/1.jpg" alt="" />
+						<h3> NAME </h3>
+						<p> Description bla balblab albl baablbl bl ablb b lb l abl b.</p>
+						<p> Time Remaining: 203</p>
+						<p> Overall Performance: Excellent</p>
+
+						<button type="button" class="btn btn-primary" onclick="showInputPopup()">Show SweetAlert2 Pop-up</button>
+
+					</div>
+				</div>
+			</div>
+			<!-- USER PROFILE SETTINGS END -->
+			
+		</main>
+		<!-- MAIN -->
+	</section>
+	<!-- CONTENT -->
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+	</body>
+</html>
+@section Scripts{
+	<script>
+		function showInputPopup() {
+			Swal.fire({
+				title: 'Enter Number of Hours',
+				input: 'number',
+				inputAttributes: {
+					autocapitalize: 'off'
+				},
+				showCancelButton: true,
+				confirmButtonText: 'Submit',
+				cancelButtonText: 'Cancel',
+				showLoaderOnConfirm: true,
+				preConfirm: (numberOfHours) => {
+					// You can perform validation or additional processing here
+					return numberOfHours;
+				},
+				allowOutsideClick: () => !Swal.isLoading()
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// Send the data to the controller using AJAX
+					sendDataToController(result.value);
+				}
+			});
+		}
+
+		function sendDataToController(numberOfHours) {
+			$.ajax({
+				url: '/Admin/EditProfile', // Replace with your actual controller and action
+				type: 'POST',
+				dataType: 'json',
+				data: { numberOfHours: numberOfHours },
+				success: function (response) {
+					// Handle the response from the server if needed
+					console.log("SUCCESS");
+				},
+				error: function (error) {
+					// Handle the error if the request fails
+					console.error(error);
+				}
+			});
+		}
+	</script>
+}

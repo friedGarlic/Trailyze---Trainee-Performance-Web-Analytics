@@ -18,7 +18,8 @@ function loadDataTable() {
         "columns": [
             { "data": "name", "width": "15%" },
             { "data": "approvalStatus", "width": "15%" },
-            { "data": "fileName", "width": "15%" }
+            { "data": "fileName", "width": "15%" },
+            { "data": "date", "width": "15%"}
         ],
         "rowGroup": {
             "dataSrc": "folderId",

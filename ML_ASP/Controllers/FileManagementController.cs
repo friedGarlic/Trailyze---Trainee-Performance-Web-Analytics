@@ -142,10 +142,11 @@ namespace ML_ASP.Controllers
 
                 prediction = _predictionEngine.Predict(new_data);
                 string predGrade = prediction.Prediciton.ToString();
+
                 //adding identity for the one who upload the file
                 submissionModel.SubmissionUserId = claim.Value;
 
-
+                //adding folderid if 1 or more files is updated
                 if (postedFiles.Count > 1)
                 {
                     var fileModel = SubmissionInjection(submissionModel, fileName, predGrade, submissionFolderName, submissionIsGreaterThan1);

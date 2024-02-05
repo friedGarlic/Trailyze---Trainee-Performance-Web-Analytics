@@ -1,4 +1,5 @@
 ﻿using iText.Layout.Element;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace ML_ASP.Controllers
 {
+	
     public class AdminController : Controller
     {
         private readonly IUnitOfWork _unit;
@@ -29,6 +31,7 @@ namespace ML_ASP.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Admin()
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -55,7 +58,8 @@ namespace ML_ASP.Controllers
 			return View(modelList);
         }
 
-		[HttpPost]
+        [Authorize]
+        [HttpPost]
 		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> originalApprovalStatus)
 		{
 			for (int i = 0; i < id.Count; i++)
@@ -74,7 +78,8 @@ namespace ML_ASP.Controllers
 			return RedirectToAction("Admin");
 		}
 
-		public ActionResult ViewPdf(string fileName)
+        [Authorize]
+        public ActionResult ViewPdf(string fileName)
 		{
 			string path = Path.Combine(_environment.ContentRootPath + "\\Uploads", fileName);
 
@@ -87,6 +92,21 @@ namespace ML_ASP.Controllers
 				TempData["failed"] = "File Not Found";
 				return NotFound();
 			}
+		}
+
+		[Authorize]
+		public IActionResult Analytics()
+		{
+			return View();
+		}
+
+		[Authorize]
+		[HttpPost]
+		public ActionResult EditProfile(int numberOfHours)
+		{
+			var result = 1 + numberOfHours;
+
+			return RedirectToAction(nameof(Analytics));
 		}
 
 	}
