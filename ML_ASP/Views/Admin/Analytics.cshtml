@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SubmissionModel>
+﻿@model IEnumerable<Account_Model>
 @{
 	Layout = "_AMasterpage_2";
 }
@@ -98,16 +98,20 @@
 			<h3 class="title"> Changes and Updates </h3>
 
 				<div class="box-container">
+					@foreach (var models in Model.ToList())
+					{
 					<div class="box">
 						<img src="~/assets/profile_example/1.jpg" alt="" />
-						<h3> NAME </h3>
+						<h3> @models.FullName </h3>
 						<p> Description bla balblab albl baablbl bl ablb b lb l abl b.</p>
-						<p> Time Remaining: 203</p>
+						<p> Time Remaining: @models.HoursRemaining</p>
+						<p> Weekly Report: @models.WeeklyReportRemaining</p>
 						<p> Overall Performance: Excellent</p>
 
 						<button type="button" class="btn btn-primary" onclick="showInputPopup()">Show SweetAlert2 Pop-up</button>
 
-					</div>
+						</div>
+					}
 				</div>
 			</div>
 			<!-- USER PROFILE SETTINGS END -->
@@ -126,18 +130,18 @@
 	<script>
 		function showInputPopup() {
 			Swal.fire({
-				title: 'Enter Number of Hours',
-				input: 'number',
-				inputAttributes: {
-					autocapitalize: 'off'
-				},
+				title: 'Enter Number of Hours and Name',
+				html:
+					'<input id="swal-input1" class="swal2-input" placeholder="Number of Hours">' +
+					'<input id="swal-input2" class="swal2-input" placeholder="Name">',
 				showCancelButton: true,
 				confirmButtonText: 'Submit',
 				cancelButtonText: 'Cancel',
-				showLoaderOnConfirm: true,
-				preConfirm: (numberOfHours) => {
+				preConfirm: () => {
+					const numberOfHours = Swal.getPopup().querySelector('#swal-input1').value;
+					const name = Swal.getPopup().querySelector('#swal-input2').value;
 					// You can perform validation or additional processing here
-					return numberOfHours;
+					return { numberOfHours: numberOfHours, name: name };
 				},
 				allowOutsideClick: () => !Swal.isLoading()
 			}).then((result) => {
@@ -148,12 +152,12 @@
 			});
 		}
 
-		function sendDataToController(numberOfHours) {
+		function sendDataToController(data) {
 			$.ajax({
 				url: '/Admin/EditProfile', // Replace with your actual controller and action
 				type: 'POST',
 				dataType: 'json',
-				data: { numberOfHours: numberOfHours },
+				data: data,
 				success: function (response) {
 					// Handle the response from the server if needed
 					console.log("SUCCESS");
@@ -164,5 +168,6 @@
 				}
 			});
 		}
+
 	</script>
 }

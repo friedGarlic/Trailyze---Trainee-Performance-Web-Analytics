@@ -23,13 +23,12 @@ namespace ML_ASP.DataAccess.Repositories
 			return _dbContext.Accounts.FirstOrDefault();
         }
 
-		public void Update(Account_Model model, string id)
+		public void Update(Account_Model model, string id) //update Image url
 		{
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
             if (objFromDb != null)
             {
-                objFromDb.HoursRemaining = model.HoursRemaining;
-				objFromDb.WeeklyReportRemaining = model.WeeklyReportRemaining;
+                objFromDb.ImageUrl = model.ImageUrl;
             }
 		}
 
@@ -47,6 +46,15 @@ namespace ML_ASP.DataAccess.Repositories
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
 
             var remain = objFromDb.WeeklyReportRemaining;
+
+            return remain;
+        }
+
+        public string? GetImageUrl(IdentityUser user)
+        {
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
+
+            var remain = objFromDb.ImageUrl;
 
             return remain;
         }

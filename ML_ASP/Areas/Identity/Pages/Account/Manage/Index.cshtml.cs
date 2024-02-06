@@ -10,12 +10,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 
 namespace ML_ASP.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
+        private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IUnitOfWork _unit;
@@ -23,11 +25,13 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
         public IndexModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IUnitOfWork unit)
+            IUnitOfWork unit,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _unit = unit;
+            _environment = environment;
         }
 
         /// <summary>
@@ -35,6 +39,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
+        public string? ImageUrl { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -74,14 +79,16 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             var remainingHours = _unit.Account.GetRemainingHours(user);
             var remainingReports = _unit.Account.GetRemainingReports(user);
+            var imageUrl = _unit.Account.GetImageUrl(user);
 
             Username = userName;
+            ImageUrl = imageUrl;
 
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
                 RemainingHours = remainingHours,
-                WeeklyReportRemaining = remainingReports
+                WeeklyReportRemaining = remainingReports,
             };
         }
 
@@ -122,33 +129,10 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            if (Input.RemainingHours != null || Input.RemainingHours != 0)
-            {
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
-                account.Id = claim.Value;
-
-                account.HoursRemaining = Input.RemainingHours;
-                _unit.Account.Update(account,account.Id);
-                _unit.Save();
-            }
-            if (Input.WeeklyReportRemaining != null || Input.WeeklyReportRemaining != 0)
-            {
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-                var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
-                account.Id = claim.Value;
-
-                account.WeeklyReportRemaining = Input.WeeklyReportRemaining;
-                _unit.Account.Update(account, account.Id);
-                _unit.Save();
-            }
-
-
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
         }
+
     }
 }

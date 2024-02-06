@@ -14,5 +14,6 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 		public Account_Model GetFirstAndDefault();
 		public double? GetRemainingHours(IdentityUser user);
 		public int? GetRemainingReports(IdentityUser user);
+        public string? GetImageUrl(IdentityUser user);
     }
 }

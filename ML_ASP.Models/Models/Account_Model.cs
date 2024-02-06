@@ -17,5 +17,6 @@ namespace ML_ASP.Models
 
         public double? HoursRemaining { get; set; }
         public double? HoursCompleted { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

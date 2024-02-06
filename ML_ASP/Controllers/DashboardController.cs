@@ -128,28 +128,48 @@ namespace ML_ASP.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
-        /*
         [Authorize]
-        public IActionResult FileManagement()
+        [HttpPost]
+        public ActionResult UploadImage(IFormFile file)
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-            submissionVM = new SubmissionVM()
+            if (file != null && file.Length > 0)
             {
-                SubmissionList = _unit.Submission.GetAll(u=> u.SubmissionUserId == claim.Value)
-            };
+                string projectPath = _environment.WebRootPath;
+                string uploadFolderName = "ProfileImages";
+                string fileName = Guid.NewGuid().ToString();
+                var uploads = Path.Combine(projectPath, uploadFolderName);
+                var extension = Path.GetExtension(file.FileName);
 
-            //TODO show all submission of an guid that is equal to the guid of login
-            return View(submissionVM);
-        }*/
+                if (!Directory.Exists(uploads))
+                {
+                    Directory.CreateDirectory(uploads);
+                }
 
-        
+                using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
 
-        
-        
-        
-        
+                // Update the image URL in the model
+                var imageUrl = Path.Combine("/", uploadFolderName, fileName + extension);
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+                account.ImageUrl = imageUrl;
+
+                _unit.Account.Update(account, account.Id);
+                _unit.Save();
+                TempData["success"] = "Uploaded Successfully!";
+            }
+            else
+            {
+                TempData["error"] = "No file uploaded.";
+            }
+
+            return RedirectToAction(nameof(Dashboard));
+        }
+
     }
 }
 

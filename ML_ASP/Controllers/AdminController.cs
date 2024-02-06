@@ -97,17 +97,19 @@ namespace ML_ASP.Controllers
 		[Authorize]
 		public IActionResult Analytics()
 		{
-			return View();
+			var getAccounts = _unit.Account.GetAll();
+
+			return View(getAccounts);
 		}
 
 		[Authorize]
 		[HttpPost]
-		public ActionResult EditProfile(int numberOfHours)
+		public ActionResult EditProfile(int numberOfHours, string name)
 		{
 			var result = 1 + numberOfHours;
+			var nameResult = "yeah" + name;
 
 			return RedirectToAction(nameof(Analytics));
 		}
-
-	}
+    }
 }
