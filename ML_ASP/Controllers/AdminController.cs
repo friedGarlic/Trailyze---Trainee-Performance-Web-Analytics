@@ -106,10 +106,13 @@ namespace ML_ASP.Controllers
 		[HttpPost]
 		public ActionResult EditProfile(int numberOfHours, string name)
 		{
-			var result = 1 + numberOfHours;
-			var nameResult = "yeah" + name;
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-			return RedirectToAction(nameof(Analytics));
+			_unit.Account.UpdateAccount(numberOfHours, claim.Value);
+			_unit.Save();
+
+			return RedirectToAction(nameof(Admin));
 		}
     }
 }

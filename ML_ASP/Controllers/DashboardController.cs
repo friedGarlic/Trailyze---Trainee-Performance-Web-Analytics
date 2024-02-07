@@ -75,7 +75,11 @@ namespace ML_ASP.Controllers
             ViewBag.RemainingHours = account.HoursRemaining;
             ViewBag.RemainingReports = account.WeeklyReportRemaining;
 
-           return View(submissionVM);
+            string imageUrl = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value)?.ImageUrl;
+
+            ViewData["ImageUrl"] = imageUrl;
+
+            return View(submissionVM);
         }
 
 
@@ -131,8 +135,15 @@ namespace ML_ASP.Controllers
         [Authorize]
         [HttpPost]
         public ActionResult UploadImage(IFormFile file)
-        {
-            if (file != null && file.Length > 0)
+		{
+            //find the unique user
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+			var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+            //
+
+			if (file != null && file.Length > 0)
             {
                 string projectPath = _environment.WebRootPath;
                 string uploadFolderName = "ProfileImages";
@@ -144,6 +155,16 @@ namespace ML_ASP.Controllers
                 {
                     Directory.CreateDirectory(uploads);
                 }
+                 
+                if(account.ImageUrl != null)
+                {
+					var oldImagePath = Path.Combine(projectPath, account.ImageUrl.TrimStart('/'));
+
+					if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
 
                 using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
                 {
@@ -152,13 +173,10 @@ namespace ML_ASP.Controllers
 
                 // Update the image URL in the model
                 var imageUrl = Path.Combine("/", uploadFolderName, fileName + extension);
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-                var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
                 account.ImageUrl = imageUrl;
 
                 _unit.Account.Update(account, account.Id);
+
                 _unit.Save();
                 TempData["success"] = "Uploaded Successfully!";
             }

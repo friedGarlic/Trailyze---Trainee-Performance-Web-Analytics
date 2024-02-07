@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace ML_ASP.Controllers
 {
@@ -9,17 +12,34 @@ namespace ML_ASP.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unit;
 
         public HomeController(ILogger<HomeController> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unit)
         {
             _emailSender = emailSender;
             _logger = logger;
+            _unit = unit;
         }
 
         public IActionResult Index()
         {
-            return View();
+            if ((ClaimsIdentity)User.Identity != null)
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                string imageUrl = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value)?.ImageUrl;
+
+                ViewData["ImageUrl"] = imageUrl;
+
+                return View();
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public IActionResult Privacy()

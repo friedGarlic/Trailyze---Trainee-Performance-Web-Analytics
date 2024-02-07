@@ -32,6 +32,15 @@ namespace ML_ASP.DataAccess.Repositories
             }
 		}
 
+		public void UpdateAccount(int hrsRemain, string id)
+		{
+			var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
+			if (objFromDb != null)
+			{
+				objFromDb.HoursRemaining = hrsRemain;
+			}
+		}
+
 		public double? GetRemainingHours(IdentityUser user)
 		{
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);

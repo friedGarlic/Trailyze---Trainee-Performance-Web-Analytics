@@ -40,9 +40,21 @@ namespace ML_ASP.Controllers
         [Authorize]
         public IActionResult FileManagement()
         {
+            if ((ClaimsIdentity)User.Identity != null)
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
+                string imageUrl = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value)?.ImageUrl;
 
-            return View();
+                ViewData["ImageUrl"] = imageUrl;
+
+                return View();
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [Authorize]
@@ -180,6 +192,10 @@ namespace ML_ASP.Controllers
             //DATABASE COLLERATION ENDS------------
 
             TempData["success"] = "Uploaded Succesfully!";
+
+            string imageUrl = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value)?.ImageUrl;
+
+            ViewData["ImageUrl"] = imageUrl;
 
             return View(submissionVM);
         }

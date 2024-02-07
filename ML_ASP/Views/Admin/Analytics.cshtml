@@ -100,16 +100,15 @@
 				<div class="box-container">
 					@foreach (var models in Model.ToList())
 					{
-					<div class="box">
-						<img src="~/assets/profile_example/1.jpg" alt="" />
-						<h3> @models.FullName </h3>
-						<p> Description bla balblab albl baablbl bl ablb b lb l abl b.</p>
-						<p> Time Remaining: @models.HoursRemaining</p>
-						<p> Weekly Report: @models.WeeklyReportRemaining</p>
-						<p> Overall Performance: Excellent</p>
+						<div class="box">
+							<img src="@models.ImageUrl" />
+							<h3> @models.FullName </h3>
+							<p> Description bla balblab albl baablbl bl ablb b lb l abl b.</p>
+							<p> Time Remaining: @models.HoursRemaining</p>
+							<p> Weekly Report: @models.WeeklyReportRemaining</p>
+							<p> Overall Performance: Excellent</p>
 
-						<button type="button" class="btn btn-primary" onclick="showInputPopup()">Show SweetAlert2 Pop-up</button>
-
+							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.HoursRemaining', '@models.FullName')"> Edit Profile </button>
 						</div>
 					}
 				</div>
@@ -128,11 +127,11 @@
 </html>
 @section Scripts{
 	<script>
-		function showInputPopup() {
+		function showInputPopup(hoursRemaining, fullName) {
 			Swal.fire({
-				title: 'Enter Number of Hours and Name',
+				title: 'Enter Number of Hours for ' + fullName,
 				html:
-					'<input id="swal-input1" class="swal2-input" placeholder="Number of Hours">' +
+					'<input id="swal-input1" class="swal2-input" placeholder="Number of Hours (Current: ' + hoursRemaining + ')">' +
 					'<input id="swal-input2" class="swal2-input" placeholder="Name">',
 				showCancelButton: true,
 				confirmButtonText: 'Submit',

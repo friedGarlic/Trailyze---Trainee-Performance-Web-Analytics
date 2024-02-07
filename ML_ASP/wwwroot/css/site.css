@@ -39,7 +39,7 @@ header{
 
 .navbar a .logo {
     position: absolute;
-    top: 13px;
+    top: 53px;
     left: 690px;
     width: 150px;
     height: 50px;
@@ -60,4 +60,15 @@ header{
     /* Height of the footer*/
     height: 40px;
     background: grey;
+}
+
+.navbar a img{
+    height: 5.5rem;
+    width: 5.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-top: -3rem;
+    border: .6rem solid var(--dark-grey);
+    border-left: .6rem solid var(--grey);
+    border-bottom: .6rem solid var(--grey);
 }
