@@ -40,12 +40,12 @@ namespace ML_ASP.Controllers
         [Authorize]
         public IActionResult FileManagement()
         {
-            if ((ClaimsIdentity)User.Identity != null)
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim != null)
             {
-                var claimsIdentity = (ClaimsIdentity)User.Identity;
-                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-                string imageUrl = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value)?.ImageUrl;
+                var getAcc = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value);
+                string? imageUrl = getAcc.ImageUrl;
 
                 ViewData["ImageUrl"] = imageUrl;
 
@@ -193,9 +193,13 @@ namespace ML_ASP.Controllers
 
             TempData["success"] = "Uploaded Succesfully!";
 
-            string imageUrl = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value)?.ImageUrl;
+            if (claim != null)
+            {
+                var getAcc = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value);
+                string? imageUrl = getAcc.ImageUrl;
 
-            ViewData["ImageUrl"] = imageUrl;
+                ViewData["ImageUrl"] = imageUrl;
+            }
 
             return View(submissionVM);
         }

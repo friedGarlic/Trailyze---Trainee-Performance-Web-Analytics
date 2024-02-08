@@ -75,10 +75,15 @@ namespace ML_ASP.Controllers
             ViewBag.RemainingHours = account.HoursRemaining;
             ViewBag.RemainingReports = account.WeeklyReportRemaining;
 
-            string imageUrl = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value)?.ImageUrl;
+            //check if theres log in account
+            //post picture if there is
+            if (claim != null)
+            {
+                var getAcc = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value);
+                string? imageUrl = getAcc.ImageUrl;
 
-            ViewData["ImageUrl"] = imageUrl;
-
+                ViewData["ImageUrl"] = imageUrl;
+            }
             return View(submissionVM);
         }
 
