@@ -108,7 +108,8 @@
 							<p> Weekly Report: @models.WeeklyReportRemaining</p>
 							<p> Overall Performance: Excellent</p>
 
-							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.HoursRemaining', '@models.FullName')"> Edit Profile </button>
+							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.Id', '@models.HoursRemaining', '@models.WeeklyReportRemaining')">Edit Profile</button>
+
 						</div>
 					}
 				</div>
@@ -127,20 +128,20 @@
 </html>
 @section Scripts{
 	<script>
-		function showInputPopup(hoursRemaining, fullName) {
+		function showInputPopup(id, hoursRemaining, weeklyReportRemaining) {
 			Swal.fire({
-				title: 'Enter Number of Hours for ' + fullName,
+				title: 'Edit Profile',
 				html:
 					'<input id="swal-input1" class="swal2-input" placeholder="Number of Hours (Current: ' + hoursRemaining + ')">' +
-					'<input id="swal-input2" class="swal2-input" placeholder="Name">',
+					'<input id="swal-input2" class="swal2-input" placeholder="Weekly Report (Current: ' + weeklyReportRemaining + ')">',
 				showCancelButton: true,
 				confirmButtonText: 'Submit',
 				cancelButtonText: 'Cancel',
 				preConfirm: () => {
 					const numberOfHours = Swal.getPopup().querySelector('#swal-input1').value;
-					const name = Swal.getPopup().querySelector('#swal-input2').value;
+					const weeklyReport = Swal.getPopup().querySelector('#swal-input2').value;
 					// You can perform validation or additional processing here
-					return { numberOfHours: numberOfHours, name: name };
+					return { id: id, numberOfHours: numberOfHours, weeklyReport: weeklyReport };
 				},
 				allowOutsideClick: () => !Swal.isLoading()
 			}).then((result) => {
@@ -167,6 +168,6 @@
 				}
 			});
 		}
-
 	</script>
+
 }

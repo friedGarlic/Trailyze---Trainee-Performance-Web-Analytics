@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.etc;
 using ML_ASP.Models;
+using ML_ASP.Utility;
 using System.CodeDom;
 using System.Drawing;
 using System.Security.Claims;
@@ -31,7 +32,7 @@ namespace ML_ASP.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = SD.Role_Admin)]
         public IActionResult Admin()
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -58,8 +59,8 @@ namespace ML_ASP.Controllers
 			return View(modelList);
         }
 
-        [Authorize]
-        [HttpPost]
+		[Authorize(Roles = SD.Role_Admin)]
+		[HttpPost]
 		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> originalApprovalStatus)
 		{
 			for (int i = 0; i < id.Count; i++)
@@ -78,8 +79,8 @@ namespace ML_ASP.Controllers
 			return RedirectToAction("Admin");
 		}
 
-        [Authorize]
-        public ActionResult ViewPdf(string fileName)
+		[Authorize(Roles = SD.Role_Admin)]
+		public ActionResult ViewPdf(string fileName)
 		{
 			string path = Path.Combine(_environment.ContentRootPath + "\\Uploads", fileName);
 
@@ -94,7 +95,7 @@ namespace ML_ASP.Controllers
 			}
 		}
 
-		[Authorize]
+		[Authorize(Roles = SD.Role_Admin)]
 		public IActionResult Analytics()
 		{
 			var getAccounts = _unit.Account.GetAll();
@@ -104,12 +105,11 @@ namespace ML_ASP.Controllers
 
 		[Authorize]
 		[HttpPost]
-		public ActionResult EditProfile(int numberOfHours, string name)
+		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			//TODO Something is wrong here..
 
-			_unit.Account.UpdateAccount(numberOfHours, claim.Value);
+			_unit.Account.UpdateAccount(numberOfHours,weeklyReport, id.ToString());
 			_unit.Save();
 
 			return RedirectToAction(nameof(Admin));

@@ -10,7 +10,7 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 {
 	public interface IAccountRepository : IRepository<Account_Model>
 	{
-		public void UpdateAccount(int hrsRemain, string id);
+		public void UpdateAccount(int hrsRemain, int weeklyReport, string id);
 		public void Update(Account_Model model, string id);
 
 

@@ -12,6 +12,7 @@ using ML_ASP.Models.ViewModel;
 using ML_net.ModelSession_2;
 using System.Security.Claims;
 using System;
+using ML_ASP.Utility;
 
 namespace ML_ASP.Controllers
 {
@@ -37,8 +38,8 @@ namespace ML_ASP.Controllers
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
         }
 
-        [Authorize]
-        public IActionResult FileManagement()
+		[Authorize(Roles = SD.Role_User)]
+		public IActionResult FileManagement()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -57,8 +58,8 @@ namespace ML_ASP.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPost]
+		[Authorize(Roles = SD.Role_User)]
+		[HttpPost]
         public ActionResult DeleteFile(int id, string fileName)
         {
             var killFile = _unit.Submission.GetFirstOrDefault(u => u.Id == id);
@@ -76,8 +77,8 @@ namespace ML_ASP.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public IActionResult FileManagement(List<IFormFile> postedFiles)
+		[Authorize(Roles = SD.Role_User)]
+		public IActionResult FileManagement(List<IFormFile> postedFiles)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -263,8 +264,8 @@ namespace ML_ASP.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPost]
+		[Authorize(Roles = SD.Role_User)]
+		[HttpPost]
         public ActionResult UploadImage(List<IFormFile> postedImages, int id)
         {
             string uploadFolderName = "Images";

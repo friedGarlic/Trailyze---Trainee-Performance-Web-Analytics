@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualBasic;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
 using System;
@@ -32,12 +33,13 @@ namespace ML_ASP.DataAccess.Repositories
             }
 		}
 
-		public void UpdateAccount(int hrsRemain, string id)
+		public void UpdateAccount(int hrsRemain,int weeklyReport, string id)
 		{
 			var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
 			if (objFromDb != null)
 			{
 				objFromDb.HoursRemaining = hrsRemain;
+                objFromDb.WeeklyReportRemaining = weeklyReport;
 			}
 		}
 
