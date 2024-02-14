@@ -55,7 +55,9 @@ namespace ML_ASP.Controllers
 
         public ActionResult SendEmail(string fullName, string email, string message)
         {
-            var emailTo = "remcarlmerza@gmail.com";
+            // var emailTo = "ycabasug@gmail.com";
+
+			var emailTo = "remcarlmerza@gmail.com";
             _emailSender.SendEmailAsync( emailTo, "Information", "FullName: " + fullName + " Email: " + email + "\n" + message);
 
             return RedirectToAction(nameof(Index));

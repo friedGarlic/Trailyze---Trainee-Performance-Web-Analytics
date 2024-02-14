@@ -38,7 +38,6 @@ namespace ML_ASP.Controllers
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
         }
 
-		[Authorize(Roles = SD.Role_User)]
 		public IActionResult FileManagement()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -77,7 +76,6 @@ namespace ML_ASP.Controllers
         }
 
         [HttpPost]
-		[Authorize(Roles = SD.Role_User)]
 		public IActionResult FileManagement(List<IFormFile> postedFiles)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;

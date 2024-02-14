@@ -72,7 +72,7 @@ body {
 #sidebar {
 	position: fixed;
 	top: 0;
-	left: 0;
+	left: -10px;
 	width: 280px;
 	height: 100%;
 	background: var(--light);
@@ -337,6 +337,8 @@ body {
 
 /* MAIN */
 #content main {
+	position:relative;
+	right: 51px;
 	width: 100%;
 	padding: 36px 24px;
 	font-family: var(--poppins);
@@ -439,7 +441,7 @@ body {
 #content main .table-data {
 	display: flex;
 	flex-wrap: wrap;
-	grid-gap: 24px;
+	grid-gap: 14px;
 	margin-top: 24px;
 	width: 100%;
 	color: var(--dark);
@@ -561,7 +563,7 @@ body {
 
 @media screen and (max-width: 768px) {
 	#sidebar {
-		width: 200px;
+		width: 100px;
 	}
 
 	#content {

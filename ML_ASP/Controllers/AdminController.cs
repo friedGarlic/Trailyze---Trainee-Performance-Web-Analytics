@@ -1,5 +1,4 @@
-﻿using iText.Layout.Element;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,10 +6,6 @@ using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.etc;
 using ML_ASP.Models;
 using ML_ASP.Utility;
-using System.CodeDom;
-using System.Drawing;
-using System.Security.Claims;
-using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace ML_ASP.Controllers
 {
@@ -33,11 +28,8 @@ namespace ML_ASP.Controllers
         }
 
         [Authorize(Roles = SD.Role_Admin)]
-        public IActionResult Admin()
+		public IActionResult Admin()
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
 			IEnumerable<IdentityUser> accountList = _unit.Account.GetAll();
 			IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
 
@@ -54,10 +46,10 @@ namespace ML_ASP.Controllers
 
 			ViewBag.AccountCount = accountCount;
 			ViewBag.SubmissionCount = submissionCount;
-            ViewBag.submissionList = submissionList;
+			ViewBag.submissionList = submissionList;
 
-			return View(modelList);
-        }
+			return View();
+		}
 
 		[Authorize(Roles = SD.Role_Admin)]
 		[HttpPost]
@@ -96,6 +88,23 @@ namespace ML_ASP.Controllers
 		}
 
 		[Authorize(Roles = SD.Role_Admin)]
+		public ActionResult ViewPdf2(string id)
+		{
+			string path = Path.Combine(_environment.ContentRootPath + "\\Uploads", id);
+
+			if (System.IO.File.Exists(path))
+			{
+				return File(System.IO.File.ReadAllBytes(path), "application/pdf");
+			}
+			else
+			{
+				TempData["failed"] = "File Not Found";
+				return NotFound();
+			}
+		}
+
+
+		[Authorize(Roles = SD.Role_Admin)]
 		public IActionResult Analytics()
 		{
 			var getAccounts = _unit.Account.GetAll();
@@ -107,12 +116,22 @@ namespace ML_ASP.Controllers
 		[HttpPost]
 		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport)
 		{
-			//TODO Something is wrong here..
-
 			_unit.Account.UpdateAccount(numberOfHours,weeklyReport, id.ToString());
 			_unit.Save();
 
 			return RedirectToAction(nameof(Admin));
 		}
-    }
+
+		
+		//------------------------------ENDPOINT REGIONS ------------------------------//
+		#region API CALLS
+		[Authorize]
+		[HttpGet]
+		public IActionResult GetAll()
+		{
+			var modelList = _unit.Submission.GetAll();
+			return Json(new { data = modelList });
+		}
+		#endregion
+	}
 }

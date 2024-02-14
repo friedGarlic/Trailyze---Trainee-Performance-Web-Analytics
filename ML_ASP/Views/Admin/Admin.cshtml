@@ -8,12 +8,13 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+	
+	<!-- My CSS -->
+	<link rel="stylesheet" href="~/css/adminStyle.css">
 	<!-- Boxicons -->
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-	<!-- My CSS -->
-	<link rel="stylesheet" href="~/css/adminStyle.css">
+	<link href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" />
 	<title>AdminHub</title>
 </head>
 <body>
@@ -114,39 +115,22 @@
 						<i class='bx bx-search'></i>
 						<i class='bx bx-filter'></i>
 					</div>
-					<form id="approvalForm" asp-controller="Admin" asp-action="UpdateApprovalStatusBulk" method="post">
+					<!-- <form id="approvalForm" asp-controller="Admin" asp-action="UpdateApprovalStatusBulk" method="post"> -->
 						<table id="submissionTable">
 							<thead>
 								<tr>
-									<th>User</th>
-									<th>Date Submitted</th>
-									<th>Status</th>
-									<th>Approval</th>
+									<th>Name</th>
+									<th>Date</th>
+									<th>File Name</th>
+									<th>Approval Status</th>
+									<th>Actions</th>
 								</tr>
 							</thead>
 							<tbody>
-								@foreach (var i in Model)
-								{
-									<tr>
-										<td>@i.Name</td>
-										<td>@i.Date</td>
-										<td>@i.DueStatus</td>
-										<td>
-											<select name="approvalStatus" asp-items="ViewBag.SubmissionList">
-												<option selected="selected">@i.ApprovalStatus</option>
-											</select>
-											<input type="hidden" name="originalApprovalStatus" value="@i.ApprovalStatus" />
-											<input type="hidden" name="id" value="@i.Id" />
-										</td>
-										<td>
-											<a href="../Admin/ViewPdf?fileName=@i.FileName" target="_blank">View</a>
-										</td>
-									</tr>
-								}
 							</tbody>
 						</table>
-						<button id="updateButton" type="button">Update Approval Status</button>
-					</form>
+						<!-- <button id="updateButton" type="button">Update Approval Status</button>
+					</form> -->
 
 				</div>
 				<div class="todo">
@@ -167,11 +151,15 @@
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
+
+	<!--
 	<script src="~/js/adminScript.js"></script>
+	-->
 </body>
 </html>
 @section Scripts{
 	@{
+	<script src="~/js/admin/submissiont_admin.js"></script>
 	<partial name="_Confirmation"/>
 	}
 	<script>

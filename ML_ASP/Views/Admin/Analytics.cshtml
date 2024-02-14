@@ -140,13 +140,13 @@
 				preConfirm: () => {
 					const numberOfHours = Swal.getPopup().querySelector('#swal-input1').value;
 					const weeklyReport = Swal.getPopup().querySelector('#swal-input2').value;
-					// You can perform validation or additional processing here
+					// perform validation or additional processing here
 					return { id: id, numberOfHours: numberOfHours, weeklyReport: weeklyReport };
 				},
 				allowOutsideClick: () => !Swal.isLoading()
 			}).then((result) => {
 				if (result.isConfirmed) {
-					// Send the data to the controller using AJAX
+					// data to the controller using AJAX
 					sendDataToController(result.value);
 				}
 			});
@@ -154,16 +154,14 @@
 
 		function sendDataToController(data) {
 			$.ajax({
-				url: '/Admin/EditProfile', // Replace with your actual controller and action
+				url: '/Admin/EditProfile',
 				type: 'POST',
 				dataType: 'json',
 				data: data,
 				success: function (response) {
-					// Handle the response from the server if needed
 					console.log("SUCCESS");
 				},
 				error: function (error) {
-					// Handle the error if the request fails
 					console.error(error);
 				}
 			});
