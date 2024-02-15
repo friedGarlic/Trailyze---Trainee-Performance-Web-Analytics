@@ -33,20 +33,11 @@ namespace ML_ASP.Controllers
 			IEnumerable<IdentityUser> accountList = _unit.Account.GetAll();
 			IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
 
-			List<string> options = new List<string> { "Approved", "Declined", "Remake" };
-
-			IEnumerable<SelectListItem> submissionList = options.Select(option => new SelectListItem
-			{
-				Text = option,
-				Value = option
-			});
-
 			var submissionCount = modelList.Count();
 			int accountCount = accountList.Select(u => u.Id).Distinct().Count();
 
 			ViewBag.AccountCount = accountCount;
 			ViewBag.SubmissionCount = submissionCount;
-			ViewBag.submissionList = submissionList;
 
 			return View();
 		}
@@ -57,16 +48,20 @@ namespace ML_ASP.Controllers
 		{
 			for (int i = 0; i < id.Count; i++)
 			{
-				if (originalApprovalStatus[i] != approvalStatus[i])
-				{
-					int changedId = id[i];
-					string newApprovalStatus = approvalStatus[i];
+				int changedId = id[i];
+				string newApprovalStatus = approvalStatus[i];
 
-					_unit.Submission.ChangeApprovalStatus(changedId, newApprovalStatus);
-				}
+				_unit.Submission.ChangeApprovalStatus(changedId, newApprovalStatus);
 			}
-
-			_unit.Save();
+			try
+			{
+				_unit.Save();
+			}
+			catch (Exception ex)
+			{
+				string message = ex.Message;
+				Console.WriteLine("Exception Message: " + message);
+			}
 
 			return RedirectToAction("Admin");
 		}
@@ -133,5 +128,7 @@ namespace ML_ASP.Controllers
 			return Json(new { data = modelList });
 		}
 		#endregion
+
+
 	}
 }
