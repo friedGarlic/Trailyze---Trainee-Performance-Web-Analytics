@@ -94,11 +94,12 @@ namespace ML_ASP.Controllers
 
                 ViewData["ImageUrl"] = imageUrl;
             }
+
             return View(submissionVM);
         }
 
 
-        // --------- ONLY FOR TIME LOG PURPOSES-----------------
+        // --------- ONLY FOR TIME LOG PURPOSES -----------------
         [HttpPost]
         [Authorize]
         public IActionResult Dashboard(bool IsTimedIn)
@@ -147,8 +148,6 @@ namespace ML_ASP.Controllers
             {
                 InputTimeDuration();
             }
-
-            //TODO this function is not adding to db for development purposes
 
             return RedirectToAction(nameof(Dashboard));
         }
@@ -211,7 +210,7 @@ namespace ML_ASP.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult AddReminder(string nameOfReminder,string iconClass,string iconType)
+        public IActionResult AddReminder(string nameOfReminder,string iconType, string iconClass)
         {
             //find the unique current user
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -226,6 +225,13 @@ namespace ML_ASP.Controllers
 
             _unit.Reminder.Add(reminder_Model);
             _unit.Save();
+
+            TempData["success"] = "Timed In Succesfully!";
+
+            submissionVM = new SubmissionVM()
+            {
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+            };
 
             return RedirectToAction(nameof(Dashboard));
         }

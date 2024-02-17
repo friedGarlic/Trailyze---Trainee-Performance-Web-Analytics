@@ -223,8 +223,8 @@
                 {
                     <div class="notification">
                         <div class="icon">
-                            <span class="material-icons-sharp"> <!-- changes for icon -->
-                                volume_up
+                            <span class="@i.IconClass"> <!-- changes for icon -->
+                                @i.IconType
                             </span>
                         </div>
                         <div class="content">
@@ -272,15 +272,26 @@
             Swal.fire({
                 title: 'Add Reminder',
                 html:
-                    '<div class="icon"> <span class="material-icons-sharp">groups</span> <span class="material-icons-sharp">task</span> <span class="material-icons-sharp">devices</span></div>' +
+                    '<div class="icon">' +
+                    '<input type="radio" name="material-icons-sharp" id="radio1" class="radio">' +
+                    '<label for="radio1" class="material-icons-sharp" style="font-size:50px;margin-right: 25px;">groups</label>' +
+
+                    '<input type="radio" name="material-icons-sharp" id="radio2" class="radio">' +
+                    '<label for="radio2" class="material-icons-sharp" style="font-size:50px;margin-right: 25px;">task</label>' +
+
+                    '<input type="radio" name="material-icons-sharp" class="radio">' +
+                    '<label for="radio3" class="material-icons-sharp" style="font-size:50px;">devices</label>' +
+                    '</div>' +
                     '<input id="swal-input1" class="swal2-input" placeholder="Name of reminder">',
-                    showCancelButton: true,
+                showCancelButton: true,
                 confirmButtonText: 'Submit',
                 cancelButtonText: 'Cancel',
                 preConfirm: () => {
+                    const iconType = Swal.getPopup().querySelector('input[name="material-icons-sharp"]:checked + label').textContent.trim();
                     const nameOfReminder = Swal.getPopup().querySelector('#swal-input1').value;
+                    const iconClass = Swal.getPopup().querySelector('input[name="material-icons-sharp"]:checked + label').getAttribute('class');
                     // perform validation or additional processing here
-                    return { nameOfReminder: nameOfReminder };
+                    return { nameOfReminder: nameOfReminder, iconType: iconType, iconClass: iconClass };
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {
