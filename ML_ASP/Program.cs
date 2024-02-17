@@ -1,7 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using ML_ASP.Repositories;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using ML_ASP.DataAccess;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.DataAccess.Repositories;
@@ -28,12 +25,14 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+//DATABASE CONTEXT
 builder.Services.AddDbContext<ApplicationDBContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDBContext>();
 
+//builder.Services.AddHostedService<RepeatingServices>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.ConfigureApplicationCookie(options =>

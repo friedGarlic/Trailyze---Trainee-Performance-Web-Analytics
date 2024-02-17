@@ -58,8 +58,8 @@
                 <div class="hrs-remaining">
                     <div class="status">
                         <div class="info">
-                            <h3>Hours Remaining</h3>
-                            <h1>@ViewBag.RemainingHours Hours</h1>
+                            <h3>Required Hours</h3>
+                            <h1>@ViewBag.RemainingHours : @ViewBag.RemainingMinutes : @ViewBag.RemainingSeconds</h1>
                         </div>
                         <div class="progress">
                             <svg>
@@ -72,7 +72,7 @@
                     <div class="status">
                         <div class="info">
                             <h3>Hours Completed</h3>
-                            <h1>0 Hours</h1>
+                            <h1>@ViewBag.HoursCompleted : @ViewBag.MinutesCompleted : @ViewBag.SecondsCompleted</h1>
                         </div>
                         <div class="progress">
                             <svg>
@@ -97,7 +97,7 @@
                 <div class="task-completed">
                     <div class="status">
                         <div class="info">
-                            <h3>Reports Remaining</h3>
+                            <h3>Total Report Required</h3>
                             <h1>@ViewBag.RemainingReports Weekly Report</h1>
                         </div>
                         <div class="task-progress">
@@ -271,10 +271,9 @@
         </div>
     </div>
 
-    <script src="~/js/index.js"></script>
-    <script src="~/js/orders.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="~/js/site.js"></script>
+    <script src="~/js/dashboard/dashboard.js"></script>
     <script>
         document.getElementById("IsTimedIn").addEventListener("click", function () {
             var slider = document.querySelector(".toggle-slider");

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using ML_ASP.DataAccess.Repositories.IRepositories;
-using ML_ASP.etc;
 using ML_ASP.Models;
 using ML_ASP.Utility;
 

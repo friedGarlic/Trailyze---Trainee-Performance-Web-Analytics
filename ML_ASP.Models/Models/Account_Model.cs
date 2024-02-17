@@ -15,8 +15,20 @@ namespace ML_ASP.Models
         //for viewing
         public int? WeeklyReportRemaining { get; set; }
 
-        public double? HoursRemaining { get; set; }
-        public double? HoursCompleted { get; set; }
+        //remaining
+        public int? HoursRemaining { get; set; }
+        public int? MinutesRemaining { get; set; }
+        public int? SecondsRemaining { get; set; }
+
+        //completed
+        public int? HoursCompleted { get; set; }
+        public int? MinutesCompleted { get; set; }
+        public int? SecondsCompleted { get; set; }
+
+        //total
+        public TimeSpan TotalTime { get; set; }
+
+        //profile
         public string? ImageUrl { get; set; }
     }
 }

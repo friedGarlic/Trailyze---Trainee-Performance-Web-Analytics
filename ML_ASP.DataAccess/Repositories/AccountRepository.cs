@@ -43,7 +43,30 @@ namespace ML_ASP.DataAccess.Repositories
 			}
 		}
 
-		public double? GetRemainingHours(IdentityUser user)
+        public void UpdateTime(
+            int? hCompleted, int? mCompleted,  int? sCompleted,
+            int? hRemaining, int? mRemaining, int? sRemaining,
+            TimeSpan totalTime,
+            string id)
+        {
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
+            if (objFromDb != null)
+            {
+                //remaining
+                objFromDb.HoursRemaining = hRemaining;
+                objFromDb.MinutesRemaining = mRemaining;
+                objFromDb.SecondsRemaining = sRemaining;
+
+                //completed
+                objFromDb.HoursCompleted = hCompleted;
+                objFromDb.MinutesCompleted = mCompleted;
+                objFromDb.SecondsCompleted = sCompleted;
+
+                objFromDb.TotalTime = totalTime;
+            }
+        }
+
+        public double? GetRemainingHours(IdentityUser user)
 		{
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
 

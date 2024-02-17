@@ -4,6 +4,7 @@ using ML_ASP.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ML_ASP.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240216084821_addVarAccModel")]
+    partial class addVarAccModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,28 +347,16 @@ namespace ML_ASP.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("HoursCompleted")
-                        .HasColumnType("int");
+                    b.Property<double?>("HoursCompleted")
+                        .HasColumnType("float");
 
-                    b.Property<int?>("HoursRemaining")
-                        .HasColumnType("int");
+                    b.Property<double?>("HoursRemaining")
+                        .HasColumnType("float");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MinutesCompleted")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("MinutesRemaining")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SecondsCompleted")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SecondsRemaining")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("TotalTime")
+                    b.Property<TimeSpan?>("TimeSpanDuration")
                         .HasColumnType("time");
 
                     b.Property<int?>("WeeklyReportRemaining")

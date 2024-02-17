@@ -1,4 +1,5 @@
-﻿using Accord.IO;
+﻿using Accord;
+using Accord.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -71,9 +72,16 @@ namespace ML_ASP.Controllers
             int submissionCount = submission.Count();
 
             ViewBag.SubmissionCount = submissionCount;
-            //
-            ViewBag.RemainingHours = account.HoursRemaining;
             ViewBag.RemainingReports = account.WeeklyReportRemaining;
+
+            //remaining
+            ViewBag.RemainingHours = account.HoursRemaining;
+            ViewBag.RemainingMinutes = account.MinutesRemaining;
+            ViewBag.RemainingSeconds = account.SecondsRemaining;
+            //completed
+            ViewBag.HoursCompleted = account.HoursCompleted;
+            ViewBag.MinutesCompleted = account.MinutesCompleted;
+            ViewBag.SecondsCompleted = account.SecondsCompleted;
 
             //check if theres log in account
             //post picture if there is
@@ -129,8 +137,14 @@ namespace ML_ASP.Controllers
                 LogList = _unit.Log.GetAll(u => u.LogId == claim.Value)
             };
 
+            
             _unit.Log.Add(logModel);
             _unit.Save();
+
+            if (IsTimedIn == true)
+            {
+                InputTimeDuration();
+            }
 
             //TODO this function is not adding to db for development purposes
 
@@ -193,6 +207,94 @@ namespace ML_ASP.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
+        public void InputTimeDuration()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+
+            //populate account hrs if null
+            PopulateTime();
+
+            var lastTimedInEntry = _unit.Log.GetAll(u => u.LogId == claim.Value && u.Log == "Timed In")
+                                    .OrderByDescending(u => u.DateTime)
+                                    .FirstOrDefault();
+
+            var lastTimedOutEntry = _unit.Log.GetAll(u => u.LogId == claim.Value && u.Log == "Timed Out")
+                                     .OrderByDescending(u => u.DateTime)
+                                     .FirstOrDefault();
+
+            
+            TimeSpan fullDuration = lastTimedOutEntry.DateTime - lastTimedInEntry.DateTime;
+
+            int totalDurationSeconds = (int)fullDuration.TotalSeconds;
+            int hours = totalDurationSeconds / 3600; // Calculate hours from total seconds
+            totalDurationSeconds %= 3600;            // Remaining seconds after subtracting hours
+            int minutes = totalDurationSeconds / 60; // Calculate minutes from remaining seconds
+            int seconds = totalDurationSeconds % 60;
+
+            //completed
+            var totalHours = account.HoursCompleted + hours;
+            var totalMinutes = account.MinutesCompleted + minutes;
+            var totalSeconds = account.SecondsCompleted + seconds;
+
+            //remianing
+            var totalRemainingH = account.HoursRemaining - hours;
+            var totalRemainingM = account.MinutesRemaining - minutes;
+            var totalRemainingS = account.SecondsRemaining - seconds;
+
+            if (totalRemainingS < 0)
+            {
+                totalRemainingM -= 1;
+                totalRemainingS += 60;
+            }
+
+            if (totalRemainingM < 0)
+            {
+                totalRemainingH -= 1;
+                totalRemainingM += 60;
+            }
+
+            _unit.Account.UpdateTime(totalHours, totalMinutes, totalSeconds,
+                totalRemainingH, totalRemainingM, totalRemainingS,
+                fullDuration, account.Id);
+            _unit.Save();
+        }
+
+        public void PopulateTime()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
+
+            //completed
+            if(account.HoursCompleted == null)
+            {
+                account.HoursCompleted = 0;
+            }
+            if(account.MinutesCompleted == null)
+            {
+                account.MinutesCompleted = 0;
+            }
+            if(account.SecondsCompleted == null)
+            {
+                account.SecondsCompleted = 0;
+            }
+
+            //remaining
+            if(account.HoursRemaining == null)
+            {
+                account.HoursRemaining = 0;
+            }
+            if(account.MinutesRemaining == null)
+            {
+                account.MinutesRemaining = 0;
+            }
+            if (account.SecondsRemaining == null)
+            {
+                account.SecondsRemaining = 0;
+            }
+        }
     }
 }
 

@@ -25,4 +25,8 @@
     <Folder Include="Predictions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ML_ASP.Utility\ML_ASP.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

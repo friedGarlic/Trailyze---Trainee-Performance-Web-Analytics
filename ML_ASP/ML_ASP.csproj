@@ -49,8 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
-    <Folder Include="ProfileImages\" />
     <Folder Include="Uploads\" />
     <Folder Include="wwwroot\ProfileImages\" />
     <Folder Include="wwwroot\Uploads\" />
