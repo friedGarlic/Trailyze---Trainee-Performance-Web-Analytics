@@ -14,5 +14,6 @@ namespace ML_ASP.DataAccess
         public DbSet<Trainee_Model> Trainees { get; set; }
         public DbSet<SubmissionModel> Submissions { get; set; }
         public DbSet<LogModel> Logs { get; set; }
+        public DbSet<Reminder_Model> Reminders { get; set; }
     }
 }

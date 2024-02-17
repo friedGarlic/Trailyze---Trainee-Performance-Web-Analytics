@@ -14,6 +14,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 
         ILogRepository Log { get; }
 
+        IReminderRepository Reminder { get; }
+
         void Save();
     }
 }

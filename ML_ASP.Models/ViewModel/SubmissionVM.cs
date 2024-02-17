@@ -13,7 +13,9 @@ namespace ML_ASP.Models.ViewModel
 
 		public IEnumerable<Account_Model> AccountList { get; set; }
 
-		public string AccountName { get; set; }
+        public IEnumerable<Reminder_Model> ReminderList { get; set; }
+
+        public string AccountName { get; set; }
 
 		public string TimeLog { get; set; }
 

@@ -31,6 +31,7 @@ namespace ML_ASP.Controllers
             _environment = environment;
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
+            //for trained model to use
             var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
@@ -53,7 +54,8 @@ namespace ML_ASP.Controllers
 
             submissionVM = new SubmissionVM()
             {
-                LogList = _unit.Log.GetAll(u => u.LogId == claim.Value)
+                LogList = _unit.Log.GetAll(u => u.LogId == claim.Value),
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
             };
             //Get Account List and name ends --------------------------
 
@@ -207,6 +209,30 @@ namespace ML_ASP.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
+        [Authorize]
+        [HttpPost]
+        public ActionResult AddReminder(string nameOfReminder,string iconClass,string iconType)
+        {
+            //find the unique current user
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            Reminder_Model reminder_Model = new Reminder_Model();
+
+            reminder_Model.Name = nameOfReminder;
+            reminder_Model.UserId = claim.Value;
+            reminder_Model.IconClass = iconClass;
+            reminder_Model.IconType = iconType;
+
+            _unit.Reminder.Add(reminder_Model);
+            _unit.Save();
+
+            return RedirectToAction(nameof(Dashboard));
+        }
+
+        //-----------------HELPER FUNCTIONS OR METHODS--------------------------
+
+        //for calculation in time duration between Timein/timout
         public void InputTimeDuration()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -261,6 +287,7 @@ namespace ML_ASP.Controllers
             _unit.Save();
         }
 
+        //check if h/m/s duration is null
         public void PopulateTime()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;

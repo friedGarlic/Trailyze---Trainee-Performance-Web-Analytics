@@ -219,45 +219,28 @@
                     </span>
                 </div>
 
-                <div class="notification">
-                    <div class="icon">
-                        <span class="material-icons-sharp">
-                            volume_up
-                        </span>
-                    </div>
-                    <div class="content">
-                        <div class="info">
-                            <h3>Workshop</h3>
-                            <small class="text_muted">
-                                08:00 AM - 12:00 PM
-                            </small>
+                @foreach(var i in Model.ReminderList) // if theres an error here that means your not passing the ReminderList obj
+                {
+                    <div class="notification">
+                        <div class="icon">
+                            <span class="material-icons-sharp"> <!-- changes for icon -->
+                                volume_up
+                            </span>
                         </div>
-                        <span class="material-icons-sharp">
-                            more_vert
-                        </span>
-                    </div>
-                </div>
-
-                <div class="notification deactive">
-                    <div class="icon">
-                        <span class="material-icons-sharp">
-                            edit
-                        </span>
-                    </div>
-                    <div class="content">
-                        <div class="info">
-                            <h3>Workshop</h3>
-                            <small class="text_muted">
-                                08:00 AM - 12:00 PM
-                            </small>
+                        <div class="content">
+                            <div class="info">
+                                <h3>@i.Name</h3>
+                                <small class="text_muted">
+                                    08:00 AM - 12:00 PM
+                                </small>
+                            </div>
+                            <span class="material-icons-sharp">
+                                more_vert
+                            </span>
                         </div>
-                        <span class="material-icons-sharp">
-                            more_vert
-                        </span>
                     </div>
-                </div>
-
-                <div class="notification add-reminder">
+                }
+                <div class="notification add-reminder" onclick="showInputPopup()">
                     <div>
                         <span class="material-icons-sharp">
                             add
@@ -265,15 +248,18 @@
                         <h3>Add Reminder</h3>
                     </div>
                 </div>
+                <!-- <div class="notification deactive"> for indication if reminders have more functionality-->
 
             </div>
 
         </div>
     </div>
 
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="~/js/site.js"></script>
-    <script src="~/js/dashboard/dashboard.js"></script>
+
     <script>
         document.getElementById("IsTimedIn").addEventListener("click", function () {
             var slider = document.querySelector(".toggle-slider");
@@ -281,6 +267,48 @@
             document.getElementById("toggleForm").submit();
         });
     </script>
-</body>
+    <script>
+        function showInputPopup() {
+            Swal.fire({
+                title: 'Add Reminder',
+                html:
+                    '<div class="icon"> <span class="material-icons-sharp">groups</span> <span class="material-icons-sharp">task</span> <span class="material-icons-sharp">devices</span></div>' +
+                    '<input id="swal-input1" class="swal2-input" placeholder="Name of reminder">',
+                    showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    const nameOfReminder = Swal.getPopup().querySelector('#swal-input1').value;
+                    // perform validation or additional processing here
+                    return { nameOfReminder: nameOfReminder };
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // data to the controller using AJAX
+                    sendDataToController(result.value);
+                }
+            });
+        }
 
+        function sendDataToController(data) {
+            $.ajax({
+                url: '/Dashboard/AddReminder',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function (response) {
+                    console.log("SUCCESS");
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
+</body>
 </html>
+
+@section Scripts{
+    
+}
