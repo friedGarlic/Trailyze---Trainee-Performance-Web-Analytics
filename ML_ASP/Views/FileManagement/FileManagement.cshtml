@@ -107,45 +107,29 @@
                     </span>
                 </div>
 
-                <div class="notification">
-                    <div class="icon">
-                        <span class="material-icons-sharp">
-                            volume_up
-                        </span>
-                    </div>
-                    <div class="content">
-                        <div class="info">
-                            <h3>Workshop</h3>
-                            <small class="text_muted">
-                                08:00 AM - 12:00 PM
-                            </small>
+                @foreach (var i in Model.ReminderList) // if theres an error here that means your not passing the ReminderList obj properly
+                {
+                    <div class="notification">
+                        <div class="icon">
+                            <span class="@i.IconClass">
+                                <!-- changes for icon -->
+                                @i.IconType
+                            </span>
                         </div>
-                        <span class="material-icons-sharp">
-                            more_vert
-                        </span>
-                    </div>
-                </div>
-
-                <div class="notification deactive">
-                    <div class="icon">
-                        <span class="material-icons-sharp">
-                            edit
-                        </span>
-                    </div>
-                    <div class="content">
-                        <div class="info">
-                            <h3>Workshop</h3>
-                            <small class="text_muted">
-                                08:00 AM - 12:00 PM
-                            </small>
+                        <div class="content">
+                            <div class="info">
+                                <h3>@i.Name</h3>
+                                <small class="text_muted">
+                                    08:00 AM - 12:00 PM
+                                </small>
+                            </div>
+                            <span class="material-icons-sharp">
+                                more_vert
+                            </span>
                         </div>
-                        <span class="material-icons-sharp">
-                            more_vert
-                        </span>
                     </div>
-                </div>
-
-                <div class="notification add-reminder">
+                }
+                <div class="notification add-reminder" onclick="showInputPopup()">
                     <div>
                         <span class="material-icons-sharp">
                             add
@@ -153,6 +137,7 @@
                         <h3>Add Reminder</h3>
                     </div>
                 </div>
+                <!-- <div class="notification deactive"> for indication if reminders have more functionality-->
 
             </div>
 
@@ -164,4 +149,55 @@
 
 @section Scripts{
     <script src="~/js/fileManagement/submissiont.js"></script>
+    <script>
+
+        function showInputPopup() {
+            Swal.fire({
+                title: 'Add Reminder',
+                html:
+                    '<div class="icon">' +
+                    '<input type="radio" name="material-icons-sharp" id="radio1" class="radio">' +
+                    '<label for="radio1" class="material-icons-sharp" style="font-size:50px;margin-right: 25px;">groups</label>' +
+
+                    '<input type="radio" name="material-icons-sharp" id="radio2" class="radio">' +
+                    '<label for="radio2" class="material-icons-sharp" style="font-size:50px;margin-right: 25px;">task</label>' +
+
+                    '<input type="radio" name="material-icons-sharp" class="radio">' +
+                    '<label for="radio3" class="material-icons-sharp" style="font-size:50px;">devices</label>' +
+                    '</div>' +
+                    '<input id="swal-input1" class="swal2-input" placeholder="Name of reminder">',
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    const iconType = Swal.getPopup().querySelector('input[name="material-icons-sharp"]:checked + label').textContent.trim();
+                    const nameOfReminder = Swal.getPopup().querySelector('#swal-input1').value;
+                    const iconClass = Swal.getPopup().querySelector('input[name="material-icons-sharp"]:checked + label').getAttribute('class');
+                    // perform validation or additional processing here
+                    return { nameOfReminder: nameOfReminder, iconType: iconType, iconClass: iconClass };
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // data to the controller using AJAX
+                    sendDataToController(result.value);
+                }
+            });
+        }
+
+        function sendDataToController(data) {
+            $.ajax({
+                url: '/Dashboard/AddReminder',
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                success: function (response) {
+                    console.log("SUCCESS");
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
 }

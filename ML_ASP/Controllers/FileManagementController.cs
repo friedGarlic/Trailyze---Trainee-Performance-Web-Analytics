@@ -42,6 +42,14 @@ namespace ML_ASP.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            //populate the reminderlist 
+            submissionVM = new SubmissionVM()
+            {
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+            };
+
+            //pass in the current user Profile Image Url
             if (claim != null)
             {
                 var getAcc = _unit.Account.GetFirstOrDefault(x => x.Id == claim.Value);
@@ -49,11 +57,11 @@ namespace ML_ASP.Controllers
 
                 ViewData["ImageUrl"] = imageUrl;
 
-                return View();
+                return View(submissionVM);
             }
             else
             {
-                return View();
+                return View(submissionVM);
             }
         }
 
@@ -182,10 +190,10 @@ namespace ML_ASP.Controllers
                 return RedirectToAction(nameof(FileManagement));
             }
             //VERIFICATION OF NO UPLOAD SUBMIT ENDS--------------
-
             submissionVM = new SubmissionVM()
             {
                 SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value),
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
                 IsMultipleFile = true
             };
             //DATABASE COLLERATION ENDS------------
