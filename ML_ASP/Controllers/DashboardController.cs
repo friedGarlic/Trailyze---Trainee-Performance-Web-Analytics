@@ -226,7 +226,7 @@ namespace ML_ASP.Controllers
             _unit.Reminder.Add(reminder_Model);
             _unit.Save();
 
-            TempData["success"] = "Timed In Succesfully!";
+            TempData["success"] = "Added Reminder Succesfully!";
 
             submissionVM = new SubmissionVM()
             {

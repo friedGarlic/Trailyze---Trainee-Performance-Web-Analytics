@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
+using ML_ASP.Models.Models;
+using ML_ASP.Models.ViewModel;
 using ML_ASP.Utility;
+using System.Security.Claims;
 
 namespace ML_ASP.Controllers
 {
@@ -12,6 +15,8 @@ namespace ML_ASP.Controllers
     {
         private readonly IUnitOfWork _unit;
 		private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
+
+		public SubmissionVM submissionVM { get; set; }
 
 		public AdminController(IUnitOfWork unit,
 			Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment)
@@ -28,6 +33,9 @@ namespace ML_ASP.Controllers
         [Authorize(Roles = SD.Role_Admin)]
 		public IActionResult Admin()
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
 			IEnumerable<IdentityUser> accountList = _unit.Account.GetAll();
 			IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
 
@@ -37,7 +45,12 @@ namespace ML_ASP.Controllers
 			ViewBag.AccountCount = accountCount;
 			ViewBag.SubmissionCount = submissionCount;
 
-			return View();
+			submissionVM = new SubmissionVM()
+			{
+				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+			};
+
+			return View(submissionVM);
 		}
 
 		[Authorize(Roles = SD.Role_Admin)]
@@ -61,7 +74,7 @@ namespace ML_ASP.Controllers
 				Console.WriteLine("Exception Message: " + message);
 			}
 
-			return RedirectToAction("Admin");
+			return RedirectToAction(nameof(Admin));
 		}
 
 		[Authorize(Roles = SD.Role_Admin)]
@@ -101,8 +114,11 @@ namespace ML_ASP.Controllers
 		public IActionResult Analytics()
 		{
 			var getAccounts = _unit.Account.GetAll();
-
-			return View(getAccounts);
+			submissionVM = new SubmissionVM()
+			{
+				AccountList = getAccounts
+			};
+			return View(submissionVM);
 		}
 
 		[Authorize]
@@ -115,7 +131,39 @@ namespace ML_ASP.Controllers
 			return RedirectToAction(nameof(Admin));
 		}
 
-		
+		[Authorize]
+		[HttpPost]
+		public IActionResult AddTodoList(string nameOfReminder, string iconType, string iconClass)
+		{
+			//find the unique current user
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+			Reminder_Model reminder_Model = new Reminder_Model();
+
+			//for admin dashboard todolist, populate so it doesnt sve in db as null
+			if (iconType == null)
+			{
+				iconType = "0";
+			}
+
+			reminder_Model.Name = nameOfReminder;
+			reminder_Model.UserId = claim.Value;
+			reminder_Model.IconClass = iconClass;
+			reminder_Model.IconType = iconType;
+
+			_unit.Reminder.Add(reminder_Model);
+			_unit.Save();
+
+			TempData["success"] = "Added Reminder Succesfully!";
+
+			submissionVM = new SubmissionVM()
+			{
+				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+			};
+
+			return RedirectToAction(nameof(Admin));
+		}
 		//------------------------------ENDPOINT REGIONS ------------------------------//
 		#region API CALLS
 		[Authorize]

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SubmissionModel>
+﻿@model ML_ASP.Models.ViewModel.SubmissionVM
 @{
 	Layout = "_AMasterpage_2";
 }
@@ -135,19 +135,26 @@
 					</form>
 
 				</div>
+				<!-- TODOS LIST FEATURE STARTS-->
 				<div class="todo">
+					
 					<div class="head">
 						<h3>Todos</h3>
-						<i class='bx bx-plus'></i>
+						<i class='bx bx-plus' onclick="showInputPopup()"></i>
 						<i class='bx bx-filter'></i>
 					</div>
-					<ul class="todo-list">
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded'></i>
-						</li>
-					</ul>
+
+					<!-- TODO LISTS-->
+					@foreach(var i in Model.ReminderList){
+						<ul class="todo-list">
+							<li class="@i.IconClass">
+								<p>@i.Name</p>
+								<i class='bx bx-dots-vertical-rounded'></i>
+							</li>
+						</ul>
+					}
 				</div>
+				<!-- TODOS LIST FEATURE ENDS-->
 			</div>
 		</main>
 		<!-- MAIN -->
@@ -181,6 +188,46 @@
 			}).then((result) => {
 				if (result.isConfirmed) {
 					document.getElementById('approvalForm').submit();
+				}
+			});
+		}
+	</script>
+	<script>
+		function showInputPopup() {
+			Swal.fire({
+				title: 'Add Reminder',
+				html:
+					'<input type="hidden" class="not-completed">' +
+					'<input id="swal-input1" class="swal2-input" placeholder="Name of reminder">',
+				showCancelButton: true,
+				confirmButtonText: 'Submit',
+				cancelButtonText: 'Cancel',
+				preConfirm: () => {
+					const nameOfReminder = Swal.getPopup().querySelector('#swal-input1').value;
+					const iconClass = Swal.getPopup().querySelector('input.not-completed').getAttribute('class');
+					// perform validation or additional processing here
+					return { nameOfReminder: nameOfReminder, iconClass: iconClass };
+				},
+				allowOutsideClick: () => !Swal.isLoading()
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// data to the controller using AJAX
+					sendDataToController(result.value);
+				}
+			});
+		}
+
+		function sendDataToController(data) {
+			$.ajax({
+				url: '/Admin/AddTodoList',
+				type: 'POST',
+				dataType: 'json',
+				data: data,
+				success: function (response) {
+					console.log("SUCCESS");
+				},
+				error: function (error) {
+					console.error(error);
 				}
 			});
 		}

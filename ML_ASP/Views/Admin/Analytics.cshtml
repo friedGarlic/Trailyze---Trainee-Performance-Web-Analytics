@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Account_Model>
+﻿@model ML_ASP.Models.ViewModel.SubmissionVM
 @{
 	Layout = "_AMasterpage_2";
 }
@@ -97,7 +97,7 @@
 			<h3 class="title"> Changes and Updates </h3>
 
 				<div class="box-container">
-					@foreach (var models in Model.ToList())
+					@foreach (var models in Model.AccountList)
 					{
 						<div class="box">
 							<img src="@models.ImageUrl" />
