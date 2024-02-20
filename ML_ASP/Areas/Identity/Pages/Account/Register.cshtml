@@ -52,7 +52,17 @@
                     <option disabled selected>--Select Role--</option> 
                 </select>
             }
-
+            @if (ModelState.Any())
+            {
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
@@ -86,7 +96,8 @@
         </section>
     </div>
 </div>
-
+<script src="~/lib/jquery/dist/jquery.min.js">
+</script><script src="~/js/registrationValidation.js"></script>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

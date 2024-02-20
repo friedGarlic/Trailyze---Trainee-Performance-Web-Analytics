@@ -30,5 +30,6 @@ namespace ML_ASP.Models
 
         //profile
         public string? ImageUrl { get; set; }
+        public string? Course { get; set; }
     }
 }

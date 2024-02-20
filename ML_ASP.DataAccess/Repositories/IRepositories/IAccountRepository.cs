@@ -19,11 +19,13 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
             string id);
 
         public void Update(Account_Model model, string id);
+        public void UpdateCourse(string? course, string id);
 
-
-		public Account_Model GetFirstAndDefault();
+        //GETTERS
+        public Account_Model GetFirstAndDefault();
 		public double? GetRemainingHours(IdentityUser user);
 		public int? GetRemainingReports(IdentityUser user);
         public string? GetImageUrl(IdentityUser user);
+        public string? GetCourse(IdentityUser user);
     }
 }

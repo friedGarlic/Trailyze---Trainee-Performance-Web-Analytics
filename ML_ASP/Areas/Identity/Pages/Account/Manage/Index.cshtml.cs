@@ -71,15 +71,17 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
 
             public double? RemainingHours { get; set; }
             public int? WeeklyReportRemaining { get; set; }
+            public string? Course { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            var remainingHours = _unit.Account.GetRemainingHours(user);
-            var remainingReports = _unit.Account.GetRemainingReports(user);
+            //var remainingHours = _unit.Account.GetRemainingHours(user);
+            //var remainingReports = _unit.Account.GetRemainingReports(user);
             var imageUrl = _unit.Account.GetImageUrl(user);
+            var course = _unit.Account.GetCourse(user);
 
             Username = userName;
             ImageUrl = imageUrl;
@@ -87,8 +89,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
-                RemainingHours = remainingHours,
-                WeeklyReportRemaining = remainingReports,
+                Course = course
             };
         }
 
@@ -127,6 +128,14 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+
+            //UPDATE COURSE
+            if (Input.Course != null)
+            {
+                var account = _unit.Account.GetFirstOrDefault(x => x.Id == user.Id);
+                _unit.Account.UpdateCourse(Input.Course, user.Id);
+                _unit.Save();
             }
 
             await _signInManager.RefreshSignInAsync(user);

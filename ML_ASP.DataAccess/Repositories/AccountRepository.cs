@@ -19,11 +19,6 @@ namespace ML_ASP.DataAccess.Repositories
 			_dbContext = dbContext;
 		}
 
-        public Account_Model GetFirstAndDefault()
-        {
-			return _dbContext.Accounts.FirstOrDefault();
-        }
-
 		public void Update(Account_Model model, string id) //update Image url
 		{
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
@@ -32,6 +27,15 @@ namespace ML_ASP.DataAccess.Repositories
                 objFromDb.ImageUrl = model.ImageUrl;
             }
 		}
+
+        public void UpdateCourse(string? course, string id)
+        {
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
+            if (objFromDb != null)
+            {
+                objFromDb.Course = course;
+            }
+        }
 
 		public void UpdateAccount(int hrsRemain,int weeklyReport, string id)
 		{
@@ -66,6 +70,7 @@ namespace ML_ASP.DataAccess.Repositories
             }
         }
 
+        //GETTERS ------------------------------------
         public double? GetRemainingHours(IdentityUser user)
 		{
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
@@ -89,6 +94,20 @@ namespace ML_ASP.DataAccess.Repositories
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
 
             var remain = objFromDb.ImageUrl;
+
+            return remain;
+        }
+
+        public Account_Model GetFirstAndDefault()
+        {
+            return _dbContext.Accounts.FirstOrDefault();
+        }
+
+        public string? GetCourse(IdentityUser user)
+        {
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == user.Id);
+
+            var remain = objFromDb.Course;
 
             return remain;
         }

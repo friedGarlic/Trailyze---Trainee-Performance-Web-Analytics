@@ -86,8 +86,11 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+
+            [BindProperty]
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(8, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long.")]
+            [RegularExpression(@"^(?=.*[A-Z])(?=.*[0-9])(?=.*\W)[A-Za-z0-9\W]{8,}$", ErrorMessage = "Password must contain at least 1 uppercase letter, 1 number, and 1 special character.")]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
