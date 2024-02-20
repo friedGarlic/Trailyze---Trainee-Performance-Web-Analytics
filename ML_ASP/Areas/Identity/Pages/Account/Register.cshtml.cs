@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -94,17 +93,15 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             [StringLength(16, MinimumLength = 8, ErrorMessage = "Password must be at least 16 characters long.")]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
-            [RegularExpression(@"^(?=.*\W)(?=.*[a-z]).*$", ErrorMessage = "Password must contain at least 1 special character and 1 lowercase letter.")]
-            //[RegularExpression(@"^(?=.*\W).*$", ErrorMessage = "Password must contain at least 1 special character.")]
-            [Validation(ErrorMessage = "Password must contain at least 1 uppercase letter.")]
-            //[PasswordComplexity(ErrorMessage = "Password must contain at least 1 lower letter.")]
+            [RegularExpression(@"^(?=.*\d)(?=.*[A-Z])(?=.*\W)(?=.*[a-z]).*$")]
             public string Password { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        [DataType(DataType.Password)]
+
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
+            [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }

@@ -18,9 +18,15 @@
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" aria-required="true" placeholder="password" />
+                <input asp-for="Input.Password" id="passwordInput" class="form-control" aria-required="true" placeholder="password" />
                 <label asp-for="Input.Password">Password</label>
                 <span asp-validation-for="Input.Password" class="text-danger" id="password-error"></span>
+                <ul id="passwordErrors">
+                    <li id="lengthError" style="display: none;">Password must be at least 8 and at most 16 characters long.</li>
+                    <li id="specialCharError" style="display: none;">Password must contain at least 1 special character.</li>
+                    <li id="numericCharError" style="display: none;">Password must contain at least 1 numerical character.</li>
+                    <li id="lowercaseCharError" style="display: none;">Password must contain at least 1 lowercase letter.</li>
+                </ul>
             </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.ConfirmPassword" class="form-control" aria-required="true" placeholder="password" />
@@ -96,8 +102,28 @@
         </section>
     </div>
 </div>
-<script src="~/lib/jquery/dist/jquery.min.js">
-</script><script src="~/js/registrationValidation.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordErrors = document.getElementById('passwordErrors');
+        const lengthError = document.getElementById('lengthError');
+        const specialCharError = document.getElementById('specialCharError');
+        const numericCharError = document.getElementById('numericCharError');
+        const lowercaseCharError = document.getElementById('lowercaseCharError');
+
+        passwordInput.addEventListener('input', function () {
+            const password = passwordInput.value;
+
+            lengthError.style.display = password.length < 8 || password.length > 16 ? 'block' : 'none';
+            specialCharError.style.display = /[^\w\s]/.test(password) ? 'none' : 'block';
+            numericCharError.style.display = /\d/.test(password) ? 'none' : 'block';
+            lowercaseCharError.style.display = /[a-z]/.test(password) ? 'none' : 'block';
+        });
+    });
+</script>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
