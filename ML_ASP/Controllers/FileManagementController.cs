@@ -32,8 +32,20 @@ namespace ML_ASP.Controllers
             _environment = environment;
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
-            var demoPath = _environment.ContentRootPath;
-            var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
+            var currentDirectory = _environment.ContentRootPath;
+
+            string desiredDirectory = "ClassLibrary1";
+            string modelDirectory = "ModelSession_2";
+            while (!Directory.Exists(Path.Combine(currentDirectory, desiredDirectory)))
+            {
+                currentDirectory = Directory.GetParent(currentDirectory).FullName;
+            }
+
+            currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
+            // Construct the path relative to the desired directory
+            string combinePath = Path.Combine(currentDirectory, modelDirectory);
+            string modelPath = Path.Combine(combinePath, "GradePrediction.zip");
+
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
