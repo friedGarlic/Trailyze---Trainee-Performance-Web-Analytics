@@ -38,9 +38,20 @@ namespace ML_net.ModelSession_2
         {
             var context = new MLContext();
 
+            string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Navigate up until reaching the desired directory (ClassLibrary1)
+            string desiredDirectory = "ModelSession_2";
+            while (!Directory.Exists(Path.Combine(currentDirectory, desiredDirectory)))
+            {
+                currentDirectory = Directory.GetParent(currentDirectory).FullName;
+            }
+            currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
+            // Construct the path relative to the desired directory
+            string filePath = Path.Combine(currentDirectory, "report_grade.csv");
+
             //load data
-            var trainData = context.Data.LoadFromTextFile<Object_DataSet>("C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\report_grade.csv",
-                hasHeader: true, separatorChar: ',');
+            var trainData = context.Data.LoadFromTextFile<Object_DataSet>(filePath,hasHeader: true, separatorChar: ',');
 
             var testTrainSplit = context.Data.TrainTestSplit(trainData, testFraction: 0.1);
 
@@ -64,9 +75,9 @@ namespace ML_net.ModelSession_2
 
             var prediction = predictFunc.Predict(newdata);
 
-            //Console.WriteLine($"Predicted Grade: {prediction.Prediciton}");
+            Console.WriteLine($"Predicted Grade: {prediction.Prediciton}");
 
-            //Console.ReadLine();
+            Console.ReadLine();
 
             var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
 

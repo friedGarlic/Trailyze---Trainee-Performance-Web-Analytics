@@ -5,6 +5,7 @@ using ML_ASP.DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
 using ML_ASP.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Hosting.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,6 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDBContext>();
 
-//builder.Services.AddHostedService<RepeatingServices>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.ConfigureApplicationCookie(options =>

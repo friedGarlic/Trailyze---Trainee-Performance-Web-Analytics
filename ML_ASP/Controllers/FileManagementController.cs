@@ -32,6 +32,7 @@ namespace ML_ASP.Controllers
             _environment = environment;
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
+            var demoPath = _environment.ContentRootPath;
             var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
@@ -148,6 +149,7 @@ namespace ML_ASP.Controllers
                     ViewBag.Message += string.Format("<b>{0}</b> uploaded.<br />", fileName);
                 }
 
+                //TODO dont forget this temporary unit test
                 int numWordsInPdf = Demo.CountSpacesInPdf(filePath);
 
                 Random rnd = new Random();
