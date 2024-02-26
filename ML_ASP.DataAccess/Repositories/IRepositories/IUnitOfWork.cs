@@ -16,6 +16,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 
         IReminderRepository Reminder { get; }
 
+        IQRRepository QR { get; }
+
         void Save();
     }
 }

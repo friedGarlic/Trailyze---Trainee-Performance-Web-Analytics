@@ -79,7 +79,7 @@ namespace ML_net.ModelSession_2
 
             Console.ReadLine();
 
-            var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
+            var modelPath = "C:\\Users\\Rem\\source\\repos\\Trailyze---Trainee-Performance-Web-Analytics\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
 
             context.Model.Save(model, trainData.Schema, modelPath);
         }

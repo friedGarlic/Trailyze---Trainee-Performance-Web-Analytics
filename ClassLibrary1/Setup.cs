@@ -10,7 +10,7 @@ namespace Setup
     {
         public static void Main(string[] args)
         {
-            //ML_net.ModelSession_1.Demo.Execute();
+            ML_net.ModelSession_1.Demo.Execute();
             //ML_net.ModelSession_2.Demo.Execute();
         }
     }

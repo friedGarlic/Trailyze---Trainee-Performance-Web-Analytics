@@ -6,6 +6,9 @@ using ML_ASP.Models;
 using ML_ASP.Models.Models;
 using ML_ASP.Models.ViewModel;
 using ML_ASP.Utility;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Security.Claims;
 
 namespace ML_ASP.Controllers
@@ -53,7 +56,20 @@ namespace ML_ASP.Controllers
 			return View(submissionVM);
 		}
 
-		[Authorize(Roles = SD.Role_Admin)]
+
+        [Authorize(Roles = SD.Role_Admin)]
+        public IActionResult Analytics()
+        {
+            var getAccounts = _unit.Account.GetAll();
+            submissionVM = new SubmissionVM()
+            {
+                AccountList = getAccounts
+            };
+            return View(submissionVM);
+        }
+
+        // --------------------METHODS ------------------
+        [Authorize(Roles = SD.Role_Admin)]
 		[HttpPost]
 		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> originalApprovalStatus)
 		{
@@ -109,18 +125,38 @@ namespace ML_ASP.Controllers
 			}
 		}
 
+		[HttpPost]
+        public ViewResult GenerateQRCode(QRModel model)
+        {
+			Random random = new Random();
+			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			int length = 8; // Length of the random string
+			var randomString = new string(Enumerable.Repeat(chars, length)
+				.Select(s => s[random.Next(s.Length)]).ToArray());
 
-		[Authorize(Roles = SD.Role_Admin)]
-		public IActionResult Analytics()
-		{
-			var getAccounts = _unit.Account.GetAll();
+			model.QrCode = randomString;
+
+			using (MemoryStream ms = new MemoryStream())
+            {
+				QRCodeGenerator qrGenerator = new QRCodeGenerator();
+				QRCodeData qrData = qrGenerator.CreateQrCode(model.QrCode, QRCodeGenerator.ECCLevel.Q);
+				QRCode qrCode = new QRCode(qrData);
+				using(Bitmap bitmap = qrCode.GetGraphic(20))
+				{
+					bitmap.Save(ms, ImageFormat.Png);
+					ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+				}
+			}
+
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
 			submissionVM = new SubmissionVM()
 			{
-				AccountList = getAccounts
+				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
 			};
-			return View(submissionVM);
-		}
-
+			return View(nameof(Admin), submissionVM);
+        }
 		[Authorize]
 		[HttpPost]
 		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport)

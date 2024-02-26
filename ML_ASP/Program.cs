@@ -71,3 +71,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id = UrlParameter.Optional }");
 
 app.Run();
+
+//https://stackoverflow.com/questions/16836473/asp-net-http-error-500-19-internal-server-error-0x8007000d

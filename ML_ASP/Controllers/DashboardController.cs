@@ -9,9 +9,15 @@ using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
 using ML_ASP.Models.Models;
 using ML_ASP.Models.ViewModel;
+using System.Security.Claims;
 //using ML_net.ModelSession_1;
 using ML_net.ModelSession_2;
-using System.Security.Claims;
+//
+using QRCoder;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+using iText.Barcodes.Qrcode;
 
 namespace ML_ASP.Controllers
 {
@@ -32,7 +38,7 @@ namespace ML_ASP.Controllers
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
             //for trained model to use
-            var modelPath = "C:\\Users\\rem\\source\\repos\\OJTPERFORMANCE-ASP-ML.NET-master\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
+            var modelPath = "C:\\Users\\Rem\\source\\repos\\Trailyze---Trainee-Performance-Web-Analytics\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
@@ -208,6 +214,7 @@ namespace ML_ASP.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
+        //-----------------ADD ON FEATURES ---------------------
         [Authorize]
         [HttpPost]
         public IActionResult AddReminder(string nameOfReminder,string iconType, string iconClass)

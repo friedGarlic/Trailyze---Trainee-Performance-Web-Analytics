@@ -153,6 +153,12 @@
 							</li>
 						</ul>
 					}
+					<form asp-action="GenerateQRCode" asp-controller="Admin" method="post">
+						<button type="submit" class="btn btn-primary">Generate QR Code</button>
+					</form>
+					<div>
+						<img src="@ViewBag.QRCodeImage" alt="qr" style="height:200px; width:200px"/>
+					</div>
 				</div>
 				<!-- TODOS LIST FEATURE ENDS-->
 			</div>

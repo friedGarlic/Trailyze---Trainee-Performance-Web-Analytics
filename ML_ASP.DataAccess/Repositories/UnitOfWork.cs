@@ -25,6 +25,7 @@ namespace ML_ASP.DataAccess.Repositories
         public IAccountRepository Account { get; private set; }
         public ILogRepository Log { get; private set; }
         public IReminderRepository Reminder { get; private set; }
+        public IQRRepository QR { get; private set; }
 
         public void Save()
         {
