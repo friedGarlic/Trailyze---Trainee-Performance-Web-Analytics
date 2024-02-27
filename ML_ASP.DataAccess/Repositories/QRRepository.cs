@@ -10,12 +10,14 @@ namespace ML_ASP.DataAccess.Repositories
 {
     public class QRRepository : Repository<QRModel>, IQRRepository
     {
-        private readonly ApplicationDBContext _dbContext;
+        private ApplicationDBContext _dbContext;
 
         public QRRepository(ApplicationDBContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
+
+        
 
     }
 }

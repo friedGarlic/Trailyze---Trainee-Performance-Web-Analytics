@@ -10,6 +10,7 @@ using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Security.Claims;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace ML_ASP.Controllers
 {
@@ -126,8 +127,19 @@ namespace ML_ASP.Controllers
 		}
 
 		[HttpPost]
-        public ViewResult GenerateQRCode(QRModel model)
-        {
+        public ViewResult GenerateQRCode()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+			QRModel model = new QRModel();
+			if(model.QrCode == null)
+			{
+				var id = _unit.QR.GetFirstOrDefault().Id;
+				var killFile = _unit.QR.GetFirstOrDefault(u => u.Id == id);
+				_unit.QR.Remove(killFile);
+			}
+
 			Random random = new Random();
 			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 			int length = 8; // Length of the random string
@@ -144,12 +156,14 @@ namespace ML_ASP.Controllers
 				using(Bitmap bitmap = qrCode.GetGraphic(20))
 				{
 					bitmap.Save(ms, ImageFormat.Png);
-					ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+					model.QrCode = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+					ViewBag.QRCodeImage = model.QrCode;
+
 				}
 			}
 
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			_unit.QR.Add(model);
+			_unit.Save();
 
 			submissionVM = new SubmissionVM()
 			{

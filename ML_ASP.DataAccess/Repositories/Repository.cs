@@ -39,6 +39,13 @@ namespace ML_ASP.DataAccess.Repositories
 			return query.FirstOrDefault();
 		}
 
+		public T GetFirstOrDefault()
+		{
+			IQueryable<T> query = _dbSet;
+
+			return query.FirstOrDefault();
+		}
+
 		public void Remove(T entity)
 		{
 			_dbSet.Remove(entity);

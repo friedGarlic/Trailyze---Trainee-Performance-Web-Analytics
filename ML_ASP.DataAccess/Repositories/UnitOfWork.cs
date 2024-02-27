@@ -19,6 +19,7 @@ namespace ML_ASP.DataAccess.Repositories
             Account = new AccountRepository(_dbContext);
             Log = new LogRepository(_dbContext);
             Reminder = new ReminderRepository(_dbContext);
+            QR = new QRRepository(_dbContext);
         }
 
         public ISubmissionRepository Submission { get; private set; }
