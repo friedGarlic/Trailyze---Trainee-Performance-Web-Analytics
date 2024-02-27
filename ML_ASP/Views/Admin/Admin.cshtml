@@ -24,7 +24,7 @@
 	<section id="sidebar">
 		<a href="#" class="brand">
 			<i class='bx bxs-smile'></i>
-			<span class="text">AdminHub</span>
+			<span class="text">Admin Hub</span>
 		</a>
 		<ul class="side-menu top">
 			<li class="active">
@@ -56,23 +56,6 @@
 		<nav>
 			<i class='bx bx-menu'></i>
 			<a href="#" class="nav-link">Categories</a>
-			<!--
-			<form action="#">
-				<div class="form-input">
-					<input type="search" placeholder="Search...">
-					<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
-				</div>
-			</form>
-			<input type="checkbox" id="switch-mode" hidden>
-			<label for="switch-mode" class="switch-mode"></label>
-			<a href="#" class="notification">
-				<i class='bx bxs-bell'></i>
-				<span class="num">8</span>
-			</a>
-			<a href="#" class="profile">
-				<img src="img/people.png">
-			</a>
-			-->
 		</nav>
 		<!-- NAVBAR -->
 		<!-- MAIN -->
@@ -153,12 +136,13 @@
 							</li>
 						</ul>
 					}
-					<form asp-action="GenerateQRCode" asp-controller="Admin" method="post">
+					@* was supposed to be used as qr code generator for attendacne taking
+						<form asp-action="GenerateQRCode" asp-controller="Admin" method="post">
 						<button type="submit" class="btn btn-primary">Generate QR Code</button>
 					</form>
 					<div>
 						<img src="@ViewBag.QRCodeImage" style="height:200px; width:200px"/>
-					</div>
+					</div> *@
 				</div>
 				<!-- TODOS LIST FEATURE ENDS-->
 			</div>

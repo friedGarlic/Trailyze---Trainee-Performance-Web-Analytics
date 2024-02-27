@@ -46,6 +46,9 @@ namespace ML_ASP.Controllers
             string combinePath = Path.Combine(currentDirectory, modelDirectory);
             string modelPath = Path.Combine(combinePath, "GradePrediction.zip");
 
+            //for deployment mode only or when published--------------------=======================
+            //var modelPath = "C:\\inetpub\\wwwroot\\trailyze\\ModelSession_1\\GradePrediction.zip";
+
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
@@ -107,8 +110,13 @@ namespace ML_ASP.Controllers
             string projectPath = _environment.ContentRootPath;
             string uploadPath = Path.Combine(projectPath, uploadFolderName);
             string submissionPath = uploadPath; // Default to the Uploads folder
+
             Prediction prediction = null;
 
+            if(!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
 
             bool submissionIsGreaterThan1 = false;
 

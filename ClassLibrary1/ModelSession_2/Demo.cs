@@ -38,6 +38,7 @@ namespace ML_net.ModelSession_2
         {
             var context = new MLContext();
 
+            //for trained model to use
             string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
             // Navigate up until reaching the desired directory (ClassLibrary1)
@@ -49,9 +50,9 @@ namespace ML_net.ModelSession_2
             currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
             // Construct the path relative to the desired directory
             string filePath = Path.Combine(currentDirectory, "report_grade.csv");
-
             //load data
-            var trainData = context.Data.LoadFromTextFile<Object_DataSet>(filePath,hasHeader: true, separatorChar: ',');
+            var trainData = context.Data.LoadFromTextFile<Object_DataSet>(filePath,
+                hasHeader: true, separatorChar: ',');
 
             var testTrainSplit = context.Data.TrainTestSplit(trainData, testFraction: 0.1);
 
@@ -69,7 +70,6 @@ namespace ML_net.ModelSession_2
                 NumberOfWords = 500,
                 Grade = 70
             };
-
             //predict engine
             var predictFunc = context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(model);
 
@@ -79,7 +79,7 @@ namespace ML_net.ModelSession_2
 
             Console.ReadLine();
 
-            var modelPath = "C:\\Users\\Rem\\source\\repos\\Trailyze---Trainee-Performance-Web-Analytics\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
+            var modelPath = AppDomain.CurrentDomain.BaseDirectory + "GradePrediction.zip";
 
             context.Model.Save(model, trainData.Schema, modelPath);
         }

@@ -120,6 +120,7 @@
                 </div>
             </div>
             <!-- End of Analyses -->
+            
             <!-- Recent Orders Table -->
             <div class="recent-orders">
                 <h2>Recent Log In's</h2>
@@ -159,6 +160,7 @@
                                     {
                                         @i.LogImageUrl
                                     } *@
+
                                 </td>
                                 <td><a href="../Dashboard/ViewImage?fileName=@i.LogImageUrl" target="_blank">View</a></td>
                                 <td>
@@ -258,9 +260,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.jsdelivr.net/npm/quagga/dist/quagga.min.js">
+            
     <script src="~/js/site.js"></script>
-
     <script>
         document.getElementById("IsTimedIn").addEventListener("click", function () {
             var slider = document.querySelector(".toggle-slider");
@@ -322,5 +323,40 @@
 </html>
 
 @section Scripts{
-    
+
+    @* scripts for getting the camera for scanning qr code
+    <div>
+                <video id="preview" width="100%"></video>
+            </div>
+            <div>
+                <label>scan qr code</label>
+                <input type="text" name="text" id="text" readonly="" placeholder="scan qrcode" class="form-control" />
+   </div>
+
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
+    <script>
+        // Initialize Instascan
+        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]);
+            } else {
+                console.error('No cameras found.');
+            }
+        }).catch(function (error) {
+            console.error(error);
+        });
+        // Add listener for when a QR code is scanned
+        scanner.addListener('scan', function (content) {
+            // Perform any actions with the scanned data (e.g., send to server)
+            // For demonstration purposes, we'll simply display the scanned data
+            document.getElementById('text').value = content;
+        });
+
+        // Start scanning *@
+
+    </script>
 }

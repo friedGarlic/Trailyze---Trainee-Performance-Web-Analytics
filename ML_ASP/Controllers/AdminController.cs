@@ -127,7 +127,7 @@ namespace ML_ASP.Controllers
 		}
 
 		[HttpPost]
-        public ViewResult GenerateQRCode()
+        public ViewResult GenerateQRCode()  ////////////// currently not used whatsoever
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -142,12 +142,13 @@ namespace ML_ASP.Controllers
 
 			Random random = new Random();
 			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-			int length = 8; // Length of the random string
+			int length = 8;
 			var randomString = new string(Enumerable.Repeat(chars, length)
 				.Select(s => s[random.Next(s.Length)]).ToArray());
 
 			model.QrCode = randomString;
 
+			//simply do 64bit image ang 64bit string using qrcoder and bitmap
 			using (MemoryStream ms = new MemoryStream())
             {
 				QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -158,7 +159,6 @@ namespace ML_ASP.Controllers
 					bitmap.Save(ms, ImageFormat.Png);
 					model.QrCode = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
 					ViewBag.QRCodeImage = model.QrCode;
-
 				}
 			}
 
@@ -171,6 +171,7 @@ namespace ML_ASP.Controllers
 			};
 			return View(nameof(Admin), submissionVM);
         }
+
 		[Authorize]
 		[HttpPost]
 		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport)

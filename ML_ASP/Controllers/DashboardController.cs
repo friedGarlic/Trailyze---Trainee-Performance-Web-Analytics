@@ -37,8 +37,23 @@ namespace ML_ASP.Controllers
             _environment = environment;
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 
-            //for trained model to use
-            var modelPath = "C:\\Users\\Rem\\source\\repos\\Trailyze---Trainee-Performance-Web-Analytics\\ClassLibrary1\\ModelSession_2\\GradePrediction.zip";
+            //find current file folder path
+            var currentDirectory = _environment.ContentRootPath;
+
+            string desiredDirectory = "ClassLibrary1";
+            string modelDirectory = "ModelSession_2";
+            while (!Directory.Exists(Path.Combine(currentDirectory, desiredDirectory)))
+            {
+                currentDirectory = Directory.GetParent(currentDirectory).FullName;
+            }
+
+            currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
+            // Construct the path relative to the desired directory
+            string combinePath = Path.Combine(currentDirectory, modelDirectory);
+            string modelPath = Path.Combine(combinePath, "GradePrediction.zip");
+
+            //for deployment mode only or when published -------------------=====================
+            //var modelPath = "C:\\inetpub\\wwwroot\\trailyze\\ModelSession_1\\GradePrediction.zip";
             var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 
             _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
