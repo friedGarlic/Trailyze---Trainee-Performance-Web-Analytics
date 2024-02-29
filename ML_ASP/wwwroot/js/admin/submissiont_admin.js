@@ -4,7 +4,8 @@ $(document).ready(function () {
     loadDataTable();
 
     // handle click event on the "Hide" button
-    $('#submissionTable').on('click', '.group-btn', function () {
+	$('#submissionTable').on('click', '.group-btn', function () {
+		event.preventDefault();
         var folderId = $(this).data('folderid');
         toggleGroupVisibility(folderId);
     });
@@ -14,7 +15,6 @@ function loadDataTable() {
 	dataTable = $('#submissionTable').DataTable({
 		"ajax": {
 			"url": "/Admin/GetAll", // Endpoint to fetch data from the controller "Admin"  **IMPORTANT
-			"type": "GET",
 		},
 		"columns": [
 			{ "data": "name" },
@@ -53,7 +53,6 @@ function loadDataTable() {
 		}
 	});
 
-	//TODO its not finding the fileName properly, Try to work this out first
 	$('#submissionTable').on('click', '.view-pdf', function () {
 		var getId = $(this).data('id');
 		var getFolderId = $(this).data('folderid');
@@ -73,19 +72,4 @@ function toggleGroupVisibility(folderId) {
     }).nodes();
 
     $(rows).toggle(); // Toggle visibility of the rows with the specified folderId
-}
-
-function getSubmissionOptionList(data) {
-    $.ajax({
-        url: '/Admin/GetOptionList',
-        type: 'GET',
-        dataType: 'json',
-        data: data,
-        success: function (response) {
-            console.log("SUCCESS");
-        },
-        error: function (error) {
-            console.error(error);
-        }
-    });
 }
