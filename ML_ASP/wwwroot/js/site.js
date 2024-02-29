@@ -2,6 +2,7 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+let gradeData = @Model.GradeList.map(grade => grade || 0);
 
 const chartOptions = {
     chart: {
@@ -11,7 +12,7 @@ const chartOptions = {
         zoom: { enable: false }
     },
     colors: ['#3498db'],
-    series: [{ name: 'Grade', data: [0, 8, 7, 8] }],
+    series: [{ name: 'Grade', data: gradeData }],
     dataLabels: { enable: false },
     stroke: { width: 5, curve: 'smooth' },
     fill: {

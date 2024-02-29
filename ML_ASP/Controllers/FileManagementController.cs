@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Accord.IO;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.ML;
-using ML_ASP.DataAccess.Repositories;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
 using ML_ASP.Models.Models;
@@ -182,7 +179,7 @@ namespace ML_ASP.Controllers
                 };
 
                 prediction = _predictionEngine.Predict(new_data);
-                string predGrade = prediction.Prediciton.ToString();
+                string predGrade = prediction.Prediciton.ToString("F2");
 
                 //adding identity for the one who upload the file
                 submissionModel.SubmissionUserId = claim.Value;
@@ -292,9 +289,8 @@ namespace ML_ASP.Controllers
             }
         }
 
-		[Authorize(Roles = SD.Role_User)]
 		[HttpPost]
-        public ActionResult UploadImage(List<IFormFile> postedImages, int id)
+        public ActionResult UploadImage(List<IFormFile> file, int id)
         {
             string uploadFolderName = "Images";
             string projectPath = _environment.ContentRootPath;
@@ -307,7 +303,7 @@ namespace ML_ASP.Controllers
             }
 
             List<string> uploadedImages = new List<string>();
-            foreach (IFormFile postedImage in postedImages)
+            foreach (IFormFile postedImage in file)
             {
                 fileName = Path.GetFileName(postedImage.FileName);
                 string filePath = Path.Combine(path, fileName);

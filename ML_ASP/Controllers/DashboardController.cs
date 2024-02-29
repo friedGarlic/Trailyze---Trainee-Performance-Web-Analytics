@@ -1,23 +1,20 @@
-﻿using Accord;
-using Accord.IO;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.ML;
-using ML_ASP.DataAccess.Repositories;
 using ML_ASP.DataAccess.Repositories.IRepositories;
-using ML_ASP.Models;
 using ML_ASP.Models.Models;
 using ML_ASP.Models.ViewModel;
 using System.Security.Claims;
 //using ML_net.ModelSession_1;
 using ML_net.ModelSession_2;
+
 //
 using QRCoder;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
 using iText.Barcodes.Qrcode;
+using ML_net.ModelSession_3;
 
 namespace ML_ASP.Controllers
 {
@@ -26,6 +23,7 @@ namespace ML_ASP.Controllers
         private readonly IUnitOfWork _unit;
         private readonly MLContext _context;
         private readonly PredictionEngine<Object_DataSet, Prediction> _predictionEngine;
+        private readonly PredictionEngine<Image_DataSet, ImagePrediction> _imagClassificationEngine;
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
 
         public SubmissionVM submissionVM { get; set; }
@@ -73,10 +71,17 @@ namespace ML_ASP.Controllers
             
             ViewBag.AccountName = accountName;
 
+            var sublist = _unit.Submission
+                  .GetAll(u => u.SubmissionUserId == claim.Value)
+                  .Take(5)
+                  .Select(u => u.Grade)
+                  .ToList();
+
             submissionVM = new SubmissionVM()
             {
                 LogList = _unit.Log.GetAll(u => u.LogId == claim.Value),
-                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
+                GradeList = sublist
             };
             //Get Account List and name ends --------------------------
 

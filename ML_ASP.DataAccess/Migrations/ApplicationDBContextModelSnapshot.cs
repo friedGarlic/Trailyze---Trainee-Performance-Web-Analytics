@@ -52,7 +52,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.QRModel", b =>
@@ -68,7 +68,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QR");
+                    b.ToTable("QR", (string)null);
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.Reminder_Model", b =>
@@ -97,7 +97,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reminders");
+                    b.ToTable("Reminders", (string)null);
                 });
 
             modelBuilder.Entity("ML_ASP.Models.SubmissionModel", b =>
@@ -141,7 +141,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Submissions");
+                    b.ToTable("Submissions", (string)null);
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Trainee_Model", b =>
@@ -169,7 +169,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trainees");
+                    b.ToTable("Trainees", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

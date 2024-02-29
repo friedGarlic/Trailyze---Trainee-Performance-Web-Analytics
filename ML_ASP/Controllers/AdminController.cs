@@ -49,9 +49,18 @@ namespace ML_ASP.Controllers
 			ViewBag.AccountCount = accountCount;
 			ViewBag.SubmissionCount = submissionCount;
 
+			//find last 5 grade from current user
+			var sublist = _unit.Submission
+				  .GetAll(u => u.SubmissionUserId == claim.Value)
+				  .OrderByDescending(u => u.Id) // Assuming there's an ID field for ordering
+				  .Take(5)
+				  .Select(u => u.Grade)
+				  .ToList();
+
 			submissionVM = new SubmissionVM()
 			{
-				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
+				GradeList = sublist
 			};
 
 			return View(submissionVM);

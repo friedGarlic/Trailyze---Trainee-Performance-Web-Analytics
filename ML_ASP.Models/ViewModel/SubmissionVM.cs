@@ -26,5 +26,7 @@ namespace ML_ASP.Models.ViewModel
 		public string Prediction { get; set; }
 
 		public bool IsMultipleFile { get; set; }
+
+		public List<string> GradeList { get; set; }
 	}
 }
