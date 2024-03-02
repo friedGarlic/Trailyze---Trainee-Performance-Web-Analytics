@@ -9,32 +9,43 @@ using ML_ASP.Utility;
 using QRCoder;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Net.Http;
 using System.Security.Claims;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using OpenAI_API;
+using OpenAI_API.Completions;
+using System.CodeDom;
+using static Tensorflow.CollectionDef.Types;
+using System.Text;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ML_ASP.Controllers
 {
-	
-    public class AdminController : Controller
-    {
-        private readonly IUnitOfWork _unit;
+
+	public class AdminController : Controller
+	{
+		private readonly IUnitOfWork _unit;
 		private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
+		private readonly IHttpClientFactory _httpClientFactory;
 
 		public SubmissionVM submissionVM { get; set; }
 
 		public AdminController(IUnitOfWork unit,
-			Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment)
-        {
+			Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment,
+			IHttpClientFactory httpClientFactory)
+		{
 			_environment = environment;
-            _unit = unit;
-        }
+			_unit = unit;
+			_httpClientFactory = httpClientFactory;
+		}
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+		public IActionResult Index()
+		{
+			return View();
+		}
 
-        [Authorize(Roles = SD.Role_Admin)]
+		[Authorize(Roles = SD.Role_Admin)]
 		public IActionResult Admin()
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -66,20 +77,21 @@ namespace ML_ASP.Controllers
 			return View(submissionVM);
 		}
 
+		//---------------------ANALYTIC FEATURES METHODS AND GETTERS------------------------------------
+		[Authorize(Roles = SD.Role_Admin)]
+		public IActionResult Analytics()
+		{
+			var getAccounts = _unit.Account.GetAll();
+			submissionVM = new SubmissionVM()
+			{
+				AccountList = getAccounts
+			};
+			return View(submissionVM);
+		}
 
-        [Authorize(Roles = SD.Role_Admin)]
-        public IActionResult Analytics()
-        {
-            var getAccounts = _unit.Account.GetAll();
-            submissionVM = new SubmissionVM()
-            {
-                AccountList = getAccounts
-            };
-            return View(submissionVM);
-        }
 
-        // --------------------METHODS ------------------
-        [Authorize(Roles = SD.Role_Admin)]
+		// --------------------METHODS ------------------
+		[Authorize(Roles = SD.Role_Admin)]
 		[HttpPost]
 		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> originalApprovalStatus)
 		{
@@ -136,13 +148,13 @@ namespace ML_ASP.Controllers
 		}
 
 		[HttpPost]
-        public ViewResult GenerateQRCode()  ////////////// currently not used whatsoever
+		public ViewResult GenerateQRCode()  ////////////// currently not used whatsoever
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
 			QRModel model = new QRModel();
-			if(model.QrCode == null)
+			if (model.QrCode == null)
 			{
 				var id = _unit.QR.GetFirstOrDefault().Id;
 				var killFile = _unit.QR.GetFirstOrDefault(u => u.Id == id);
@@ -159,11 +171,11 @@ namespace ML_ASP.Controllers
 
 			//simply do 64bit image ang 64bit string using qrcoder and bitmap
 			using (MemoryStream ms = new MemoryStream())
-            {
+			{
 				QRCodeGenerator qrGenerator = new QRCodeGenerator();
 				QRCodeData qrData = qrGenerator.CreateQrCode(model.QrCode, QRCodeGenerator.ECCLevel.Q);
 				QRCode qrCode = new QRCode(qrData);
-				using(Bitmap bitmap = qrCode.GetGraphic(20))
+				using (Bitmap bitmap = qrCode.GetGraphic(20))
 				{
 					bitmap.Save(ms, ImageFormat.Png);
 					model.QrCode = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
@@ -179,13 +191,13 @@ namespace ML_ASP.Controllers
 				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
 			};
 			return View(nameof(Admin), submissionVM);
-        }
+		}
 
 		[Authorize]
 		[HttpPost]
 		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport)
 		{
-			_unit.Account.UpdateAccount(numberOfHours,weeklyReport, id.ToString());
+			_unit.Account.UpdateAccount(numberOfHours, weeklyReport, id.ToString());
 			_unit.Save();
 
 			return RedirectToAction(nameof(Admin));
@@ -233,6 +245,34 @@ namespace ML_ASP.Controllers
 			var modelList = _unit.Submission.GetAll();
 			return Json(new { data = modelList });
 		}
+
+		[HttpGet]
+		public async Task<IActionResult> SendToApi()
+		{
+			string OutputResult = "";
+			try
+			{
+				string apiKey = "";
+				var openai = new OpenAIAPI(apiKey);
+				var request = openai.Chat.CreateConversation();
+				request.AppendUserInput("The grade of student is 80/100,77/100,80/100. What is your analysis on this.");
+				var response = await request.GetResponseFromChatbotAsync();
+				
+				foreach (var message in response)
+				{
+					OutputResult += message.ToString();
+				}
+
+				return Json(new { data = OutputResult });
+			}
+			catch (Exception ex)
+			{
+				// Log any exceptions
+				Console.WriteLine(ex.Message);
+				return StatusCode(500, ex.Message); // Internal Server Error
+			}
+		}
+
 		#endregion
 
 

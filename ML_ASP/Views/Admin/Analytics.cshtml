@@ -108,7 +108,7 @@
 							<p> Overall Performance: Excellent</p>
 
 							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.Id', '@models.HoursRemaining', '@models.WeeklyReportRemaining')">Edit Profile</button>
-							<button type="button" class="btn btn-primary"> Analyze </button>
+							<button type="button" class="btn btn-primary" onclick="showChatPopup()"> Analyze </button>
 						</div>
 					}
 				</div>
@@ -126,6 +126,48 @@
 	</body>
 </html>
 @section Scripts{
+	<script>
+		async function showChatPopup() {
+			sendToController();
+		}
+
+		function sendToController() {
+			$.ajax({
+				url: '/Admin/SendToApi',
+				type: 'GET',
+				dataType: 'json',
+				success: function (response) {
+					// Display the response using SweetAlert
+					let timerInterval;
+					Swal.fire({
+						title: "Analysis!",
+						html: "Analyzing data from user in <b></b> milliseconds.",
+						timer: 2000,
+						timerProgressBar: true,
+						didOpen: () => {
+							Swal.showLoading();
+							const timer = Swal.getPopup().querySelector("b");
+							timerInterval = setInterval(() => {
+								timer.textContent = `${Swal.getTimerLeft()}`;
+							}, 100);
+						}
+					}).then((result) => {
+						Swal.fire({
+							title: 'Output Result',
+							text: response.data
+						});
+					});
+				},
+				error: function (xhr, status, error) {
+					console.error(xhr.responseText);
+					// Handle errors
+				}
+			});
+		}
+
+
+	</script>
+
 	<script>
 		function showInputPopup(id, hoursRemaining, weeklyReportRemaining) {
 			Swal.fire({
