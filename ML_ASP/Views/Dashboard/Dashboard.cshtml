@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="~/css/styleDashboard.css">
     <title>Responsive Dashboard Design #1 | AsmrProg</title>
 </head>
@@ -34,13 +35,13 @@
                     </span>
                     <h2>Prediction</h2>
                 </a>
-                <a href="#">
+                @* <a href="#">
                     <span class="material-symbols-outlined">
                         mail
                     </span>
                     <h2>Mails</h2>
                     <span class="message-count">3</span>
-                </a>
+                </a> *@
                 <a href="#">
                     <span class="material-symbols-outlined">
                         logout
@@ -223,7 +224,7 @@
 
                 @foreach(var i in Model.ReminderList) // if theres an error here that means your not passing the ReminderList obj
                 {
-                    <div class="notification">
+                    <div class="notification" id="reminder-@i.Id">
                         <div class="icon">
                             <span class="@i.IconClass"> <!-- changes for icon -->
                                 @i.IconType
@@ -250,6 +251,7 @@
                         <h3>Add Reminder</h3>
                     </div>
                 </div>
+                <input type="datetime-local" class="form-control" placeholder="Select Date and Time">
                 <!-- <div class="notification deactive"> for indication if reminders have more functionality-->
 
             </div>
@@ -260,6 +262,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
             
     <script>
         document.getElementById("IsTimedIn").addEventListener("click", function () {
@@ -283,6 +286,7 @@
                     '<input type="radio" name="material-icons-sharp" class="radio">' +
                     '<label for="radio3" class="material-icons-sharp" style="font-size:50px;">devices</label>' +
                     '</div>' +
+                    '<input type="text" id="swal-input2" class="swal2-input" placeholder="Select Date and Time">' +
                     '<input id="swal-input1" class="swal2-input" placeholder="Name of reminder">',
                 showCancelButton: true,
                 confirmButtonText: 'Submit',
@@ -364,11 +368,33 @@
         const chart = new ApexCharts(document.querySelector('.chart-area'), chartOptions);
         chart.render();
     </script>
+    <script>
+        // Set a timeout to display an alarm notification after a delay
+        setTimeout(function (reminderId) {
+            // Find the reminder element by its ID
+            var reminderElement = document.getElementById("reminder-" + reminderId);
+
+            // Check if the element exists (in case it has been removed before the timeout)
+            if (reminderElement) {
+                // Display the notification
+                reminderElement.style.display = "block"; // Or any other method to show the notification
+            }
+        }, 5000);
+    </script>
+    <script>
+        flatpickr("input[type=datetime-local]", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            altInput: true,
+            altFormat: "F j, Y (h:S K)"
+        });
+    </script>
+    
 </body>
 </html>
 
 @section Scripts{
-
+    
     @* scripts for getting the camera for scanning qr code
     <div>
                 <video id="preview" width="100%"></video>

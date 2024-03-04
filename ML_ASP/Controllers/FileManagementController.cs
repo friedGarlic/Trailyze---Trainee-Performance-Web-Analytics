@@ -227,7 +227,7 @@ namespace ML_ASP.Controllers
                 ViewData["ImageUrl"] = imageUrl;
             }
 
-            return View(submissionVM);
+            return View(nameof(FileManagement),submissionVM);
         }
 
         public SubmissionModel SubmissionInjection(SubmissionModel submissionModel, string filename, string grade, string submissionFolderName, bool submissionIsGreaterThan1)
