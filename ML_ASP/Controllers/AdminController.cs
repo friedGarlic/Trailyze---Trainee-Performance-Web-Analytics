@@ -89,6 +89,18 @@ namespace ML_ASP.Controllers
 			return View(submissionVM);
 		}
 
+		public ActionResult ProfileFilter(string searchName)
+		{
+			var getAccounts = _unit.Account.GetAll();
+			
+			submissionVM = new SubmissionVM()
+			{
+				AccountList = getAccounts,
+				SearchQuery = searchName
+			};
+
+			return View(nameof(Analytics),submissionVM);
+		}
 
 		// --------------------METHODS ------------------
 		[Authorize(Roles = SD.Role_Admin)]
@@ -195,9 +207,9 @@ namespace ML_ASP.Controllers
 
 		[Authorize]
 		[HttpPost]
-		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport)
+		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport, string _course)
 		{
-			_unit.Account.UpdateAccount(numberOfHours, weeklyReport, id.ToString());
+			_unit.Account.UpdateAccount(_course, numberOfHours, weeklyReport, id.ToString());
 			_unit.Save();
 
 			return RedirectToAction(nameof(Admin));
@@ -252,7 +264,7 @@ namespace ML_ASP.Controllers
 			string OutputResult = "";
 			try
 			{
-				string apiKey = "";
+				string apiKey = "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";
 				var openai = new OpenAIAPI(apiKey);
 				var request = openai.Chat.CreateConversation();
 				request.AppendUserInput("The grade of student is 80/100,77/100,80/100. What is your analysis on this.");

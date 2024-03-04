@@ -57,12 +57,14 @@
 		<nav>
 			<i class='bx bx-menu'></i>
 			<a href="#" class="nav-link">Categories</a>
-			<form action="#">
+
+			<form asp-controller="Admin" asp-action="ProfileFilter" method="GET" id="searchForm">
 				<div class="form-input">
-					<input type="search" placeholder="Search...">
+					<input type="search" name="searchName" id="searchInput" placeholder="Search..." value="@Model.SearchQuery">
 					<button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
 				</div>
 			</form>
+
 			<input type="checkbox" id="switch-mode" hidden>
 			<label for="switch-mode" class="switch-mode"></label>
 			<a href="#" class="notification">
@@ -97,7 +99,11 @@
 			<h3 class="title"> Changes and Updates </h3>
 
 				<div class="box-container">
-					@foreach (var models in Model.AccountList)
+					@foreach (var models in Model.AccountList.Where(m =>
+										(string.IsNullOrEmpty(Model.SearchQuery) ||
+										m.FullName.Contains(Model.SearchQuery, StringComparison.OrdinalIgnoreCase) ||
+										(m.Course != null && m.Course.Contains(Model.SearchQuery, StringComparison.OrdinalIgnoreCase))
+										)))
 					{
 						<div class="box">
 							<img src="@models.ImageUrl" />
@@ -107,7 +113,7 @@
 							<p> Weekly Report: @models.WeeklyReportRemaining</p>
 							<p> Overall Performance: Excellent</p>
 
-							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.Id', '@models.HoursRemaining', '@models.WeeklyReportRemaining')">Edit Profile</button>
+							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.Id', '@models.HoursRemaining', '@models.WeeklyReportRemaining', '@models.Course')">Edit Profile</button>
 							<button type="button" class="btn btn-primary" onclick="showChatPopup()"> Analyze </button>
 						</div>
 					}
@@ -169,20 +175,22 @@
 	</script>
 
 	<script>
-		function showInputPopup(id, hoursRemaining, weeklyReportRemaining) {
+		function showInputPopup(id, hoursRemaining, weeklyReportRemaining, course) {
 			Swal.fire({
 				title: 'Edit Profile',
 				html:
 					'<input id="swal-input1" class="swal2-input" placeholder="Number of Hours (Current: ' + hoursRemaining + ')">' +
-					'<input id="swal-input2" class="swal2-input" placeholder="Weekly Report (Current: ' + weeklyReportRemaining + ')">',
+					'<input id="swal-input2" class="swal2-input" placeholder="Weekly Report (Current: ' + weeklyReportRemaining + ')">' +
+					'<input id="swal-input3" class="swal2-input" placeholder="Course (Current: ' + course + ')">',
 				showCancelButton: true,
 				confirmButtonText: 'Submit',
 				cancelButtonText: 'Cancel',
 				preConfirm: () => {
 					const numberOfHours = Swal.getPopup().querySelector('#swal-input1').value;
 					const weeklyReport = Swal.getPopup().querySelector('#swal-input2').value;
+					const _course = Swal.getPopup().querySelector('#swal-input2').value;
 					// perform validation or additional processing here
-					return { id: id, numberOfHours: numberOfHours, weeklyReport: weeklyReport };
+					return { id: id, numberOfHours: numberOfHours, weeklyReport: weeklyReport, _course: _course};
 				},
 				allowOutsideClick: () => !Swal.isLoading()
 			}).then((result) => {

@@ -37,13 +37,14 @@ namespace ML_ASP.DataAccess.Repositories
             }
         }
 
-		public void UpdateAccount(int hrsRemain,int weeklyReport, string id)
+		public void UpdateAccount(string course, int hrsRemain,int weeklyReport, string id)
 		{
 			var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
 			if (objFromDb != null)
 			{
 				objFromDb.HoursRemaining = hrsRemain;
                 objFromDb.WeeklyReportRemaining = weeklyReport;
+                objFromDb.Course = course;
 			}
 		}
 

@@ -15,11 +15,12 @@ namespace ML_ASP.Models.ViewModel
 
         public IEnumerable<Reminder_Model> ReminderList { get; set; }
 
-        public string AccountName { get; set; }
+		public IEnumerable<LogModel> LogList { get; set; }
+
+		public string AccountName { get; set; }
 
 		public string TimeLog { get; set; }
 
-		public IEnumerable<LogModel> LogList { get; set; }
 
 		public LogModel LogModel { get; set; }
 
@@ -28,5 +29,7 @@ namespace ML_ASP.Models.ViewModel
 		public bool IsMultipleFile { get; set; }
 
 		public List<string> GradeList { get; set; }
+
+		public string SearchQuery { get; set; }
 	}
 }
