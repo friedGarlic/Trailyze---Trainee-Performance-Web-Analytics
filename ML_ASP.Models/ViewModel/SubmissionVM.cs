@@ -17,12 +17,14 @@ namespace ML_ASP.Models.ViewModel
 
 		public IEnumerable<LogModel> LogList { get; set; }
 
-		public string AccountName { get; set; }
+        public LogModel LogModel { get; set; }
+
+		public string CurrentUserId{ get; set; }
+
+        public string AccountName { get; set; }
 
 		public string TimeLog { get; set; }
 
-
-		public LogModel LogModel { get; set; }
 
 		public string Prediction { get; set; }
 

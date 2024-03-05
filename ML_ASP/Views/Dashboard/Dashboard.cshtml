@@ -60,7 +60,7 @@
                     <div class="status">
                         <div class="info">
                             <h3>Required Hours</h3>
-                            <h1>@ViewBag.RemainingHours : @ViewBag.RemainingMinutes : @ViewBag.RemainingSeconds</h1>
+                            <h1 id="countdownRemaining"> @ViewBag.RemainingHours : @ViewBag.RemainingMinutes : @ViewBag.RemainingSeconds</h1>
                         </div>
                         <div class="progress">
                             <svg>
@@ -73,7 +73,7 @@
                     <div class="status">
                         <div class="info">
                             <h3>Hours Completed</h3>
-                            <h1>@ViewBag.HoursCompleted : @ViewBag.MinutesCompleted : @ViewBag.SecondsCompleted</h1>
+                            <h1 id="countdown"> @ViewBag.HoursCompleted : @ViewBag.MinutesCompleted : @ViewBag.SecondsCompleted</h1>
                         </div>
                         <div class="progress">
                             <svg>
@@ -258,22 +258,81 @@
 
                 <!-- Reminder element -->
                 <div id="reminder-1" style="display: none;">Reminder: Don't forget to do something!</div>
-
+                
+                <button id="startCountdownButton">Start Countdown</button>
+                <button id="stopCountdownButton">Start Countdown</button>
             </div>
         </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/dashboard/dashboard_script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-            
     <script>
+
         document.getElementById("IsTimedIn").addEventListener("click", function () {
             var slider = document.querySelector(".toggle-slider");
             slider.classList.toggle("on");
             document.getElementById("toggleForm").submit();
         });
+        let startCountdownButton = document.getElementById('startCountdownButton');
+
+        startCountdownButton.addEventListener('click', function () {
+            startCountdown();
+        });
+
+        let countdownInterval;
+
+        function startCountdown() {
+            let sc = parseInt("@ViewBag.SecondsCompleted");
+            let mc = parseInt("@ViewBag.MinutesCompleted");
+            let hc = parseInt("@ViewBag.HoursCompleted");
+
+
+            let rs = parseInt("@ViewBag.RemainingSeconds");
+            let rm = parseInt("@ViewBag.RemainingMinutes");
+            let rh = parseInt("@ViewBag.RemainingHours");
+
+            let totalInitialSeconds = (hc * 3600) + (mc * 60) + sc;
+            let totalInitialSecondsRemaining = (rh * 3600) + (rm * 60) + rs;
+
+            countdownInterval = setInterval(() => {
+                totalInitialSeconds++;
+                totalInitialSecondsRemaining--;
+
+                let newHours = Math.floor(totalInitialSeconds / 3600);
+                let newMinutes = Math.floor((totalInitialSeconds % 3600) / 60);
+                let newSeconds = totalInitialSeconds % 60;
+
+                let newHoursRemaining = Math.floor(totalInitialSecondsRemaining / 3600);
+                let newMinutesRemaining = Math.floor((totalInitialSecondsRemaining % 3600) / 60);
+                let newSecondsRemaining = totalInitialSecondsRemaining % 60;
+
+                // Update the countdown displayed on the HTML element
+                document.getElementById('countdown').innerText = `${newHours}: ${newMinutes}: ${newSeconds}`;
+                document.getElementById('countdownRemaining').innerText = `${newHoursRemaining}: ${newMinutesRemaining}: ${newSecondsRemaining}`;
+
+                if (stopCountdownButton.clicked) {
+                    // Clear the interval and return to stop the countdown
+                    clearInterval(countdownInterval);
+                }
+
+            }, 1000);
+
+        }
+        let stopCountdownButton = document.getElementById('stopCountdownButton');
+
+        // Add event listener to the stop button
+        stopCountdownButton.addEventListener('click', function () {
+            // Stop the countdown when the stop button is clicked
+            clearInterval(countdownInterval);
+        });
+
+        function updateCountdown() {
+            // Update your countdown display here
+        }
 
         function playNotificationSound() {
             // Play notification sound

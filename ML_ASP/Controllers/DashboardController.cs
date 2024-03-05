@@ -70,7 +70,6 @@ namespace ML_ASP.Controllers
 
             var userId = claim.Value;
 			var accountName = account.FullName;
-
             
             ViewBag.AccountName = accountName;
 
@@ -103,7 +102,8 @@ namespace ML_ASP.Controllers
             {
                 LogList = _unit.Log.GetAll(u => u.LogId == claim.Value),
                 ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
-                GradeList = sublist
+                GradeList = sublist,
+                CurrentUserId = userId,
             };
             //Get Account List and name ends --------------------------
 
