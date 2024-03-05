@@ -17,6 +17,7 @@ using iText.Barcodes.Qrcode;
 using ML_net.ModelSession_3;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ML_ASP.Controllers
 {
@@ -259,9 +260,8 @@ namespace ML_ASP.Controllers
         }
 
         //-----------------ADD ON FEATURES ---------------------
-        [Authorize]
         [HttpPost]
-        public IActionResult AddReminder(string nameOfReminder,string iconType, string iconClass, DateTime dateTime)
+        public ActionResult AddReminder(string nameOfReminder,string iconType, string iconClass, DateTime dateTime)
         {
             //find the unique current user
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -273,35 +273,38 @@ namespace ML_ASP.Controllers
             TimeSpan duration = dateTime - currentTime;
             double durationInSeconds = duration.TotalMilliseconds;
 
-            reminder_Model.ReminderDuration = durationInSeconds;
-            reminder_Model.Name = nameOfReminder;
-            reminder_Model.UserId = claim.Value;
-            reminder_Model.IconClass = iconClass;
-            reminder_Model.IconType = iconType;
-            reminder_Model.ReminderDateTime = dateTime;
+            if (durationInSeconds > 0 && !string.IsNullOrEmpty(nameOfReminder) && !string.IsNullOrEmpty(iconClass) &&
+                    !string.IsNullOrEmpty(iconType) && !string.IsNullOrEmpty(claim.Value) && dateTime != null)
+            {
+                reminder_Model.ReminderDuration = durationInSeconds;
+                reminder_Model.Name = nameOfReminder;
+                reminder_Model.UserId = claim.Value;
+                reminder_Model.IconClass = iconClass;
+                reminder_Model.IconType = iconType;
+                reminder_Model.ReminderDateTime = dateTime;
 
-            _unit.Reminder.Add(reminder_Model);
-            _unit.Save();
+                _unit.Reminder.Add(reminder_Model);
+                _unit.Save();
+            }
 
             TempData["success"] = "Added Reminder Succesfully!";
 
-            var sublist = _unit.Submission
-                  .GetAll(u => u.SubmissionUserId == claim.Value)
-                  .Take(5)
-                  .Select(u => u.Grade)
-                  .ToList();
-
-            submissionVM = new SubmissionVM()
-            {
-                LogList = _unit.Log.GetAll(u => u.LogId == claim.Value),
-                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
-                GradeList = sublist
-            };
-
-            return View(nameof(Dashboard),submissionVM);
+            return RedirectToAction(nameof(Dashboard));
         }
 
+
         //-----------------HELPER FUNCTIONS OR METHODS--------------------------
+        [HttpPost]
+        public ActionResult DeleteReminder(int id)
+        {
+            var killFile = _unit.Reminder.GetFirstOrDefault(u => u.Id == id);
+            _unit.Reminder.Remove(killFile);
+            _unit.Save();
+
+            TempData["success"] = "Delete Reminder Succesfully!";
+
+            return RedirectToAction(nameof(Dashboard));
+        }
 
         //for calculation in time duration between Timein/timout
         public void InputTimeDuration()

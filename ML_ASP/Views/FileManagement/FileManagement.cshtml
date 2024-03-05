@@ -107,10 +107,9 @@
                         notifications_none
                     </span>
                 </div>
-
-                @foreach (var i in Model.ReminderList) // if theres an error here that means your not passing the ReminderList obj properly
+                @foreach (var i in Model.ReminderList) // if theres an error here that means your not passing the ReminderList obj
                 {
-                    <div class="notification">
+                    <div class="notification" id="reminder-@i.Id">
                         <div class="icon">
                             <span class="@i.IconClass">
                                 <!-- changes for icon -->
@@ -121,7 +120,7 @@
                             <div class="info">
                                 <h3>@i.Name</h3>
                                 <small class="text_muted">
-                                    08:00 AM - 12:00 PM
+                                    @i.ReminderDateTime
                                 </small>
                             </div>
                             <span class="material-icons-sharp">
@@ -129,6 +128,7 @@
                             </span>
                         </div>
                     </div>
+
                 }
                 <div class="notification add-reminder" onclick="showInputPopup()">
                     <div>
@@ -138,6 +138,9 @@
                         <h3>Add Reminder</h3>
                     </div>
                 </div>
+
+                <!-- Reminder element -->
+                <div id="reminder-1" style="display: none;">Reminder: Don't forget to do something!</div>
                 <!-- <div class="notification deactive"> for indication if reminders have more functionality-->
 
             </div>
@@ -148,8 +151,11 @@
 </body>
 </html>
 
-@section Scripts{
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/fileManagement/submissiont.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
 
         function showInputPopup() {
@@ -166,6 +172,7 @@
                     '<input type="radio" name="material-icons-sharp" class="radio">' +
                     '<label for="radio3" class="material-icons-sharp" style="font-size:50px;">devices</label>' +
                     '</div>' +
+                    '<input id="swal-input2" type="datetime-local" class="swal2-input" placeholder="Select Date and Time">' +
                     '<input id="swal-input1" class="swal2-input" placeholder="Name of reminder">',
                 showCancelButton: true,
                 confirmButtonText: 'Submit',
@@ -174,8 +181,9 @@
                     const iconType = Swal.getPopup().querySelector('input[name="material-icons-sharp"]:checked + label').textContent.trim();
                     const nameOfReminder = Swal.getPopup().querySelector('#swal-input1').value;
                     const iconClass = Swal.getPopup().querySelector('input[name="material-icons-sharp"]:checked + label').getAttribute('class');
+                    const dateTime = Swal.getPopup().querySelector('#swal-input2').value;
                     // perform validation or additional processing here
-                    return { nameOfReminder: nameOfReminder, iconType: iconType, iconClass: iconClass };
+                    return { nameOfReminder: nameOfReminder, iconType: iconType, iconClass: iconClass, dateTime: dateTime };
                 },
                 allowOutsideClick: () => !Swal.isLoading()
             }).then((result) => {
@@ -200,5 +208,35 @@
                 }
             });
         }
+    </script>
+    <script>
+        flatpickr("input[type=datetime-local]", {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            altInput: true,
+            altFormat: "F j, Y (h:S K)",
+            minDate: "today",
+            minTime: "8:00",
+            maxTime: "17:00",
+            parseDate: (datestr, format) => {
+                return moment(datestr, format, true).toDate();
+            },
+        });
+    </script>
+    <script>
+        var lowestReminderDuration = @Model.ReminderList.Min(i => i.ReminderDuration);
+
+        // Set a timeout to display an alarm notification after a delay
+        setTimeout(function () {
+            // Find the reminder element by its ID
+            var reminderElement = document.getElementById("reminder-1");
+
+            // Check if the element exists (in case it has been removed before the timeout)
+            if (reminderElement) {
+                // Display the notification
+                reminderElement.style.display = "block"; // Or any other method to show the notification
+                playNotificationSound();
+            }
+        }, lowestReminderDuration);
     </script>
 }
