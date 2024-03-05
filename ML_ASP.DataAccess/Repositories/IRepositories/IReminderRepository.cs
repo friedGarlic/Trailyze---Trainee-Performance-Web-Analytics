@@ -9,6 +9,6 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 {
     public interface IReminderRepository : IRepository<Reminder_Model>
     {
-        public void Update(int id, string reminderName, string iconClass, string iconType);
+        public void Update(int id, double duration);
     }
 }

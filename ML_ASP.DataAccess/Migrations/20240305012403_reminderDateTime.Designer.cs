@@ -4,6 +4,7 @@ using ML_ASP.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ML_ASP.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240305012403_reminderDateTime")]
+    partial class reminderDateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,11 +94,8 @@ namespace ML_ASP.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ReminderDateTime")
+                    b.Property<DateTime>("ReminderDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<double?>("ReminderDuration")
-                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()

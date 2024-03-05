@@ -18,9 +18,13 @@ namespace ML_ASP.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public void Update(int id, string reminderName, string iconClass, string iconType)
+        public void Update(int id, double duration)
         {
             var objFromDb = _dbContext.Reminders.FirstOrDefault(u => u.Id == id);
+            if (objFromDb != null)
+            {
+                objFromDb.ReminderDuration = duration;
+            }
         }
 
     }

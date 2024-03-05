@@ -16,5 +16,8 @@ namespace ML_ASP.Models.Models
 
         public string IconClass { get; set; }
         public string IconType { get; set; }
+        public DateTime? ReminderDateTime { get; set; }
+
+        public double? ReminderDuration { get; set; }
     }
 }

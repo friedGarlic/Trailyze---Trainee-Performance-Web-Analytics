@@ -15,6 +15,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using iText.Barcodes.Qrcode;
 using ML_net.ModelSession_3;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System;
 
 namespace ML_ASP.Controllers
 {
@@ -71,11 +73,30 @@ namespace ML_ASP.Controllers
             
             ViewBag.AccountName = accountName;
 
+            //for grades
             var sublist = _unit.Submission
                   .GetAll(u => u.SubmissionUserId == claim.Value)
                   .Take(5)
                   .Select(u => u.Grade)
                   .ToList();
+            //-------------------grade ends
+
+
+            //reminder alarm
+            var getaccounttime = _unit.Reminder.GetAll(u => u.UserId == userId);
+
+            foreach (var i in getaccounttime.ToList())
+            {
+                DateTime currentTime = DateTime.Now;
+                if (i.ReminderDateTime > currentTime)
+                {
+                    TimeSpan duration = (TimeSpan)(i.ReminderDateTime - currentTime);
+                    double durationInSeconds = duration.TotalMilliseconds;
+
+                    _unit.Reminder.Update(i.Id, durationInSeconds);
+                }
+            }
+            //-------------------reminder alarm ends
 
             submissionVM = new SubmissionVM()
             {
@@ -86,7 +107,7 @@ namespace ML_ASP.Controllers
             //Get Account List and name ends --------------------------
 
             //retrieve last entry
-            //so it stays as Timed in if timed in
+            //so it stays as Timed in if timed in-------------------
             var lastLogEntry = _unit.Log.GetAll(u => u.LogId == claim.Value)
                                    .OrderByDescending(u => u.DateTime)
                                    .FirstOrDefault();
@@ -94,6 +115,7 @@ namespace ML_ASP.Controllers
             bool initialIsTimedIn = lastLogEntry != null && lastLogEntry.Log == "Timed In";
 
             ViewBag.InitialIsTimedIn = initialIsTimedIn;
+            //-------------------log ends
 
             //getters
             var submission = _unit.Submission.GetAll(u => u.SubmissionUserId == userId);
@@ -120,6 +142,8 @@ namespace ML_ASP.Controllers
 
                 ViewData["ImageUrl"] = imageUrl;
             }
+
+            _unit.Save();
 
             return View(submissionVM);
         }
@@ -237,7 +261,7 @@ namespace ML_ASP.Controllers
         //-----------------ADD ON FEATURES ---------------------
         [Authorize]
         [HttpPost]
-        public IActionResult AddReminder(string nameOfReminder,string iconType, string iconClass)
+        public IActionResult AddReminder(string nameOfReminder,string iconType, string iconClass, DateTime dateTime)
         {
             //find the unique current user
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -245,22 +269,36 @@ namespace ML_ASP.Controllers
 
             Reminder_Model reminder_Model = new Reminder_Model();
 
+            DateTime currentTime = DateTime.Now;
+            TimeSpan duration = dateTime - currentTime;
+            double durationInSeconds = duration.TotalMilliseconds;
+
+            reminder_Model.ReminderDuration = durationInSeconds;
             reminder_Model.Name = nameOfReminder;
             reminder_Model.UserId = claim.Value;
             reminder_Model.IconClass = iconClass;
             reminder_Model.IconType = iconType;
+            reminder_Model.ReminderDateTime = dateTime;
 
             _unit.Reminder.Add(reminder_Model);
             _unit.Save();
 
             TempData["success"] = "Added Reminder Succesfully!";
 
+            var sublist = _unit.Submission
+                  .GetAll(u => u.SubmissionUserId == claim.Value)
+                  .Take(5)
+                  .Select(u => u.Grade)
+                  .ToList();
+
             submissionVM = new SubmissionVM()
             {
-                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+                LogList = _unit.Log.GetAll(u => u.LogId == claim.Value),
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
+                GradeList = sublist
             };
 
-            return RedirectToAction(nameof(Dashboard));
+            return View(nameof(Dashboard),submissionVM);
         }
 
         //-----------------HELPER FUNCTIONS OR METHODS--------------------------
