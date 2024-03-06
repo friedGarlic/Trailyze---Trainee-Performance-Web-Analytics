@@ -1,7 +1,7 @@
-﻿var dataTable;
+﻿var dataTable1;
 
 $(document).ready(function () {
-    loadDataTable();
+    loadDataTable1();
 
     // Handle click event on the "Hide" button
     $('#tblData').on('click', '.group-btn', function () {
@@ -10,8 +10,8 @@ $(document).ready(function () {
     });
 });
 
-function loadDataTable() {
-    dataTable = $('#tblData').DataTable({
+function loadDataTable1() {
+    dataTable1 = $('#tblData').DataTable({
         "ajax": {
             "url": "/FileManagement/GetAll"
         },
@@ -32,7 +32,7 @@ function loadDataTable() {
 }
 
 function toggleGroupVisibility(folderId) {
-    var rows = dataTable.rows(function (idx, data, node) {
+    var rows = dataTable1.rows(function (idx, data, node) {
         return data.folderId === folderId;
     }).nodes();
 

@@ -189,6 +189,10 @@
                                     <input type="checkbox" class="toggle-input" id="IsTimedIn" name="IsTimedIn" value="true">
                                     <span class="toggle-slider on"></span>
                                 </label>
+                                <script>
+                                    let isChecked = true;
+                                    localStorage.setItem('isChecked', isChecked.toString());
+                                </script>
                                 return;
                             }
                             @if (Model.TimeLog != "Timed In" || ViewBag.InitialIsTimedIn == false)
@@ -197,6 +201,11 @@
                                     <input type="checkbox" class="toggle-input" id="IsTimedIn" name="IsTimedIn" value="false">
                                     <span class="toggle-slider"></span>
                                 </label>
+                                <script>
+                                    @* some genius and dumbshit added just to let it run because of both toggle button id is timedin *@
+                                    let isChecked = false;
+                                    localStorage.setItem('isChecked', isChecked.toString());
+                                </script>
                                 return;
                             }
                         </form>
@@ -264,28 +273,21 @@
             </div>
         </div>
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/dashboard/dashboard_script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        let countdownInterval;
 
         document.getElementById("IsTimedIn").addEventListener("click", function () {
+            startCountdown();
+
             var slider = document.querySelector(".toggle-slider");
             slider.classList.toggle("on");
             document.getElementById("toggleForm").submit();
         });
-        let startCountdownButton = document.getElementById('startCountdownButton');
-
-        startCountdownButton.addEventListener('click', function () {
-            startCountdown();
-        });
-
-        let countdownInterval;
-
+        
         function startCountdown() {
+
             let sc = parseInt("@ViewBag.SecondsCompleted");
             let mc = parseInt("@ViewBag.MinutesCompleted");
             let hc = parseInt("@ViewBag.HoursCompleted");
@@ -314,28 +316,23 @@
                 document.getElementById('countdown').innerText = `${newHours}: ${newMinutes}: ${newSeconds}`;
                 document.getElementById('countdownRemaining').innerText = `${newHoursRemaining}: ${newMinutesRemaining}: ${newSecondsRemaining}`;
 
-                if (stopCountdownButton.clicked) {
-                    // Clear the interval and return to stop the countdown
-                    clearInterval(countdownInterval);
-                }
-
             }, 1000);
+        } 
 
-        }
-        let stopCountdownButton = document.getElementById('stopCountdownButton');
-
-        // Add event listener to the stop button
-        stopCountdownButton.addEventListener('click', function () {
-            // Stop the countdown when the stop button is clicked
+        function stopCountdown() {
             clearInterval(countdownInterval);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (isChecked) {
+                startCountdown();
+            } else {
+                stopCountdown();
+            }
+
         });
 
-        function updateCountdown() {
-            // Update your countdown display here
-        }
-
         function playNotificationSound() {
-            // Play notification sound
             var audio = new Audio("/assets/ararm.mp3");
             audio.play();
         }
@@ -410,7 +407,7 @@
             colors: ['#3498db'],
             series: [{ name: 'Grade', data: gradeData }],
             dataLabels: { enable: false },
-            stroke: { width: 5, curve: 'smooth' },
+            stroke: [{ width: 5, curve: 'smooth' }],
             fill: {
                 type: 'gradient',
                 gradient: {

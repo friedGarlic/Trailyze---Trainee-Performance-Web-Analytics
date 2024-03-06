@@ -59,7 +59,7 @@ namespace ML_ASP.Controllers
             //populate the reminderlist 
             submissionVM = new SubmissionVM()
             {
-                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
             };
 
             //pass in the current user Profile Image Url

@@ -152,10 +152,12 @@
 </html>
 
 @section Scripts {
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/fileManagement/submissiont.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    @{
+        //careful passing duplicate querys, look first at shared layout
+        <script src="~/js/fileManagement/submissiont.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    }
     <script>
 
         function showInputPopup() {
