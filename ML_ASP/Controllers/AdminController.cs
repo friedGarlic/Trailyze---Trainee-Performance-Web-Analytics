@@ -68,6 +68,7 @@ namespace ML_ASP.Controllers
 				  .Select(u => u.Grade)
 				  .ToList();
 
+			
 			submissionVM = new SubmissionVM()
 			{
 				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
@@ -267,7 +268,7 @@ namespace ML_ASP.Controllers
 				string apiKey = "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";
 				var openai = new OpenAIAPI(apiKey);
 				var request = openai.Chat.CreateConversation();
-				request.AppendUserInput("The grade of student is 80/100,77/100,80/100. What is your analysis on this.");
+				request.AppendUserInput("The grade of student is 82/100,79/100,82/100,81.67/100. What is your analysis and recommendation on this.");
 				var response = await request.GetResponseFromChatbotAsync();
 				
 				foreach (var message in response)
@@ -286,7 +287,18 @@ namespace ML_ASP.Controllers
 		}
 
 		#endregion
+		[HttpGet]
+		public ActionResult RetrieveGradeList(string id)
+		{
+			var sublist = _unit.Submission
+				  .GetAll(u => u.SubmissionUserId == id)
+				  .OrderByDescending(u => u.Id) // Assuming there's an ID field for ordering
+				  .Take(5)
+				  .Select(u => u.Grade)
+				  .ToList();
 
+			return Json(new { data = sublist });
+		}
 
 	}
 }

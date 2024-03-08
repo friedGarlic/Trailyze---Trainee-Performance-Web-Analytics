@@ -175,8 +175,9 @@
             <!-- End of Recent Orders -->
 
         </main>
-        <!-- End of Main Content -->
-        <!-- Right Section -->
+        <!-- End of Main Content --> 
+        <!-- Right Section --> 
+                        @* --------------NEED FIX TO BECOME PARTIAL VIEW AND NOT INLCUDE IN EVERY VIEW *@
         <div class="right-section">
             <div class="nav">
                 <div class="profile">
@@ -268,8 +269,6 @@
                 <!-- Reminder element -->
                 <div id="reminder-1" style="display: none;">Reminder: Don't forget to do something!</div>
                 
-                <button id="startCountdownButton">Start Countdown</button>
-                <button id="stopCountdownButton">Start Countdown</button>
             </div>
         </div>
     </div>
@@ -407,7 +406,7 @@
             colors: ['#3498db'],
             series: [{ name: 'Grade', data: gradeData }],
             dataLabels: { enable: false },
-            stroke: [{ width: 5, curve: 'smooth' }],
+            stroke: { width: 5, curve: 'smooth' },
             fill: {
                 type: 'gradient',
                 gradient: {
@@ -452,15 +451,11 @@
     <script>
         var lowestReminderDuration = @Model.ReminderList.Min(i => i.ReminderDuration);
 
-        // Set a timeout to display an alarm notification after a delay
         setTimeout(function () {
-            // Find the reminder element by its ID
             var reminderElement = document.getElementById("reminder-1");
 
-            // Check if the element exists (in case it has been removed before the timeout)
             if (reminderElement) {
-                // Display the notification
-                reminderElement.style.display = "block"; // Or any other method to show the notification
+                reminderElement.style.display = "block";
                 playNotificationSound();
             }
         }, lowestReminderDuration);

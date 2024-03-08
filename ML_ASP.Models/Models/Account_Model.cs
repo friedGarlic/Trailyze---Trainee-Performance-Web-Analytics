@@ -6,7 +6,7 @@ namespace ML_ASP.Models
 {
     public class Account_Model : IdentityUser
     {
-        [Range(18,50)]
+        [Range(18, 50)]
         public int Age { get; set; }
 
         [DisplayName("Full Name")]
@@ -31,5 +31,5 @@ namespace ML_ASP.Models
         //profile
         public string? ImageUrl { get; set; }
         public string? Course { get; set; }
-    }
+	}
 }

@@ -1,36 +1,41 @@
-﻿function startCountdown() {
+﻿let gradeData = [80, 79, 78];
 
-    let sc = parseInt("@ViewBag.SecondsCompleted");
-    let mc = parseInt("@ViewBag.MinutesCompleted");
-    let hc = parseInt("@ViewBag.HoursCompleted");
+const chartData = {
+	chart: {
+		type: 'area',
+		height: 100,
+		toolbar: { show: false },
+		zoom: { enable: false }
+	},
+	colors: ['#3498db'],
+	series: [{ name: 'Grade', data: gradeData }],
+	dataLabels: { enable: false },
+	stroke: { width: 5, curve: 'smooth' },
+	fill: {
+		type: 'gradient',
+		gradient: {
+			shadeIntensity: 1,
+			opacityFrom: 0.7,
+			opacityTo: 0,
+			stops: [0, 90, 100]
+		}
+	},
+	xaxis: {
+		categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+		axisBorder: { show: false },
+		labels: { style: { colors: '#a7a7a7', fontFamily: 'system-ui' } }
+	},
+	yaxis: { show: false },
+	grid: { borderColor: 'rgba(0,0,0,0)', padding: { top: -30, bottom: -8, left: 12, right: 12 } },
+	tooltip: {
+		disable: true,
+		y: { formatter: value => '${value}K' },
+		style: { fontFamily: 'system-ui' }
+	},
+	markers: { show: false }
+};
 
-
-    let rs = parseInt("@ViewBag.RemainingSeconds");
-    let rm = parseInt("@ViewBag.RemainingMinutes");
-    let rh = parseInt("@ViewBag.RemainingHours");
-
-    let totalInitialSeconds = (hc * 3600) + (mc * 60) + sc;
-    let totalInitialSecondsRemaining = (rh * 3600) + (rm * 60) + rs;
-
-    countdownInterval = setInterval(() => {
-        totalInitialSeconds++;
-        totalInitialSecondsRemaining--;
-
-        let newHours = Math.floor(totalInitialSeconds / 3600);
-        let newMinutes = Math.floor((totalInitialSeconds % 3600) / 60);
-        let newSeconds = totalInitialSeconds % 60;
-
-        let newHoursRemaining = Math.floor(totalInitialSecondsRemaining / 3600);
-        let newMinutesRemaining = Math.floor((totalInitialSecondsRemaining % 3600) / 60);
-        let newSecondsRemaining = totalInitialSecondsRemaining % 60;
-
-        // Update the countdown displayed on the HTML element
-        document.getElementById('countdown').innerText = `${newHours}: ${newMinutes}: ${newSeconds}`;
-        document.getElementById('countdownRemaining').innerText = `${newHoursRemaining}: ${newMinutesRemaining}: ${newSecondsRemaining}`;
-
-    }, 1000);
-}
-
-function stopCountdown() {
-    clearInterval(countdownInterval);
+error: function (xhr, status, error) {
+	console.error(xhr.responseText);
+	// Handle errors
 }

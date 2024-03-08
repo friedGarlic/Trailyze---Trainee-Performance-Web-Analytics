@@ -114,7 +114,7 @@
 							<p> Overall Performance: Excellent</p>
 
 							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.Id', '@models.HoursRemaining', '@models.WeeklyReportRemaining', '@models.Course')">Edit Profile</button>
-							<button type="button" class="btn btn-primary" onclick="showChatPopup()"> Analyze </button>
+							<button type="button" class="btn btn-primary" onclick="showChatPopup('@models.Id')"> Analyze </button>
 						</div>
 					}
 				</div>
@@ -125,19 +125,58 @@
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
-
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 	</body>
 </html>
 @section Scripts{
 	<script>
-		async function showChatPopup() {
-			sendToController();
+		var gradeList;
+		async function showChatPopup(id) {
+			try {
+				const data = await retrieveGradeList(id);
+
+				await sendToController(data)
+			} catch (error) {
+				console.error("Error:", error);
+			}
 		}
 
-		function sendToController() {
+		function retrieveGradeList(id) {
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					url: '/Admin/RetrieveGradeList',
+					type: 'GET',
+					dataType: 'json',
+					data: { id: id }, // Properly send the id as data
+					success: function (response) {
+						resolve(response); // Resolve the promise with the received data
+					},
+					error: function (xhr, status, error) {
+						reject(error); // Reject the promise if an error occurs
+					}
+				});
+			});
+		}
+
+
+		function sendToController(data) {
+			var teststring = data.data;
+			const chartData = {
+				series: [{ name: 'Grade', data: teststring}],
+				chart: {
+					height: 350,
+					type: 'area',
+					toolbar: {
+						show: false
+					}
+				},
+				xaxis: {
+					categories: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+					axisBorder: { show: false },
+					labels: { style: { colors: '#a7a7a7', fontFamily: 'system-ui' } }
+				}
+			};
 			$.ajax({
 				url: '/Admin/SendToApi',
 				type: 'GET',
@@ -160,20 +199,28 @@
 					}).then((result) => {
 						Swal.fire({
 							title: 'Output Result',
-							text: response.data
+							html: `<div id="chart" class="charts">
+										<h2> Performance Progress</h2>
+										<p> By Week</p>
+										<div class="pulse"></div>
+										<div class="chart-area"></div>
+									</div>
+									<div>
+										<p> `+ response.data + `<p>
+									</div>`,
+							didOpen: () => { //--------------------- THIS IS the syntax that made the script of apexchart works
+								const chartContainer = document.getElementById('chart');
+								const chart = new ApexCharts(chartContainer, chartData);
+								chart.render();
+							}
 						});
 					});
-				},
-				error: function (xhr, status, error) {
-					console.error(xhr.responseText);
-					// Handle errors
 				}
 			});
 		}
 
 
 	</script>
-
 	<script>
 		function showInputPopup(id, hoursRemaining, weeklyReportRemaining, course) {
 			Swal.fire({
