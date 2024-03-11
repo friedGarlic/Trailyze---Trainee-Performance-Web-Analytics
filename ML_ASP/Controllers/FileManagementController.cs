@@ -341,8 +341,6 @@ namespace ML_ASP.Controllers
             var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
             var accountName = account.FullName;
 
-            logModel.ImageUrl = claim.Value;
-
             _unit.Log.Update(logModel, fileName, accountName, id);
             _unit.Save();
 

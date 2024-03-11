@@ -41,7 +41,7 @@ function loadDataTable() {
 			{
 				"data": null,
 				"render": function (data, type, row) {
-					return '<button class="view-pdf" data-id="' + row.fileName + '" data-folderid="' + row.folderId + '">View</button>';
+					return '<button class="btn btn-secondary btn-sm view-pdf" data-id="' + row.fileName + '" data-folderid="' + row.folderId + '">View</button>';
 				}
 			}
 		],

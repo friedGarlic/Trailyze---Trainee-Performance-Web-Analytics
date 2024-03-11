@@ -19,8 +19,6 @@ namespace ML_ASP.Models.Models
 
         public string? Log { get; set; }
 
-        public string? ImageUrl { get; set; }
-
         public string? LogImageUrl { get; set; }
 
         [DisplayName("Full Name")]

@@ -34,7 +34,7 @@ function loadDataTable() {
 			{
 				"data": null,
 				"render": function (data, type, row) {
-					return '<button class="view-pdf" data-id="' + row.fileName + '" data-folderid="' + row.folderId + '">View</button>';
+					return '<button class="btn btn-secondary btn-sm view-pdf" data-id="' + row.logImageUrl + '">View</button>';
 				}
 			}
 		],
@@ -44,5 +44,11 @@ function loadDataTable() {
 				return '<label class="btn btn-primary btn-sm group-btn" data-folderid="' + group + '">Group</label> Folder ID: ' + group;
 			}
 		}
+	});
+
+	$('#timeTable').on('click', '.view-pdf', function () {
+		var getId = $(this).data('id');
+
+		window.open('../FileManagement/ViewImage?fileName=' + getId, '_blank');
 	});
 }
