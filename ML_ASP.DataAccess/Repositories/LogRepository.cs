@@ -34,5 +34,14 @@ namespace ML_ASP.DataAccess.Repositories
         {
             _dbContext.Update(logModel);
         }
-    }
+
+		public void ChangeApprovalStatus(int id, string status)
+        {
+			var objFromDb = _dbContext.Logs.FirstOrDefault(u => u.Id == id);
+			if (objFromDb != null)
+			{
+				objFromDb.ApprovalStatus = status;
+			}
+		}
+	}
 }

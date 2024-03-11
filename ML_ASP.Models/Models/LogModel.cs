@@ -26,5 +26,7 @@ namespace ML_ASP.Models.Models
         [DisplayName("Full Name")]
         public string FullName { get; set; }
 
-    }
+		public string? ApprovalStatus { get; set; }
+
+	}
 }

@@ -40,6 +40,12 @@
 					<span class="text">Analytics</span>
 				</a>
 			</li>
+			<li>
+				<a asp-controller="TimeLog" asp-action="TimeLog">
+					<i class='bx bxs-spreadsheet'></i>
+					<span class="text">Time Log</span>
+				</a>
+			</li>
 		</ul>
 		<ul class="side-menu">
 			<!--<li>
@@ -65,15 +71,6 @@
 				</div>
 			</form>
 
-			<input type="checkbox" id="switch-mode" hidden>
-			<label for="switch-mode" class="switch-mode"></label>
-			<a href="#" class="notification">
-				<i class='bx bxs-bell'></i>
-				<span class="num">8</span>
-			</a>
-			<a href="#" class="profile">
-				<img src="img/people.png">
-			</a>
 		</nav>
 		<!-- NAVBAR -->
 		<!-- MAIN -->
@@ -114,7 +111,7 @@
 							<p> Overall Performance: Excellent</p>
 
 							<button type="button" class="btn btn-primary" onclick="showInputPopup('@models.Id', '@models.HoursRemaining', '@models.WeeklyReportRemaining', '@models.Course')">Edit Profile</button>
-							<button type="button" class="btn btn-primary" onclick="showChatPopup('@models.Id')"> Analyze </button>
+							<button type="button" class="btn btn-primary" onclick="showChatPopup('@models.Id')" style="margin-top: 10px;"> Analyze Performance</button>
 						</div>
 					}
 				</div>

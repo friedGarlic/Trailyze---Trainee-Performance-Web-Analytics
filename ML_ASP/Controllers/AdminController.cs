@@ -60,10 +60,10 @@ namespace ML_ASP.Controllers
 			ViewBag.AccountCount = accountCount;
 			ViewBag.SubmissionCount = submissionCount;
 
-			//find last 5 grade from current user
+			//find last 5 grade from current user selected
 			var sublist = _unit.Submission
 				  .GetAll(u => u.SubmissionUserId == claim.Value)
-				  .OrderByDescending(u => u.Id) // Assuming there's an ID field for ordering
+				  .OrderByDescending(u => u.Id)
 				  .Take(5)
 				  .Select(u => u.Grade)
 				  .ToList();
@@ -286,19 +286,19 @@ namespace ML_ASP.Controllers
 			}
 		}
 
-		#endregion
 		[HttpGet]
 		public ActionResult RetrieveGradeList(string id)
 		{
 			var sublist = _unit.Submission
 				  .GetAll(u => u.SubmissionUserId == id)
-				  .OrderByDescending(u => u.Id) // Assuming there's an ID field for ordering
+				  .OrderByDescending(u => u.Id)
 				  .Take(5)
 				  .Select(u => u.Grade)
 				  .ToList();
 
 			return Json(new { data = sublist });
 		}
+		#endregion
 
 	}
 }
