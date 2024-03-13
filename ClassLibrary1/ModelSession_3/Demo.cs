@@ -32,8 +32,9 @@ namespace ML_net.ModelSession_3
             // construct the path relative to the desired directory
             string _assetsPath = Path.Combine(currentDirectory, "assets");
 
-            string _imagesFolder = Path.Combine(_assetsPath, "images");
-            string _trainTagsTsv = Path.Combine(_imagesFolder, "tags.tsv");
+            //string _imagesFolder = Path.Combine(_assetsPath, "images");
+			string _imagesFolder = Path.Combine(_assetsPath, "samples");
+			string _trainTagsTsv = Path.Combine(_imagesFolder, "tags.tsv");
             string _testTagsTsv = Path.Combine(_imagesFolder, "test-tags.tsv");
             string _inceptionTensorFlowModel = Path.Combine(_assetsPath, "inception", "tensorflow_inception_graph.pb");
 
@@ -94,9 +95,10 @@ namespace ML_net.ModelSession_3
             currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
             // construct the path relative to the desired directory
             string _assetsPath = Path.Combine(currentDirectory, "assets");
-            string _imagesFolder = Path.Combine(_assetsPath, "images");
+            //string _imagesFolder = Path.Combine(_assetsPath, "images");
+			string _imagesFolder = Path.Combine(_assetsPath, "samples");
 
-            string _predictSingleImage = Path.Combine(_imagesFolder, "acceptable_Sample5.png");
+			string _predictSingleImage = Path.Combine(_imagesFolder, "toaster.jpg");
 
             var imageData = new Image_DataSet()
             {
@@ -111,9 +113,9 @@ namespace ML_net.ModelSession_3
             string modelPath = Path.Combine(currentDirectory, "ImageClassification.zip");
             mlContext.Model.Save(model, null, modelPath);
 
-            /*Console.WriteLine($"Image: {Path.GetFileName(imageData.ImagePath)} " +
+            Console.WriteLine($"Image: {Path.GetFileName(imageData.ImagePath)} " +
                 $"predicted as: {prediction.PredictedLabelValue} " +
-                $"with score: {prediction.Score?.Max()} ");*/
+                $"with score: {prediction.Score?.Max()} ");
 
         }
 
@@ -130,7 +132,8 @@ namespace ML_net.ModelSession_3
         {
             MLContext mlContext = new MLContext();
 
-            GenerateModel(mlContext);
+            var a = GenerateModel(mlContext);
+            ClassifySingleImage(mlContext, a);
         }
     }
 }

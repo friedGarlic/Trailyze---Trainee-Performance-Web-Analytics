@@ -10,6 +10,7 @@ using ML_net.ModelSession_2;
 using System.Security.Claims;
 using System;
 using ML_ASP.Utility;
+using ML_net.ModelSession_3;
 
 namespace ML_ASP.Controllers
 {
@@ -18,10 +19,12 @@ namespace ML_ASP.Controllers
         private readonly IUnitOfWork _unit;
         private readonly MLContext _context;
         private readonly PredictionEngine<Object_DataSet, Prediction> _predictionEngine;
-        private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
+		private readonly PredictionEngine<Image_DataSet, ImagePrediction> _imagClassificationEngine;
+		private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
 
         public SubmissionVM submissionVM { get; set; }
 
+        //constructor for every model and object needed
         public FileManagementController(Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment,
             IUnitOfWork unit)
         {
@@ -33,6 +36,7 @@ namespace ML_ASP.Controllers
 
             string desiredDirectory = "ClassLibrary1";
             string modelDirectory = "ModelSession_2";
+            string modelDirectory2 = "ModelSession_3";
             while (!Directory.Exists(Path.Combine(currentDirectory, desiredDirectory)))
             {
                 currentDirectory = Directory.GetParent(currentDirectory).FullName;
@@ -40,18 +44,25 @@ namespace ML_ASP.Controllers
 
             currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
             // Construct the path relative to the desired directory
+            //for Grade prediction
             string combinePath = Path.Combine(currentDirectory, modelDirectory);
             string modelPath = Path.Combine(combinePath, "GradePrediction.zip");
 
-            //for deployment mode only or when published--------------------=======================
-            //var modelPath = "C:\\inetpub\\wwwroot\\trailyze\\ModelSession_1\\GradePrediction.zip";
+			var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
+			_predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
 
-            var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
+			//for image classification
+			string combinePath2 = Path.Combine(currentDirectory, modelDirectory2);
+            string modelPath2 = Path.Combine(combinePath2, "ImageClassification.zip");
 
-            _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
-        }
+            var trainedModel2 = _context.Model.Load(modelPath2, out var modelSchema2);
+			_imagClassificationEngine = _context.Model.CreatePredictionEngine<Image_DataSet, ImagePrediction>(trainedModel2);
 
-		public IActionResult FileManagement()
+			//for deployment mode only or when published--------------------=======================
+			//var modelPath = "C:\\inetpub\\wwwroot\\trailyze\\ModelSession_1\\GradePrediction.zip";
+		}
+
+        public IActionResult FileManagement()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -167,7 +178,7 @@ namespace ML_ASP.Controllers
                 }
 
                 //TODO dont forget this temporary unit test
-                int numWordsInPdf = Demo.CountSpacesInPdf(filePath);
+                int numWordsInPdf = ML_net.ModelSession_2.Demo.CountSpacesInPdf(filePath);
 
                 Random rnd = new Random();
                 int num = rnd.Next(80, 90);
@@ -292,21 +303,32 @@ namespace ML_ASP.Controllers
 		[HttpPost]
         public ActionResult UploadImage(List<IFormFile> file, int id)
         {
-            string uploadFolderName = "Images";
-            string projectPath = _environment.ContentRootPath;
-            string path = Path.Combine(projectPath, uploadFolderName);
-            string fileName = "";
+			var currentDirectory = _environment.ContentRootPath;
 
-            if (!Directory.Exists(path))
+			string desiredDirectory = "ClassLibrary1";
+			while (!Directory.Exists(Path.Combine(currentDirectory, desiredDirectory)))
+			{
+				currentDirectory = Directory.GetParent(currentDirectory).FullName;
+			}
+
+			currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
+
+			string _modelSessionPath = Path.Combine(currentDirectory, "ModelSession_3");
+			string _assetsPath = Path.Combine(_modelSessionPath, "assets");
+			string _imagesFolderPath = Path.Combine(_assetsPath, "samples");
+
+			string fileName = "";
+
+            if (!Directory.Exists(_imagesFolderPath))
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(_imagesFolderPath);
             }
 
             List<string> uploadedImages = new List<string>();
             foreach (IFormFile postedImage in file)
             {
                 fileName = Path.GetFileName(postedImage.FileName);
-                string filePath = Path.Combine(path, fileName);
+                string filePath = Path.Combine(_imagesFolderPath, fileName);
 
                 int attempt = 1;
                 while (System.IO.File.Exists(filePath))
@@ -322,7 +344,7 @@ namespace ML_ASP.Controllers
 
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
                     fileName = $"{fileNameWithoutExtension}_{attempt}{extension}";
-                    filePath = Path.Combine(path, fileName);
+                    filePath = Path.Combine(_imagesFolderPath, fileName);
                     attempt++;
                 }
 
@@ -341,7 +363,22 @@ namespace ML_ASP.Controllers
             var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
             var accountName = account.FullName;
 
-            _unit.Log.Update(logModel, fileName, accountName, id);
+			var new_data = new Image_DataSet
+			{
+				ImagePath = fileName,
+			};
+			var prediction = _imagClassificationEngine.Predict(new_data);
+            string approved = "Approved";
+            string declined = "Declined";
+
+			if (prediction.ToString() == "UniformedHuman")
+            {
+				_unit.Log.Update(logModel, fileName, accountName, approved, id);
+			}
+            else {
+				_unit.Log.Update(logModel, fileName, accountName, declined, id);
+			}
+
             _unit.Save();
 
             return RedirectToAction("Dashboard", "Dashboard");

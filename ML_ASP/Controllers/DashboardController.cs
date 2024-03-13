@@ -18,6 +18,7 @@ using ML_net.ModelSession_3;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Tensorflow;
 
 namespace ML_ASP.Controllers
 {
@@ -25,8 +26,6 @@ namespace ML_ASP.Controllers
     {
         private readonly IUnitOfWork _unit;
         private readonly MLContext _context;
-        private readonly PredictionEngine<Object_DataSet, Prediction> _predictionEngine;
-        private readonly PredictionEngine<Image_DataSet, ImagePrediction> _imagClassificationEngine;
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
 
         public SubmissionVM submissionVM { get; set; }
@@ -37,28 +36,7 @@ namespace ML_ASP.Controllers
             _unit = unit;
             _environment = environment;
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
-
-            //find current file folder path
-            var currentDirectory = _environment.ContentRootPath;
-
-            string desiredDirectory = "ClassLibrary1";
-            string modelDirectory = "ModelSession_2";
-            while (!Directory.Exists(Path.Combine(currentDirectory, desiredDirectory)))
-            {
-                currentDirectory = Directory.GetParent(currentDirectory).FullName;
-            }
-
-            currentDirectory = Path.Combine(currentDirectory, desiredDirectory);
-            // Construct the path relative to the desired directory
-            string combinePath = Path.Combine(currentDirectory, modelDirectory);
-            string modelPath = Path.Combine(combinePath, "GradePrediction.zip");
-
-            //for deployment mode only or when published -------------------=====================
-            //var modelPath = "C:\\inetpub\\wwwroot\\trailyze\\ModelSession_1\\GradePrediction.zip";
-            var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
-
-            _predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
-        }
+	} //construction of 2 model are on filemanagement controller
 
         [Authorize]
         [HttpGet]
@@ -205,7 +183,7 @@ namespace ML_ASP.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult UploadImage(IFormFile file)
+        public ActionResult UploadImage(IFormFile file) //for profile image
 		{
             //find the unique user
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -244,9 +222,8 @@ namespace ML_ASP.Controllers
 
                 // Update the image URL in the model
                 var imageUrl = Path.Combine("/", uploadFolderName, fileName + extension);
-                account.ImageUrl = imageUrl;
 
-                _unit.Account.Update(account, account.Id);
+				_unit.Account.Update(account, account.Id);
 
                 _unit.Save();
                 TempData["success"] = "Uploaded Successfully!";
