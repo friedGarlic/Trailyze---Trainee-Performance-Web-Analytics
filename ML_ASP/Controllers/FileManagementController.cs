@@ -89,7 +89,6 @@ namespace ML_ASP.Controllers
             }
         }
 
-		[Authorize(Roles = SD.Role_User)]
 		[HttpPost]
         public ActionResult DeleteFile(int id, string fileName)
         {

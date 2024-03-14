@@ -17,6 +17,8 @@ namespace ML_ASP.Models.ViewModel
 
 		public IEnumerable<LogModel> LogList { get; set; }
 
+		public IEnumerable<Workload_Model> WorkloadList { get; set; }
+
         public LogModel LogModel { get; set; }
 
 		public string CurrentUserId{ get; set; }

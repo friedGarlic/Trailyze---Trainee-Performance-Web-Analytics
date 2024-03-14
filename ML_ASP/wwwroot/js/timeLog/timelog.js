@@ -32,6 +32,9 @@ function loadDataTable() {
 				}
 			},
 			{
+				"data" : "approvalStatus"
+			},
+			{
 				"data": null,
 				"render": function (data, type, row) {
 					return '<button class="btn btn-secondary btn-sm view-pdf" data-id="' + row.logImageUrl + '">View</button>';

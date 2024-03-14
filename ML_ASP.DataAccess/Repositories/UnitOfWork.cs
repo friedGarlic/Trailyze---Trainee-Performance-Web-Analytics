@@ -20,6 +20,7 @@ namespace ML_ASP.DataAccess.Repositories
             Log = new LogRepository(_dbContext);
             Reminder = new ReminderRepository(_dbContext);
             QR = new QRRepository(_dbContext);
+            Workload = new WorkloadRepository(_dbContext);
         }
 
         public ISubmissionRepository Submission { get; private set; }
@@ -27,6 +28,7 @@ namespace ML_ASP.DataAccess.Repositories
         public ILogRepository Log { get; private set; }
         public IReminderRepository Reminder { get; private set; }
         public IQRRepository QR { get; private set; }
+        public IWorkloadRepository Workload { get; private set; }
 
         public void Save()
         {

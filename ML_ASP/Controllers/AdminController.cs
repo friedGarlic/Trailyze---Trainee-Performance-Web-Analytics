@@ -72,7 +72,8 @@ namespace ML_ASP.Controllers
 			submissionVM = new SubmissionVM()
 			{
 				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
-				GradeList = sublist
+				GradeList = sublist,
+				WorkloadList = _unit.Workload.GetAll(),
 			};
 
 			return View(submissionVM);
@@ -249,6 +250,26 @@ namespace ML_ASP.Controllers
 
 			return RedirectToAction(nameof(Admin));
 		}
+
+		[Authorize]
+		[HttpPost]
+		public IActionResult AddWorkload(string nameOfReminder,DateTime dateTime, string typeOfCourse, string description)
+		{
+			Workload_Model model = new Workload_Model();
+
+			model.Name = nameOfReminder;
+			model.Description = description;
+			model.DueDate = dateTime;
+			model.Course = typeOfCourse;
+
+
+			_unit.Workload.Add(model);
+			_unit.Save();
+
+			TempData["success"] = "Added Workload Succesfully!";
+
+			return RedirectToAction(nameof(Admin));
+		}
 		//------------------------------ENDPOINT REGIONS ------------------------------//
 		#region API CALLS
 		[Authorize]
@@ -298,6 +319,8 @@ namespace ML_ASP.Controllers
 
 			return Json(new { data = sublist });
 		}
+
+
 		#endregion
 
 	}

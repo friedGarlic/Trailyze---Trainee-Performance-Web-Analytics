@@ -14,6 +14,7 @@
 	<!-- Boxicons -->
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
 	<link href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" />
 	<title>AdminHub</title>
 </head>
@@ -98,6 +99,28 @@
 				</li>
 			</ul>
 
+			<div class="add-reminder" onclick="showWorkloadPopup()">
+				<div>
+					<span class="material-icons-sharp">
+						add
+					</span>
+					<h3>Add Workload</h3>
+				</div>
+			</div>
+
+			<div class="profile">
+				<div class="box-container">
+						@foreach(var i in Model.WorkloadList)
+						{
+						<div class="box">
+							<h3> @i.Name </h3>
+							<p> Description: @i.Description</p>
+							<p> Time Remaining: @i.DueDate.ToString("MMMM dd, yyyy")</p>
+							<p> Course: @i.Course</p>
+						</div>
+						}
+				</div>
+			</div>
 
 			<div class="table-data">
 				<div class="order">
@@ -156,10 +179,6 @@
 		<!-- MAIN -->
 	</section>
 	<!-- CONTENT -->
-
-	<!--
-	<script src="~/js/adminScript.js"></script>
-	-->
 </body>
 </html>
 @section Scripts{

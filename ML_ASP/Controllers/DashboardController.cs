@@ -82,7 +82,7 @@ namespace ML_ASP.Controllers
                 ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
                 GradeList = sublist,
                 CurrentUserId = userId,
-            };
+			};
             //Get Account List and name ends --------------------------
 
             //retrieve last entry

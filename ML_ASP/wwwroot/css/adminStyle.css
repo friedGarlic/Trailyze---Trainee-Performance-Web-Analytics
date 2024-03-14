@@ -32,6 +32,26 @@ li {
 	--light-yellow: #FFF2C6;
 	--orange: #FD7238;
 	--light-orange: #FFE0D3;
+
+	--color-primary: #6C9BCF;
+    --color-danger: #FF0060;
+    --color-success: #1B9C85;
+    --color-warning: #F7D060;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
 html {
@@ -550,12 +570,31 @@ body {
 #content main .table-data .todo .todo-list li:last-child {
 	margin-bottom: 0;
 }
+
+#content .add-reminder {
+	background-color: var(--color-white);
+	border: 2px dashed var(--color-primary);
+	color: var(--color-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	border-radius: 10px;
+}
+ 
+#content .add-reminder:hover {
+	background-color: var(--color-primary);
+	color: white;
+}
+
+#content main .add-reminder div {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 10px;
+}
 /* MAIN */
 /* CONTENT */
-
-
-
-
 
 
 
@@ -575,9 +614,6 @@ body {
 		display: none;
 	}
 }
-
-
-
 
 
 
@@ -675,4 +711,3 @@ main .profile .box-container .box .button {
 }
 
 /* PROFILE DESIGN SECTION */
-

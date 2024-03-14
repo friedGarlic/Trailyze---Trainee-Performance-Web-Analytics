@@ -132,7 +132,7 @@
                             <th class="p-4">DateTime</th>
                             <th class="p-4">Log Status</th>
                             <th class="p-4">Evidence</th>
-                            <th class="p-4"></th>
+                            <th class="p-4">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -161,11 +161,15 @@
                                     {
                                         @i.LogImageUrl
                                     }
-
                                 </td>
-                                <td><a href="../FileManagement/ViewImage?fileName=@i.LogImageUrl" target="_blank">View</a></td>
+                                <td><a href="../FileManagement/ViewImage?fileName=@i.LogImageUrl" target="_blank" style="margin-bottom: 2px;">View</a>
+                                    <form id="approvalForm" method="post" asp-controller="FileManagement" asp-action="DeleteFile" asp-route-id="@i.Id">
+                                        <input type="hidden" name="fileName" value="@i.LogImageUrl" />
+                                        <button class="btn btn-secondary" id="deleteButton" type="button">Delete</button>
+                                    </form>
+                                </td>
                                 <td>
-                                   <!-- REMAINING SPACE FOR DELETING BUTTON-->
+                                    
                                 </td>
                             </tr>
                         }
@@ -459,6 +463,28 @@
                 playNotificationSound();
             }
         }, lowestReminderDuration);
+    </script>
+    <script>
+        document.getElementById('deleteButton').addEventListener('click', function () {
+            confirmDelete();
+        });
+
+        function confirmDelete() {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Manually trigger the form submission
+                    document.getElementById('approvalForm').submit();
+                }
+            });
+        }
     </script>
 </body>
 </html>

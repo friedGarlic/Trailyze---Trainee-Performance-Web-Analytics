@@ -73,3 +73,48 @@ function toggleGroupVisibility(folderId) {
 
     $(rows).toggle(); // Toggle visibility of the rows with the specified folderId
 }
+
+function showWorkloadPopup() {
+	Swal.fire({
+		title: 'Add Reminder',
+		html:
+			'<input id="swal-input1" class="swal2-input" placeholder="Add Workload">' +
+			`<textarea id="swal-input4" rows="4" cols="50">
+				  Enter your details here...
+				</textarea>` +
+			`<input id="swal-input2" type="datetime-local" class="swal2-input" placeholder="Select Date and Time">` +
+			'<input id="swal-input3" class="swal2-input" placeholder="Type of Course">',
+		showCancelButton: true,
+		confirmButtonText: 'Submit',
+		cancelButtonText: 'Cancel',
+		preConfirm: () => {
+			const nameOfReminder = Swal.getPopup().querySelector('#swal-input1').value;
+			const dateTime = Swal.getPopup().querySelector('#swal-input2').value;
+			const typeOfCourse = Swal.getPopup().querySelector('#swal-input3').value;
+			const description = Swal.getPopup().querySelector('#swal-input4').value;
+			// perform validation or additional processing here
+			return { nameOfReminder: nameOfReminder, dateTime: dateTime, typeOfCourse: typeOfCourse, description: description };
+		},
+		allowOutsideClick: () => !Swal.isLoading()
+	}).then((result) => {
+		if (result.isConfirmed) {
+			// data to the controller using AJAX
+			sendToController(result.value);
+		}
+	});
+}
+
+function sendToController(data) {
+	$.ajax({
+		url: '/Admin/AddWorkload',
+		type: 'POST',
+		dataType: 'json',
+		data: data,
+		success: function (response) {
+			console.log("SUCCESS");
+		},
+		error: function (error) {
+			console.error(error);
+		}
+	});
+}
