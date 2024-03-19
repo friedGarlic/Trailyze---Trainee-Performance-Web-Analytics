@@ -254,19 +254,37 @@ namespace ML_ASP.Controllers
 		[Authorize]
 		[HttpPost]
 		public IActionResult AddWorkload(string nameOfReminder,DateTime dateTime, string typeOfCourse, string description)
-		{
-			Workload_Model model = new Workload_Model();
+        {
+            Random rnd = new Random();
+            Workload_Model model = new Workload_Model();
 
 			model.Name = nameOfReminder;
 			model.Description = description;
 			model.DueDate = dateTime;
 			model.Course = typeOfCourse;
 
+            model.ModelId = rnd.Next(100, 1000);
 
-			_unit.Workload.Add(model);
-			_unit.Save();
+            _unit.Workload.Add(model);
 
-			TempData["success"] = "Added Workload Succesfully!";
+            //iterate getall account
+            //in each iteration get the id and pass it to new model of list
+            //get id of workload model, pass it to newmodel of workload list again,
+            //tag as default unsubmitted.
+            //iterate again
+
+            foreach (var i in _unit.Account.GetAll())
+            {
+                WorkloadSubmissionList_Model wrkldModel = new();
+				wrkldModel.SubmissionUserID = i.Id;
+                wrkldModel.WorkloadId = model.ModelId;
+				wrkldModel.IsSubmitted = false;
+
+				_unit.WorkloadSubmissionList.Add(wrkldModel);
+            }
+            _unit.Save();
+
+            TempData["success"] = "Added Workload Succesfully!";
 
 			return RedirectToAction(nameof(Admin));
 		}

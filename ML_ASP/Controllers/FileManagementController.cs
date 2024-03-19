@@ -67,10 +67,16 @@ namespace ML_ASP.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
+            var workloadsubmissionlist = _unit.WorkloadSubmissionList.GetAll()
+                .FirstOrDefault(i => i.SubmissionUserID == claim.Value); //looks for the current user that is similar on the list (a student that needs to submit work load) 
+
             //populate the reminderlist 
             submissionVM = new SubmissionVM()
             {
                 ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
+                WorkloadList = _unit.Workload.GetAll(),
+                WorkloadSubmissionListModel = workloadsubmissionlist,
+                WorkloadSubmissionList = _unit.WorkloadSubmissionList.GetAll(),
             };
 
             //pass in the current user Profile Image Url
@@ -107,7 +113,7 @@ namespace ML_ASP.Controllers
         }
 
         [HttpPost]
-		public IActionResult FileManagement(List<IFormFile> postedFiles)
+		public IActionResult FileManagement(List<IFormFile> postedFiles, int modelId)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -151,6 +157,7 @@ namespace ML_ASP.Controllers
                 }
             }
 
+            //UPLOADING FILES STARTS---------------
             List<string> uploadedFiles = new List<string>();
             foreach (IFormFile postedFile in postedFiles)
             {
@@ -219,12 +226,7 @@ namespace ML_ASP.Controllers
                 return RedirectToAction(nameof(FileManagement));
             }
             //VERIFICATION OF NO UPLOAD SUBMIT ENDS--------------
-            submissionVM = new SubmissionVM()
-            {
-                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value),
-                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
-                IsMultipleFile = true
-            };
+            
             //DATABASE COLLERATION ENDS------------
 
             TempData["success"] = "Uploaded Succesfully!";
@@ -236,6 +238,25 @@ namespace ML_ASP.Controllers
 
                 ViewData["ImageUrl"] = imageUrl;
             }
+
+            //flagging the current workload as submitted
+            var workload = _unit.WorkloadSubmissionList.GetAll()
+                .FirstOrDefault(i => i.WorkloadId == modelId && claim.Value == i.SubmissionUserID);
+
+            if (workload != null)
+            {
+                _unit.WorkloadSubmissionList.IsSubmitted(true, workload.Id);
+            }
+
+            _unit.Save();
+
+            submissionVM = new SubmissionVM()
+            {
+                SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value),
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
+                IsMultipleFile = true,
+                WorkloadList = _unit.Workload.GetAll(),
+            };
 
             return View(nameof(FileManagement),submissionVM);
         }

@@ -19,6 +19,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
         IQRRepository QR { get; }
 
         IWorkloadRepository Workload { get; }
+        
+        IWorkloadSubmissionListRepository WorkloadSubmissionList { get; }
 
         void Save();
     }

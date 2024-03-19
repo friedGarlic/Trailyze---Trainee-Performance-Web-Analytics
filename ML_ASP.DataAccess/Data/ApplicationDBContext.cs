@@ -17,5 +17,6 @@ namespace ML_ASP.DataAccess
         public DbSet<Reminder_Model> Reminders { get; set; }
         public DbSet<QRModel> QR { get; set; }
         public DbSet<Workload_Model> Workloads { get; set; }
+        public DbSet<WorkloadSubmissionList_Model> WorkloadsSubmissionList { get; set;}
     }
 }

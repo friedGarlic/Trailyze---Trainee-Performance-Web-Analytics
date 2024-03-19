@@ -22,7 +22,21 @@
         width: 20vw;
     }
 }
-:root{
+:root {
+    --poppins: 'Poppins', sans-serif;
+    --lato: 'Lato', sans-serif;
+    --light: #F9F9F9;
+    --blue: #3C91E6;
+    --light-blue: #CFE8FF;
+    --grey: #eee;
+    --dark-grey: #AAAAAA;
+    --dark: #342E37;
+    --red: #DB504A;
+    --yellow: #FFCE26;
+    --light-yellow: #FFF2C6;
+    --orange: #FD7238;
+    --light-orange: #FFE0D3;
+
     --color-primary: #6C9BCF;
     --color-danger: #FF0060;
     --color-success: #1B9C85;
@@ -33,14 +47,11 @@
     --color-light: rgba(132, 139, 200, 0.18);
     --color-dark-variant: #677483;
     --color-background: #f6f6f9;
-
     --card-border-radius: 2rem;
     --border-radius-1: 0.4rem;
     --border-radius-2: 1.2rem;
-
     --card-padding: 1.8rem;
     --padding-1: 1.2rem;
-
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
@@ -576,6 +587,8 @@ main .recent-orders a{
     gap: 0.6rem;
 }
 
+
+/* ------------------- SCREEN RESOULTION OF PHONE 1200px -------------------*/
 @media screen and (max-width: 1200px) {
     .container{
         width: 95%;
@@ -629,9 +642,11 @@ main .recent-orders a{
     main table tbody tr td:first-child{
         display: none;
     }
-
 }
+/* ------------------- SCREEN RESOULTION OF PHONE 1200px ENDS -------------------*/
 
+
+/* ------------------- SCREEN RESOULTION OF PHONE 768px -------------------*/
 @media screen and (max-width: 768px) {
     .container{
         width: 100%;
@@ -747,6 +762,8 @@ main .recent-orders a{
     }
 
 }
+/* ------------------- SCREEN RESOULTION OF PHONE 768px ENDS -------------------*/
+
 
 .charts{
     top: 15px;
@@ -865,3 +882,56 @@ main .recent-orders a{
     align-items: center;
     gap: 0.6rem;
 }
+
+
+/* WORKLOAD DESIGN SECTION */
+main .profile .box-container {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+main .profile .box-container .box{
+	width: 18rem;
+	padding: 1.2rem;
+	text-align:center;
+	box-shadow: 0 .3rem .5rem rgba(0,0,0,.3);
+	background: #fff;
+	margin: 3rem 1rem;
+}
+
+main .profile .box-container .box img{
+	height: 6.5rem;
+	width: 6.5rem;
+	object-fit: cover;
+	border-radius: 50%;
+	margin-top: -3rem;
+	border: .6rem solid var(--dark-grey);
+	border-left: .6rem solid var(--grey);
+	border-bottom: .6rem solid var(--grey);
+}
+
+main .profile .box-container .box h3{
+	font-size: 2rem;
+	color: var(--red);
+	padding: 0 .5rem;
+}
+
+main .profile .header{
+    text-align: center;
+    font-size: 2rem;
+}
+
+main .profile .box-container .box p{
+	font-size: 1.2rem;
+	padding: 0 1.3rem;
+}
+
+main .profile .box-container .box .button {
+	position: relative;
+	width: 50px;
+	border-radius: 5px;
+	color: var(--light);
+	background: var(--red);
+}
+/* PROFILE DESIGN SECTION */

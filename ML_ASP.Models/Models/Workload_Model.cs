@@ -12,6 +12,8 @@ namespace ML_ASP.Models.Models
 		[Key]
 		public int Id { get; set; }
 
+		public int ModelId { get; set; }
+
 		public string Name { get; set; }
 
 		public string Description { get; set; }

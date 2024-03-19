@@ -51,15 +51,38 @@
         <!-- End of Sidebar Section -->
         <!-- Main Content -->
         <main style="width: 700px;">
-            <div class="prediction" style="margin-bottom: 20px;">
-                <div class="forme">
-                    <form method="post" enctype="multipart/form-data" asp-controller="FileManagement" asp-action="FileManagement">
-                        <span>Select File:</span>
-                        <input type="file" name="postedFiles" multiple />
-                        <input type="submit" value="Upload" /> <br />
-                    </form>
+            <div class="profile">
+                <h1 class="header">Workloads</h1>
+                <div class="box-container">
+                    @foreach (var i in Model.WorkloadList)
+                    {
+                        <div class="box">
+                            <h3> @i.Name </h3>
+                            <p> Description: @i.Description</p>
+                            <p> Time Remaining: @i.DueDate.ToString("MMMM dd, yyyy")</p>
+                            <p> Course: @i.Course</p>
+                            @if (Model.WorkloadSubmissionList.Any(j => j.SubmissionUserID == Model.WorkloadSubmissionListModel.SubmissionUserID 
+                                                                                                                    && i.ModelId == Model.WorkloadSubmissionListModel.WorkloadId) 
+                                                                                                                    && Model.WorkloadSubmissionListModel.IsSubmitted)
+                            {
+                                <p>Submitted</p>
+                            }
+                             else{
+
+                                <div class="prediction" style="margin-bottom: 20px;">
+                                    <form method="post" enctype="multipart/form-data" asp-controller="FileManagement" asp-action="FileManagement">
+                                        <input type="file" name="postedFiles" multiple />
+                                        <input type="hidden" name="modelId" value="@i.ModelId" />
+                                        <input type="submit" value="Upload" /> <br />
+                                    </form>
+                                </div>
+                             }
+                        </div>
+                    }
                 </div>
             </div>
+
+            
 
             <table id="tblData" class="display">
                 <thead>

@@ -4,6 +4,7 @@ using ML_ASP.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ML_ASP.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240319014008_workloadSubmissionListModel")]
+    partial class workloadSubmissionListModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,9 +120,6 @@ namespace ML_ASP.DataAccess.Migrations
                     b.Property<bool>("IsSubmitted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SubmissionUserID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -150,9 +150,6 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()

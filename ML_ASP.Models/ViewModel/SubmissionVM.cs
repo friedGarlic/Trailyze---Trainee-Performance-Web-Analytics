@@ -19,14 +19,17 @@ namespace ML_ASP.Models.ViewModel
 
 		public IEnumerable<Workload_Model> WorkloadList { get; set; }
 
+		public IEnumerable<WorkloadSubmissionList_Model> WorkloadSubmissionList { get; set; }
+
         public LogModel LogModel { get; set; }
 
-		public string CurrentUserId{ get; set; }
+		public WorkloadSubmissionList_Model WorkloadSubmissionListModel { get; set; }
+
+        public string CurrentUserId{ get; set; }
 
         public string AccountName { get; set; }
 
 		public string TimeLog { get; set; }
-
 
 		public string Prediction { get; set; }
 
