@@ -267,12 +267,6 @@ namespace ML_ASP.Controllers
 
             _unit.Workload.Add(model);
 
-            //iterate getall account
-            //in each iteration get the id and pass it to new model of list
-            //get id of workload model, pass it to newmodel of workload list again,
-            //tag as default unsubmitted.
-            //iterate again
-
             foreach (var i in _unit.Account.GetAll())
             {
                 WorkloadSubmissionList_Model wrkldModel = new();

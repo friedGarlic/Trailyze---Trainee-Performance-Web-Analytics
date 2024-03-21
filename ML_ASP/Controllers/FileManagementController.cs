@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System;
 using ML_ASP.Utility;
 using ML_net.ModelSession_3;
+using Microsoft.VisualBasic;
 
 namespace ML_ASP.Controllers
 {
@@ -67,15 +68,14 @@ namespace ML_ASP.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            var workloadsubmissionlist = _unit.WorkloadSubmissionList.GetAll()
-                .FirstOrDefault(i => i.SubmissionUserID == claim.Value); //looks for the current user that is similar on the list (a student that needs to submit work load) 
+            var workloadsubmissionlist = _unit.WorkloadSubmissionList.GetAll(i => i.SubmissionUserID == claim.Value);//to get the list of all workloads of current user 
 
             //populate the reminderlist 
             submissionVM = new SubmissionVM()
             {
                 ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
                 WorkloadList = _unit.Workload.GetAll(),
-                WorkloadSubmissionListModel = workloadsubmissionlist,
+                CurrentUserSubmissionList = workloadsubmissionlist,
                 WorkloadSubmissionList = _unit.WorkloadSubmissionList.GetAll(),
             };
 
@@ -113,7 +113,7 @@ namespace ML_ASP.Controllers
         }
 
         [HttpPost]
-		public IActionResult FileManagement(List<IFormFile> postedFiles, int modelId)
+		public IActionResult FileManagement(List<IFormFile> postedFiles, int modelId, DateTime dueDate)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -123,6 +123,9 @@ namespace ML_ASP.Controllers
             string projectPath = _environment.ContentRootPath;
             string uploadPath = Path.Combine(projectPath, uploadFolderName);
             string submissionPath = uploadPath; // Default to the Uploads folder
+
+            Random rnd = new Random();
+            int num = rnd.Next(80, 90);
 
             Prediction prediction = null;
 
@@ -157,6 +160,22 @@ namespace ML_ASP.Controllers
                 }
             }
 
+            //determine the additional grade based on how many days have passed
+            DateTime currentDate = DateTime.Now;
+            DateTime earlySubmittedDate = dueDate.AddDays(-3);
+            if (currentDate < dueDate) // Submission is before the due date
+            {
+                num += 3;
+            }
+            else if (currentDate <= earlySubmittedDate) // Submission is on time (within 3 days after due date)
+            {
+                num += 7;
+            }
+            else // Submission is late
+            {
+                num -= 2;
+            }
+
             //UPLOADING FILES STARTS---------------
             List<string> uploadedFiles = new List<string>();
             foreach (IFormFile postedFile in postedFiles)
@@ -185,9 +204,6 @@ namespace ML_ASP.Controllers
 
                 //TODO dont forget this temporary unit test
                 int numWordsInPdf = ML_net.ModelSession_2.Demo.CountSpacesInPdf(filePath);
-
-                Random rnd = new Random();
-                int num = rnd.Next(80, 90);
 
                 var new_data = new Object_DataSet
                 {
@@ -218,7 +234,6 @@ namespace ML_ASP.Controllers
                 }
             }
             //UPLOADING FILES ENDS-------------
-
             if (postedFiles.Count <= 0)
             {
                 TempData["failed"] = "No File was Uploaded";
@@ -250,12 +265,15 @@ namespace ML_ASP.Controllers
 
             _unit.Save();
 
+            var workloadsubmissionlist = _unit.WorkloadSubmissionList.GetAll(i => i.SubmissionUserID == claim.Value);//to get the list of all workloads of current user 
             submissionVM = new SubmissionVM()
             {
                 SubmissionList = _unit.Submission.GetAll(u => u.SubmissionUserId == claim.Value),
                 ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
                 IsMultipleFile = true,
                 WorkloadList = _unit.Workload.GetAll(),
+                CurrentUserSubmissionList = workloadsubmissionlist,
+                WorkloadSubmissionList = _unit.WorkloadSubmissionList.GetAll(),
             };
 
             return View(nameof(FileManagement),submissionVM);

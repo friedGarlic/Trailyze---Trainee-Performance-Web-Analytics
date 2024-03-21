@@ -21,9 +21,9 @@ namespace ML_ASP.Models.ViewModel
 
 		public IEnumerable<WorkloadSubmissionList_Model> WorkloadSubmissionList { get; set; }
 
-        public LogModel LogModel { get; set; }
+        public IEnumerable<WorkloadSubmissionList_Model> CurrentUserSubmissionList { get; set; }
 
-		public WorkloadSubmissionList_Model WorkloadSubmissionListModel { get; set; }
+        public LogModel LogModel { get; set; }
 
         public string CurrentUserId{ get; set; }
 

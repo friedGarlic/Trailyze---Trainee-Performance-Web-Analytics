@@ -54,29 +54,38 @@
             <div class="profile">
                 <h1 class="header">Workloads</h1>
                 <div class="box-container">
-                    @foreach (var i in Model.WorkloadList)
+                    @foreach (var i in Model.WorkloadList) //
                     {
                         <div class="box">
                             <h3> @i.Name </h3>
                             <p> Description: @i.Description</p>
                             <p> Time Remaining: @i.DueDate.ToString("MMMM dd, yyyy")</p>
                             <p> Course: @i.Course</p>
-                            @if (Model.WorkloadSubmissionList.Any(j => j.SubmissionUserID == Model.WorkloadSubmissionListModel.SubmissionUserID 
-                                                                                                                    && i.ModelId == Model.WorkloadSubmissionListModel.WorkloadId) 
-                                                                                                                    && Model.WorkloadSubmissionListModel.IsSubmitted)
+                            @{var isFirstIteration = true;}
+                            @foreach (var submission in Model.CurrentUserSubmissionList)
                             {
-                                <p>Submitted</p>
+                                @if (isFirstIteration == true)
+                                {
+                                    @* "any" is too look for the list in that condition, its likke getall in unit dbcontext *@
+                                    if (i.ModelId == submission.WorkloadId && submission.IsSubmitted)
+                                    {
+                                        <p>Submitted</p>
+                                        isFirstIteration = false;
+                                    }
+                                    if(i.ModelId == submission.WorkloadId && !submission.IsSubmitted)
+                                    {
+                                        <div class="prediction" style="margin-bottom: 20px;">
+                                            <form method="post" enctype="multipart/form-data" asp-controller="FileManagement" asp-action="FileManagement">
+                                                <input type="file" name="postedFiles" multiple />
+                                                <input type="hidden" name="modelId" value="@i.ModelId" />
+                                                <input type="hidden" name="dueDate" value="@i.DueDate" />
+                                                <input type="submit" value="Upload" /> <br />
+                                            </form>
+                                        </div>
+                                        isFirstIteration = false;
+                                    }
+                                }
                             }
-                             else{
-
-                                <div class="prediction" style="margin-bottom: 20px;">
-                                    <form method="post" enctype="multipart/form-data" asp-controller="FileManagement" asp-action="FileManagement">
-                                        <input type="file" name="postedFiles" multiple />
-                                        <input type="hidden" name="modelId" value="@i.ModelId" />
-                                        <input type="submit" value="Upload" /> <br />
-                                    </form>
-                                </div>
-                             }
                         </div>
                     }
                 </div>
