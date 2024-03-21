@@ -62,7 +62,7 @@
                             <p> Time Remaining: @i.DueDate.ToString("MMMM dd, yyyy")</p>
                             <p> Course: @i.Course</p>
                             @{var isFirstIteration = true;}
-                            @foreach (var submission in Model.CurrentUserSubmissionList)
+                            @foreach (var submission in Model.CurrentUserSubmissionList) //before; me and god knows what is happening here, now its god only, idk wtf is happening now.
                             {
                                 @if (isFirstIteration == true)
                                 {
