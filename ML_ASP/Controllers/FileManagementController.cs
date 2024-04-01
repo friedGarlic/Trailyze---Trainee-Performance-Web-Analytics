@@ -12,6 +12,7 @@ using System;
 using ML_ASP.Utility;
 using ML_net.ModelSession_3;
 using Microsoft.VisualBasic;
+using Accord;
 
 namespace ML_ASP.Controllers
 {
@@ -160,22 +161,6 @@ namespace ML_ASP.Controllers
                 }
             }
 
-            //determine the additional grade based on how many days have passed
-            DateTime currentDate = DateTime.Now;
-            DateTime earlySubmittedDate = dueDate.AddDays(-3);
-            if (currentDate < dueDate) // Submission is before the due date
-            {
-                num += 3;
-            }
-            else if (currentDate <= earlySubmittedDate) // Submission is on time (within 3 days after due date)
-            {
-                num += 7;
-            }
-            else // Submission is late
-            {
-                num -= 2;
-            }
-
             //UPLOADING FILES STARTS---------------
             List<string> uploadedFiles = new List<string>();
             foreach (IFormFile postedFile in postedFiles)
@@ -212,7 +197,25 @@ namespace ML_ASP.Controllers
                 };
 
                 prediction = _predictionEngine.Predict(new_data);
-                string predGrade = prediction.Prediciton.ToString("F2");
+                int convertPrediction = ((int)prediction.Prediciton);
+
+                //determine the additional grade based on how many days have passed
+                DateTime currentDate = DateTime.Now;
+                DateTime earlySubmittedDate = dueDate.AddDays(-3);
+                if (currentDate < dueDate) // Submission is before the due date
+                {
+                    convertPrediction += 3;
+                }
+                else if (currentDate <= earlySubmittedDate) // Submission is on time (within 3 days after due date)
+                {
+                    convertPrediction += 7;
+                }
+                else // Submission is late
+                {
+                    convertPrediction -= 2;
+                }
+
+                string predGrade = convertPrediction.ToString("F2");
 
                 //adding identity for the one who upload the file
                 submissionModel.SubmissionUserId = claim.Value;

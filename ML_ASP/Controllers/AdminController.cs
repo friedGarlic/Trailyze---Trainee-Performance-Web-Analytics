@@ -238,8 +238,16 @@ namespace ML_ASP.Controllers
 			reminder_Model.IconClass = iconClass;
 			reminder_Model.IconType = iconType;
 
-			_unit.Reminder.Add(reminder_Model);
-			_unit.Save();
+			//temporary validation
+			if (nameOfReminder == null)
+            {
+                return RedirectToAction(nameof(Admin));
+            }
+			else {
+                _unit.Reminder.Add(reminder_Model);
+                _unit.Save();
+            }
+			
 
 			TempData["success"] = "Added Reminder Succesfully!";
 

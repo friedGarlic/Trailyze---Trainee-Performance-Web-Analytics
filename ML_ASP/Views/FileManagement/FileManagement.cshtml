@@ -225,6 +225,7 @@
                 if (result.isConfirmed) {
                     // data to the controller using AJAX
                     sendDataToController(result.value);
+                    location.reload();
                 }
             });
         }
@@ -236,7 +237,6 @@
                 dataType: 'json',
                 data: data,
                 success: function (response) {
-                    console.log("SUCCESS");
                 },
                 error: function (error) {
                     console.error(error);
