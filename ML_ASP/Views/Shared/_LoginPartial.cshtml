@@ -57,11 +57,10 @@ else
             success: function (data) {
                 $("#noti_Container").ikrNotificationCount({
                     NotificationList: notifications,
-                    NotiFromPropName: "FromUserName", //needs change, got different name in model
-                    ListTitlePropName: "NotiHeader",    //needs change, got different name in model
-                    ListBodyPropName: "NotiBody",   //needs change, got different name in model
-                    ControllerName: "Notifications",     //needs change, got different name in model
-                    ActionName: "AllNotifications"  //needs change, got different name in model
+                    ListTitlePropName: "NotiHeader", 
+                    ListBodyPropName: "NotiBody",   
+                    ControllerName: "Notifications", 
+                    ActionName: "AllNotifications"
                 }); 
             }
         });

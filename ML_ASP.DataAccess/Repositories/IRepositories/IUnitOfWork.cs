@@ -22,6 +22,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
         
         IWorkloadSubmissionListRepository WorkloadSubmissionList { get; }
 
+        INotificationRepository Notification { get; }
+
         void Save();
     }
 }

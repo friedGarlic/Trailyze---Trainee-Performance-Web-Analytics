@@ -22,6 +22,7 @@ namespace ML_ASP.DataAccess.Repositories
             QR = new QRRepository(_dbContext);
             Workload = new WorkloadRepository(_dbContext);
             WorkloadSubmissionList = new WorkloadSubmissionListRepository(_dbContext);
+            Notification = new NotificationRepository(_dbContext);
         }
 
         public ISubmissionRepository Submission { get; private set; }
@@ -31,6 +32,7 @@ namespace ML_ASP.DataAccess.Repositories
         public IQRRepository QR { get; private set; }
         public IWorkloadRepository Workload { get; private set; }
         public IWorkloadSubmissionListRepository WorkloadSubmissionList { get; private set; }
+        public INotificationRepository Notification { get; private set; }
 
         public void Save()
         {
