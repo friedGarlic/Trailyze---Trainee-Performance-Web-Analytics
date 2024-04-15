@@ -204,15 +204,14 @@ namespace ML_ASP.Controllers
                 DateTime earlySubmittedDate = dueDate.AddDays(-3);
                 if (currentDate < dueDate) // Submission is before the due date
                 {
-                    convertPrediction += 3;
+                    convertPrediction += 4;
                 }
                 else if (currentDate <= earlySubmittedDate) // Submission is on time (within 3 days after due date)
                 {
-                    convertPrediction += 7;
+                    convertPrediction += 4;
                 }
                 else // Submission is late
                 {
-                    convertPrediction -= 2;
                 }
 
                 string predGrade = convertPrediction.ToString("F2");

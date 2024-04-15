@@ -3,13 +3,23 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+<head>
+<link rel="stylesheet" href="~/js/notification/ikr.notification.css">
+</head>
+
+<body>
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item" style="position: relative; top:20px; right: 20px;">
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                <img src="@ViewData["ImageUrl"]" alt="User Image">
-            </a>
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <img src="@ViewData["ImageUrl"]" alt="User Image">
+        </a>
+    </li>
+    <li>
+        <span class="material-icons-sharp" style="position: relative; top:10px; right: 10px;">
+            notifications_none
+        </span>
     </li>
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
@@ -27,3 +37,33 @@ else
     </li>
 }
 </ul>
+
+<div id="noti_Container">
+
+</div>
+
+    <script src="~/js/notification/ikr.notificationPlugin.js"> </script>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#noti_Container").ikrNotificationSetup();
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "Dashboard/GetNotification",
+            traditional: true,
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                $("#noti_Container").ikrNotificationCount({
+                    NotificationList: notifications,
+                    NotiFromPropName: "FromUserName", //needs change, got different name in model
+                    ListTitlePropName: "NotiHeader",    //needs change, got different name in model
+                    ListBodyPropName: "NotiBody",   //needs change, got different name in model
+                    ControllerName: "Notifications",     //needs change, got different name in model
+                    ActionName: "AllNotifications"  //needs change, got different name in model
+                }); 
+            }
+        });
+    });
+</script>
