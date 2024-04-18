@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     // handle click event on the "Hide" button
 	$('#submissionTable').on('click', '.group-btn', function () {
-		event.preventDefault();
+		//event.preventDefault();
         var folderId = $(this).data('folderid');
         toggleGroupVisibility(folderId);
     });
@@ -32,10 +32,10 @@ function loadDataTable() {
 						selectHtml += '<option value="' + options[i] + '" ' + isSelected + '>' + options[i] + '</option>';
 					}
 					selectHtml += '</select>';
-
-					var hiddenInputApproval = '<input type="hidden" name="originalApprovalStatus" value = "' + row.approvalStatus + '" />'; //to pass in controller
+					var hiddenInputApproval = '<input type="hidden" name="originalApprovalStatus" value = "' + row.approvalStatus + '" />';
 					var hiddenInputHtml = '<input type="hidden" name="id" value="' + row.id + '">'; // to pass in controller
-					return selectHtml + hiddenInputApproval + hiddenInputHtml;
+					var hiddentInputUserId = '<input type="hidden" name="userId" value="' + row.submissionUserId + '">';
+					return selectHtml + hiddenInputHtml + hiddentInputUserId + hiddenInputApproval;
 				}
 			},
 			{

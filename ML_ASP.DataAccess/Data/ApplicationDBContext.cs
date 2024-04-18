@@ -18,5 +18,6 @@ namespace ML_ASP.DataAccess
         public DbSet<QRModel> QR { get; set; }
         public DbSet<Workload_Model> Workloads { get; set; }
         public DbSet<WorkloadSubmissionList_Model> WorkloadsSubmissionList { get; set;}
+        public DbSet<Notification_Model> Notification { get; set; }
     }
 }

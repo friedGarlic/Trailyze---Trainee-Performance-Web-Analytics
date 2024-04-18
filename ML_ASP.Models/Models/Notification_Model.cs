@@ -14,8 +14,11 @@ namespace ML_ASP.Models.Models
 
         public string Description { get; set; }
 
+        public string NotifUserId { get; set; }
+
         //weekly report that needed to be submitted
         //reminders that expired,
+        //accepted submission and timein evidence approval
         //admin warnings
     }
 }

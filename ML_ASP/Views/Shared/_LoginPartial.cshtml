@@ -3,11 +3,7 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-<head>
-<link rel="stylesheet" href="~/js/notification/ikr.notification.css">
-</head>
 
-<body>
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
@@ -16,11 +12,7 @@
             <img src="@ViewData["ImageUrl"]" alt="User Image">
         </a>
     </li>
-    <li>
-        <span class="material-icons-sharp" style="position: relative; top:10px; right: 10px;">
-            notifications_none
-        </span>
-    </li>
+    
     <li class="nav-item">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
             <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
@@ -38,31 +30,3 @@ else
 }
 </ul>
 
-<div id="noti_Container">
-
-</div>
-
-    <script src="~/js/notification/ikr.notificationPlugin.js"> </script>
-</body>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#noti_Container").ikrNotificationSetup();
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "Dashboard/GetNotification",
-            traditional: true,
-            contentType: "application/json;charset=utf-8",
-            success: function (data) {
-                $("#noti_Container").ikrNotificationCount({
-                    NotificationList: notifications,
-                    ListTitlePropName: "NotiHeader", 
-                    ListBodyPropName: "NotiBody",   
-                    ControllerName: "Notifications", 
-                    ActionName: "AllNotifications"
-                }); 
-            }
-        });
-    });
-</script>

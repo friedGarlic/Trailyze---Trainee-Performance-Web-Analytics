@@ -53,6 +53,7 @@
   <ItemGroup>
     <Folder Include="Images\" />
     <Folder Include="Uploads\" />
+    <Folder Include="Views\Notification\" />
     <Folder Include="wwwroot\ProfileImages\" />
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>

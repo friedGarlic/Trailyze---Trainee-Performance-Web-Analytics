@@ -107,27 +107,25 @@ namespace ML_ASP.Controllers
 		// --------------------METHODS ------------------
 		[Authorize(Roles = SD.Role_Admin)]
 		[HttpPost]
-		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> userId)
+		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> userId, List<string> originalApprovalStatus)
 		{
 			string newApprovalStatus = "";
 
 			for (int i = 0; i < id.Count; i++)
 			{
-				int changedId = id[i];
-				newApprovalStatus = approvalStatus[i];
-
-				_unit.Submission.ChangeApprovalStatus(changedId, newApprovalStatus);
-
-				int batchSize = 10; // adjust this based on performance testing
-
-				// Check if it's time to save changes
-				if (i > 0 && i % batchSize == 0) // i is evenly divisible by batchSize without any remainder
+				if (originalApprovalStatus[i] != approvalStatus[i])
 				{
+					int changedId = id[i];
+					newApprovalStatus = approvalStatus[i];
+
+					_unit.Submission.ChangeApprovalStatus(changedId, newApprovalStatus);
+
 					try
 					{
 						Notification_Model notif = new Notification_Model();
 						notif.Title = "Pending Status";
 						notif.Description = "Your Pending status is changed to:" + newApprovalStatus;
+						notif.NotifUserId = userId[i];
 
 						_unit.Notification.Add(notif);
 
