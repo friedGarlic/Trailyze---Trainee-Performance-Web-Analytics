@@ -398,8 +398,9 @@ namespace ML_ASP.Controllers
 
             LogModel logModel = new LogModel();
 
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claimsIdentity = (ClaimsIdentity)User.Identity; //---------------- claim, current user info
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
             var account = _unit.Account.GetFirstOrDefault(u => u.Id == claim.Value);
             var accountName = account.FullName;
 
@@ -411,13 +412,27 @@ namespace ML_ASP.Controllers
             string approved = "Approved";
             string declined = "Declined";
 
-			if (prediction.ToString() == "UniformedHuman")
+            Notification_Model notif = new Notification_Model();
+            if (prediction.ToString() == "UniformedHuman")
             {
-				_unit.Log.Update(logModel, fileName, accountName, approved, id);
-			}
-            else {
-				_unit.Log.Update(logModel, fileName, accountName, declined, id);
-			}
+                _unit.Log.Update(logModel, fileName, accountName, approved, id);
+
+                notif.Title = "Machine Learning Model Approval Status";
+                notif.Description = "Your Pending status file: " + fileName + " is changed to:" + approved;
+                notif.NotifUserId = account.Id;
+
+                _unit.Notification.Add(notif);
+            }
+            else
+            {
+                _unit.Log.Update(logModel, fileName, accountName, declined, id);
+
+                notif.Title = "Machine Learning Model Approval Status";
+                notif.Description = "Your submitted file: " + fileName + " is changed to:" + declined;
+                notif.NotifUserId = account.Id;
+
+                _unit.Notification.Add(notif);
+            }
 
             _unit.Save();
 

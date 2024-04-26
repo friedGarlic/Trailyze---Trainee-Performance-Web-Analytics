@@ -16,6 +16,7 @@ namespace ML_ASP.Controllers
         {
             return View();
         }
+
         #region API CALLS
         [HttpGet]
         public ActionResult GetAllNotification()
@@ -27,8 +28,6 @@ namespace ML_ASP.Controllers
             var sublist = _unit.Notification
                   .GetAll(u => u.NotifUserId == id)
                   .ToList();
-
-            int noOfNotif = sublist.Count;
 
             return Json(new { data = sublist});
         }

@@ -119,12 +119,13 @@ namespace ML_ASP.Controllers
 					newApprovalStatus = approvalStatus[i];
 
 					_unit.Submission.ChangeApprovalStatus(changedId, newApprovalStatus);
+					string fileName = _unit.Submission.GetFirstOrDefault(u => u.Id == id[i]).FileName;
 
 					try
 					{
 						Notification_Model notif = new Notification_Model();
 						notif.Title = "Pending Status";
-						notif.Description = "Your Pending status is changed to:" + newApprovalStatus;
+						notif.Description = "Your Pending status file: " + fileName + " is changed to:" + newApprovalStatus;
 						notif.NotifUserId = userId[i];
 
 						_unit.Notification.Add(notif);

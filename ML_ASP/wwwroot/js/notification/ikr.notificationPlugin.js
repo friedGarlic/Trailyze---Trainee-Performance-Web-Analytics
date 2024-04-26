@@ -70,8 +70,9 @@
                 window.open('../' + defaultSettings.ControllerName + '/' + defaultSettings.ActionName + '', '_blank');
             });
 
+            
             var totalUnReadNoti = defaultSettings.NotificationList.filter(function (item) {
-                return !item.isRead; // Count unread notifications
+                return !item.isRead; // count number unread notifications and shows it
             }).length;
 
             $('#' + parentId + ' .ikrNoti_Counter').text(totalUnReadNoti);

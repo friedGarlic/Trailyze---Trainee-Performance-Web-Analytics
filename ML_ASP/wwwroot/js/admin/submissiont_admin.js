@@ -100,6 +100,7 @@ function showWorkloadPopup() {
 		if (result.isConfirmed) {
 			// data to the controller using AJAX
 			sendToController(result.value);
+			location.reload();
 		}
 	});
 }
