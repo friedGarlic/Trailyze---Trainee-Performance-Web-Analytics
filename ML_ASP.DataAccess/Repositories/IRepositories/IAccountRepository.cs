@@ -18,7 +18,7 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
             TimeSpan totalTime,
             string id);
 
-        public void Update(Account_Model model, string id);
+        public void Update(string imageUrl, string id);
         public void UpdateCourse(string? course, string id);
 
         //GETTERS

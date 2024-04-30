@@ -19,12 +19,12 @@ namespace ML_ASP.DataAccess.Repositories
 			_dbContext = dbContext;
 		}
 
-		public void Update(Account_Model model, string id) //update Image url
+		public void Update(string imageUrl, string id) //update Image url
 		{
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
             if (objFromDb != null)
             {
-                objFromDb.ImageUrl = model.ImageUrl;
+                objFromDb.ImageUrl = imageUrl;
             }
 		}
 

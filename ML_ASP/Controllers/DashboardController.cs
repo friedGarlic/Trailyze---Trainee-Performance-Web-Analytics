@@ -223,7 +223,7 @@ namespace ML_ASP.Controllers
                 // Update the image URL in the model
                 var imageUrl = Path.Combine("/", uploadFolderName, fileName + extension);
 
-				_unit.Account.Update(account, account.Id);
+				_unit.Account.Update(imageUrl, account.Id);
 
                 _unit.Save();
                 TempData["success"] = "Uploaded Successfully!";
