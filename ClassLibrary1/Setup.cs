@@ -12,7 +12,7 @@ namespace Setup
         {
             //ML_net.ModelSession_1.Demo.Execute();
 
-            Console.WriteLine("Press the spacebar to execute ML_net.ModelSession_2.Demo.Execute();");
+            Console.WriteLine("Press the spacebar to execute ML_net.ModelSession_3.Demo.Execute();");
 
             // Subscribe to the KeyPress event
             while (true)
@@ -22,7 +22,7 @@ namespace Setup
                 {
                     ML_net.ModelSession_3.Demo.Execute();
 
-                    Console.WriteLine("Press the Enter to repeat and Space to execute ML_net.ModelSession_2.Demo.Execute();");
+                    Console.WriteLine("Press the Enter to repeat and Space to execute ML_net.ModelSession_3.Demo.Execute();");
                 }
             }
         }
