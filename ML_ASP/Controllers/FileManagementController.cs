@@ -53,11 +53,12 @@ namespace ML_ASP.Controllers
 			var trainedModel = _context.Model.Load(modelPath, out var modelSchema);
 			_predictionEngine = _context.Model.CreatePredictionEngine<Object_DataSet, Prediction>(trainedModel);
 
-            //for image classification
-            var modelPath1 = "C:\\Users\\Rem\\source\\repos\\Trailyze---Trainee-Performance-Web-Analytics\\ClassLibrary1\\ModelSession_3\\ImageClassification.zip";
-            var trainedModel1 = _context.Model.Load(modelPath1, out var modelSchema1);
+			//for image classification
+			string combinePath2 = Path.Combine(currentDirectory, modelDirectory2);
+            string modelPath2 = Path.Combine(combinePath2, "ImageClassification.zip");
 
-            _imagClassificationEngine = _context.Model.CreatePredictionEngine<Image_DataSet, ImagePrediction>(trainedModel1);
+            var trainedModel2 = _context.Model.Load(modelPath2, out var modelSchema2);
+			_imagClassificationEngine = _context.Model.CreatePredictionEngine<Image_DataSet, ImagePrediction>(trainedModel2);
 
 			//for deployment mode only or when published--------------------=======================
 			//var modelPath = "C:\\inetpub\\wwwroot\\trailyze\\ModelSession_1\\GradePrediction.zip";
