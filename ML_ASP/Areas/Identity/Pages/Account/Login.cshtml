@@ -1,16 +1,22 @@
 ﻿@page
 @model LoginModel
-
 @{
-    ViewData["Title"] = "Log in";
+    Layout = "_AMasterPage_2";
 }
 
 <h1>@ViewData["Title"]</h1>
-<div class="row" style="position:absolute; top:280px;">
-    <div class="col-md-4">
+
+<a class="logo-container" asp-controller="Home" asp-action="Index">
+    <img style="width:12rem;height:auto;" class="logo" src="~/assets/dashboard/logo-no-background.png" />
+</a>
+<body>
+    <div class="background">
+    </div>
+</body>
+<div class="login-container" style="margin-top: 8rem; text-align: center;">
         <section>
             <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
+                <h1>Log In.</h1>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
@@ -32,6 +38,7 @@
                 <div>
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                 </div>
+@* 
                 <div>
                     <p>
                         <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
@@ -42,10 +49,9 @@
                     <p>
                         <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
                     </p>
-                </div>
+                </div> *@
             </form>
         </section>
-    </div>
     @* <div class="col-md-6 col-md-offset-2"> DISABLED THE EXTERNAL LOGIN FOR NOW
         <section>
             <h3>Use another service to log in.</h3>
@@ -80,3 +86,35 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>    
+    body {
+        background-image: url('/assets/bgReg.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+    }
+
+    .logo-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 10px; /* Add some padding to adjust the position if needed */
+    }
+
+    .login-container {
+        background-color: antiquewhite;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto; 
+        box-sizing: border-box;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 10px; 
+        text-align: left; 
+    }
+
+    
+</style>
