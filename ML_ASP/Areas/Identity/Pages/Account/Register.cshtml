@@ -207,7 +207,8 @@
         position: absolute;
         top: 0;
         left: 0;
-        padding: 10px; /* Add some padding to adjust the position if needed */
+        padding: 10px;
+        animation: transitionIn 1s;
     }
 
     .prediction {
@@ -248,5 +249,18 @@
         border-radius: 10px;
         padding: 10px;
         text-align: left;
+        animation: transitionIn 1s;
+    }
+
+    @@keyframes transitionIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
