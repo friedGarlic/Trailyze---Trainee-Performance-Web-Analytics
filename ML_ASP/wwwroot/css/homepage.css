@@ -393,14 +393,19 @@ p {
 }
 
 .contact .row .contact-image img{
-    width: 50vw;
-    height: 70vh;
+    width: 50rem;
+    height:auto;
+    /*width: 50vw;
+    height: 70vh;*/
 }
 
 .contact .row .form-container{
     width: 50%;
     padding-right: 6rem;
     position: absolute;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    padding: 2rem;
 }
 
 .contact .row .form-container input, textarea{
@@ -423,4 +428,18 @@ p {
     border-radius: 1rem;
     padding: 1rem;
     resize: none;
+}
+
+.contact .row .form-container .form-button:hover{
+    background-color: forestgreen;
+}
+
+#about {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    #about{
+        display: block;
+    }
 }

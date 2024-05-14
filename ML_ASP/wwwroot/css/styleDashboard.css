@@ -255,8 +255,8 @@ main .analyse{
     gap: 1.6rem;
 }
 
-main .analyse > div{
-    background-color: var(--color-white);
+main .analyse > div {
+    background-color: #B3C0CD;
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
     margin-top: 1rem;
@@ -378,15 +378,15 @@ main .recent-orders h2{
     margin-bottom: 0.8rem;
 }
 
-main .recent-orders table{
-    background-color: var(--color-white);
-    width: 100%;
-    padding: var(--card-padding);
-    text-align: center;
-    box-shadow: var(--box-shadow);
-    border-radius: var(--card-border-radius);
-    transition: all 0.3s ease;
-}
+    main .recent-orders table {
+        background-color: #F7E6FF;
+        width: 100%;
+        padding: var(--card-padding);
+        text-align: center;
+        box-shadow: var(--box-shadow);
+        border-radius: var(--card-border-radius);
+        transition: all 0.3s ease;
+    }
 
 main .recent-orders table:hover{
     box-shadow: none;
@@ -517,8 +517,8 @@ main .recent-orders a{
     border-radius: 50%;
 }
 
-.right-section .reminders .notification{
-    background-color: var(--color-white);
+.right-section .reminders .notification {
+    background-color: #FFDAB9;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -747,10 +747,10 @@ main .recent-orders a{
 
 }
 
-.charts{
+.charts {
     top: 15px;
     position: relative;
-    background-color: var(--color-background);
+    background-color: #E8FFDC;
     padding: 25px;
     border-radius: var(--border-radius-1);
     box-shadow: 16px;

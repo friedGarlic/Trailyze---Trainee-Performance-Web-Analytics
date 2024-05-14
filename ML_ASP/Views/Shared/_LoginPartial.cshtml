@@ -3,7 +3,6 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
-
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
@@ -22,11 +21,46 @@
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            @* to align side by side "d-flex align-items-center" *@
+        <a class="nav-link text-dark d-flex align-items-center" id="register" asp-area="Identity" asp-page="/Account/Register"> 
+            <span class="material-symbols-outlined me-2">
+                how_to_reg
+            </span>
+            Register
+        </a>
     </li>
+
+    <li>
+    <hr class="vertical-line">
+    </li>
+
     <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="nav-link text-dark d-flex align-items-center" id="login" asp-area="Identity" asp-page="/Account/Login">
+            <span class="material-symbols-outlined" style="margin-right: 10px;">
+                login
+            </span>
+            Login
+        </a>
     </li>
 }
 </ul>
 
+
+<style>
+    .vertical-line {
+        display: none;
+        height: 40px;
+        width: 0;
+        border: 1px solid black;
+        margin: 0;
+        margin-left:1rem;
+        margin-right:1rem;
+        transform: rotate(180deg);
+    }
+
+    @@media (min-width: 768px) {
+        .vertical-line {
+            display: block; /* Show the vertical line on desktop */
+        }
+    }
+</style>

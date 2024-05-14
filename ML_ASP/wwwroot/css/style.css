@@ -529,8 +529,8 @@ main .recent-orders a{
     border-radius: 50%;
 }
 
-.right-section .reminders .notification{
-    background-color: var(--color-white);
+.right-section .reminders .notification {
+    background-color: #FFDAB9;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -935,3 +935,7 @@ main .profile .box-container .box .button {
 	background: var(--red);
 }
 /* PROFILE DESIGN SECTION */
+
+main .profile .box-container .box {
+    background-color: #E6E6FA;
+}
