@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using ML_ASP.Models;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 
         public void Update(string imageUrl, string id);
         public void UpdateCourse(string? course, string id);
+        public void UpdateRequirementFile(string fileEnrollment, string fileMedical,  string id);
 
         //GETTERS
         public Account_Model GetFirstAndDefault();

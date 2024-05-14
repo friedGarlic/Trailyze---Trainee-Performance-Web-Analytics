@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -31,5 +32,9 @@ namespace ML_ASP.Models
         //profile
         public string? ImageUrl { get; set; }
         public string? Course { get; set; }
+
+        //CERTIFICATE REQUIREMENTS
+        public string Medical { get; set; }
+        public string Enrollment { get; set; }
 	}
 }

@@ -110,19 +110,26 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            var user = await _userManager.FindByEmailAsync(Input.Email);
-            //
-            bool isAdmin = await _userManager.IsInRoleAsync(user, SD.Role_Admin);
-
-            if (isAdmin)
+            try
             {
-                returnUrl ??= Url.Content("~/Admin/Admin");
-            }
-            else
-            {
-                returnUrl ??= Url.Content("~/Dashboard/Dashboard");
-            }
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                //
+                bool isAdmin = await _userManager.IsInRoleAsync(user, SD.Role_Admin);
 
+                if (isAdmin)
+                {
+                    returnUrl ??= Url.Content("~/Admin/Admin");
+                }
+                else
+                {
+                    returnUrl ??= Url.Content("~/Dashboard/Dashboard");
+                }
+            }
+            catch
+            {
+
+            }
+            
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)

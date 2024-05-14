@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualBasic;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
@@ -27,6 +28,16 @@ namespace ML_ASP.DataAccess.Repositories
                 objFromDb.ImageUrl = imageUrl;
             }
 		}
+
+        public void UpdateRequirementFile(string fileEnrollment, string fileMedical, string id)
+        {
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
+            if (objFromDb != null)
+            {
+                objFromDb.Enrollment = fileEnrollment;
+                objFromDb.Medical = fileEnrollment;
+            }
+        }
 
         public void UpdateCourse(string? course, string id)
         {

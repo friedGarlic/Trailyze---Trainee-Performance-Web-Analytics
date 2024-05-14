@@ -16,8 +16,10 @@
 <div class="login-container row" style="margin-top: 6rem; text-align: center;">
     <h1 style="text-align: center;">Create a new account.</h1>
     <hr />
+
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+        <div class="row">
     <div class="col-md-4 mx-md-auto ml-sm-5">
-        <form id="registerForm"  asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-2 py-1">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
@@ -76,8 +78,6 @@
                     </ul>
                 </div>
             }
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
     </div>
     <div class="col-md-1">
         <hr class="vertical-line">
@@ -88,29 +88,28 @@
         <div class="upload-container text-center ">
             <label> Proof of Enrollment </label>
             <div class="prediction" style="margin-bottom: 20px;">
-                <form method="post" enctype="multipart/form-data" asp-controller="FileManagement" asp-action="UploadImage">
-                    <input type="file" name="file" multiple />
-                    <input type="submit" value="Upload" />
-                    <span style="color:green">@Html.Raw(ViewBag.Message)</span>
-                </form>
+                <input type="file" asp-for="Input.Enrollment" multiple />
+                <span asp-validation-for="Input.Enrollment" class="text-danger"></span>
             </div>
         </div>
         <div class="upload-container text-center">
             <label> Proof of Certificate of Medical </label>
             <div class="prediction" style="margin-bottom: 20px;">
-                <form method="post" enctype="multipart/form-data" asp-controller="FileManagement" asp-action="UploadImage">
-                    <input type="file" name="file" multiple />
-                    <input type="submit" value="Upload" />
-                    <span style="color:green">@Html.Raw(ViewBag.Message)</span>
-                </form>
+                <input type="file" asp-for="Input.Medical" multiple />
+                <span asp-validation-for="Input.Medical" class="text-danger"></span>
             </div>
         </div>
         <div class="upload-container text-center">
             <p>Already have an account?  
                 <a style="text-decoration:none;" asp-area="Identity" asp-page="/Account/Login">Sign In</a>
-                </p>
+            </p>
         </div>
+            </div>
     </div>
+
+    <button style="margin-top: 1rem;" id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+    </form>
+    @* ------------------ *@
     @* <div class="col-md-5"> DISABLED THE EXTERNEAL SERVICES FOR NOW
         <section>
             <h3>Use another service to register.</h3>

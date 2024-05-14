@@ -30,6 +30,8 @@ namespace ML_ASP.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
+
         public bool IsAdminRegistration { get; set; }
 
         public RegisterModel(
@@ -38,7 +40,8 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -47,6 +50,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _environment = environment;
         }
 
         /// <summary>
@@ -117,6 +121,12 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
             public string? Role { get; set; }
 
+            [Required(ErrorMessage = "Please select a file.")]
+            public IFormFile Medical { get; set; }
+
+            [Required(ErrorMessage = "Please select a file.")]
+            public IFormFile Enrollment { get; set; }
+
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
         }
@@ -157,8 +167,43 @@ namespace ML_ASP.Areas.Identity.Pages.Account
                 user.PhoneNumber = Input.PhoneNumber;
                 user.FullName = Input.FullName;
                 user.Age = Input.Age;
+
+                //REQUIREMENT REGISTRATION:
                 
-                
+                if (Input.Enrollment != null && Input.Enrollment.Length > 0 && Input.Medical != null && Input.Medical.Length > 0)
+                {
+                    string projectPath = _environment.WebRootPath;
+                    string uploadFolderName = "RequirementFiles";
+                    var uploads = Path.Combine(projectPath, uploadFolderName);
+
+                    string fileName = Guid.NewGuid().ToString();
+                    string secondFileName = Guid.NewGuid().ToString();
+
+                    var extension = Path.GetExtension(Input.Enrollment.FileName);
+                    var secondExtension = Path.GetExtension(Input.Medical.FileName);
+
+                    if (!Directory.Exists(uploads))
+                    {
+                        Directory.CreateDirectory(uploads);
+                    }
+
+                    string newEnrollmentFileName = fileName + extension;
+                    string newMedicalFileName = secondFileName + secondExtension;
+
+                    using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        Input.Enrollment.CopyTo(fileStream);
+                    }
+                    using (var fileStream = new FileStream(Path.Combine(uploads, secondFileName + secondExtension), FileMode.Create))
+                    {
+                        Input.Medical.CopyTo(fileStream);
+                    }
+
+                    user.Enrollment = newEnrollmentFileName;
+                    user.Medical = newMedicalFileName;
+                }
+                //REQUIREMENT REGISTRATION: ENDS-----------
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
