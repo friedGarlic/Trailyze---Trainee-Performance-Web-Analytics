@@ -16,23 +16,28 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ML_ASP.Utility;
 using System.Security.Claims;
+using ML_ASP.Models;
+using ML_ASP.DataAccess.Repositories.IRepositories;
 
 namespace ML_ASP.Areas.Identity.Pages.Account
 {
-    
+
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<Account_Model> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Account_Model> _userManager;
+        private readonly IUnitOfWork _unit;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager,
+        public LoginModel(SignInManager<Account_Model> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<IdentityUser> userManager)
+            UserManager<Account_Model> userManager,
+            IUnitOfWork unit)
         {
             _signInManager = signInManager;
             _logger = logger;
             _userManager = userManager;
+            _unit = unit;
         }
 
         /// <summary>
@@ -110,19 +115,28 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+
             try
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                //
+
                 bool isAdmin = await _userManager.IsInRoleAsync(user, SD.Role_Admin);
 
+                if (user.RegistrationPermission == 0) //pending permission
+                {
+                    returnUrl ??= Url.Content("~/RequirementFile/Index");
+                }
+                else if (user.RegistrationPermission == 1) //accepted permission
+                {
+                    returnUrl ??= Url.Content("~/Dashboard/Dashboard");
+                }
+                else if (user.RegistrationPermission == 1) //denied permission, re register, failed registration account will be deleted in 2 days.
+                {
+                    returnUrl ??= Url.Content("~/RequirementFile/PermissionDenied");
+                }
                 if (isAdmin)
                 {
                     returnUrl ??= Url.Content("~/Admin/Admin");
-                }
-                else
-                {
-                    returnUrl ??= Url.Content("~/Dashboard/Dashboard");
                 }
             }
             catch
@@ -162,7 +176,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             return Page();
         }
 
-        public async Task<IdentityUser> GetUserFromClaimsAsync(ClaimsPrincipal claimsPrincipal)
+        public async Task<Account_Model> GetUserFromClaimsAsync(ClaimsPrincipal claimsPrincipal)
         {
             // Get the user's ID claim from the ClaimsPrincipal
             var userIdClaim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier);

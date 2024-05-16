@@ -6,73 +6,51 @@ using Microsoft.AspNetCore.Identity;
 using ML_ASP.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Hosting.Internal;
+using ML_ASP.Models;
+using ML_ASP.Areas.Identity.Pages.Account;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-/*builder.Services.AddAuthentication(option =>
-{
-    option.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-}).AddCookie().AddGoogle(GoogleDefaults.AuthenticationScheme, option =>
-{
-    option.ClientId = builder.Configuration.GetSection("GoogleKeys:ClientId").Value;
-    option.ClientSecret = builder.Configuration.GetSection("GoogleKeys:ClientSecret").Value; 
-});*/
-
-//SCOPES
+// Register custom services
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
-//DATABASE CONTEXT
-builder.Services.AddDbContext<ApplicationDBContext>(options => 
+// Register the DbContext
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders()
-    .AddEntityFrameworkStores<ApplicationDBContext>();
+// Register Identity services
+builder.Services.AddIdentity<Account_Model, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddDefaultTokenProviders();
 
-//SINGLETONS
-builder.Services.AddHttpClient();
-builder.Services.AddSingleton<IEmailSender, EmailSender>();
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = $"/Identity/Account/Login";
-    options.LogoutPath = $"/Identity/Account/Logout";
-    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-});
-builder.Services.AddSession();
+// Add Razor Pages if using Identity UI
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
-app.UseAuthentication();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
- 
+
+app.UseAuthentication(); // Ensure authentication middleware is added
 app.UseAuthorization();
 
-app.UseSession();
-
-app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id = UrlParameter.Optional }");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages(); // Ensure Razor Pages are mapped
 
 app.Run();
-
-//https://stackoverflow.com/questions/16836473/asp-net-http-error-500-19-internal-server-error-0x8007000d

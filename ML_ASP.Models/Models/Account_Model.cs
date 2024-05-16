@@ -36,5 +36,8 @@ namespace ML_ASP.Models
         //CERTIFICATE REQUIREMENTS
         public string Medical { get; set; }
         public string Enrollment { get; set; }
+
+        //0 - pending, 1 - accepted, 2 - denied;
+        public int RegistrationPermission { get; set; } = 0;
 	}
 }

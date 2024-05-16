@@ -24,6 +24,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 
         INotificationRepository Notification { get; }
 
+        IRequirementFileRepository RequirementFile { get; }
+
         void Save();
     }
 }

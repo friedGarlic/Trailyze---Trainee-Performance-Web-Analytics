@@ -51,7 +51,7 @@ namespace ML_ASP.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-			IEnumerable<IdentityUser> accountList = _unit.Account.GetAll();
+			IEnumerable<Account_Model> accountList = _unit.Account.GetAll();
 			IEnumerable<SubmissionModel> modelList = _unit.Submission.GetAll();
 
 			var submissionCount = modelList.Count();

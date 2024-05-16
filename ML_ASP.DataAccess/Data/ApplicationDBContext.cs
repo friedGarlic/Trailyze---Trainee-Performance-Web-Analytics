@@ -5,10 +5,16 @@ using ML_ASP.Models.Models;
 
 namespace ML_ASP.DataAccess
 {
-    public class ApplicationDBContext : IdentityDbContext
+    public class ApplicationDBContext : IdentityDbContext<Account_Model>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         { }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+        }
 
         public DbSet<Account_Model> Accounts { get; set; }
         public DbSet<Trainee_Model> Trainees { get; set; }
@@ -19,5 +25,6 @@ namespace ML_ASP.DataAccess
         public DbSet<Workload_Model> Workloads { get; set; }
         public DbSet<WorkloadSubmissionList_Model> WorkloadsSubmissionList { get; set;}
         public DbSet<Notification_Model> Notification { get; set; }
+        public DbSet<RequirementFile_Model> RequirementFile { get; set; }
     }
 }

@@ -12,19 +12,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ML_ASP.DataAccess.Repositories.IRepositories;
+using ML_ASP.Models;
 
 namespace ML_ASP.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<Account_Model> _userManager;
+        private readonly SignInManager<Account_Model> _signInManager;
         private readonly IUnitOfWork _unit;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<Account_Model> userManager,
+            SignInManager<Account_Model> signInManager,
             IUnitOfWork unit,
             IWebHostEnvironment environment)
         {
@@ -74,7 +75,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account.Manage
             public string? Course { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(Account_Model user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
