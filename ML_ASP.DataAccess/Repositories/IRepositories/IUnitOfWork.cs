@@ -26,6 +26,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 
         IRequirementFileRepository RequirementFile { get; }
 
+        IRequirementFormRepository RequirementForm { get; }
+
         void Save();
     }
 }

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ML_ASP.Models.ViewModel.SubmissionVM
+
+@{
     Layout = "_AMasterPage_2";
 }
 
@@ -47,6 +49,7 @@
             <div>
                 <label for="mandatory">This document is mandatory</label>
             </div>
+
             <div class="prediction" style="margin-bottom: 20px;">
                 <input type="file" id="attachDocumentButton" name="postedFiles0"/>
                 <input type="hidden" name="modelId" />
@@ -91,7 +94,7 @@
 
             <label for="description3">Document Description:</label>
             <textarea id="description3" name="description3" placeholder="Provide document description"></textarea>
-
+            
             <div>
             <label for="mandatory">This document is mandatory</label>
             </div>

@@ -15,7 +15,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models;
+using ML_ASP.Models.Models;
 using ML_ASP.Utility;
 
 namespace ML_ASP.Areas.Identity.Pages.Account
@@ -29,6 +31,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUnitOfWork _unit;
 
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
 
@@ -41,7 +44,8 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IUnitOfWork unit)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -51,6 +55,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _roleManager = roleManager;
             _environment = environment;
+            _unit = unit;
         }
 
         /// <summary>
@@ -201,6 +206,29 @@ namespace ML_ASP.Areas.Identity.Pages.Account
                     user.Medical = newMedicalFileName;
                 }
                 //REQUIREMENT REGISTRATION: ENDS-----------
+
+                RequirementForm_Model formModel = new RequirementForm_Model();
+                RequirementForm_Model formModel2 = new RequirementForm_Model();
+                RequirementForm_Model formModel3 = new RequirementForm_Model();
+                //REQUIREMENTFORM START--------------------
+                formModel.IsSubmitted = false;
+                formModel.UserId = user.Id;
+                formModel.FileName = "Null";
+
+                formModel2.IsSubmitted = false;
+                formModel2.UserId = user.Id;
+                formModel2.FileName = "Null";
+
+                formModel.IsSubmitted = false;
+                formModel3.UserId = user.Id;
+                formModel3.FileName = "Null";
+
+                _unit.RequirementForm.Add(formModel);
+                _unit.RequirementForm.Add(formModel2);
+                _unit.RequirementForm.Add(formModel3);
+
+                _unit.Save();
+                //REQUIREMENT FORM ENDS-------------------
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

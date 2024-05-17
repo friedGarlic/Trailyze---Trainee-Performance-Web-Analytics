@@ -4,6 +4,7 @@ using ML_ASP.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ML_ASP.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240517135855_addRequirementFormProperties")]
+    partial class addRequirementFormProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,7 +168,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs", (string)null);
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.Notification_Model", b =>
@@ -190,7 +193,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.QRModel", b =>
@@ -206,7 +209,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("QR", (string)null);
+                    b.ToTable("QR");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.Reminder_Model", b =>
@@ -241,7 +244,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reminders", (string)null);
+                    b.ToTable("Reminders");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.RequirementFile_Model", b =>
@@ -274,7 +277,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RequirementFile", (string)null);
+                    b.ToTable("RequirementFile");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.RequirementForm_Model", b =>
@@ -298,7 +301,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RequirementForm", (string)null);
+                    b.ToTable("RequirementForm");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.WorkloadSubmissionList_Model", b =>
@@ -324,7 +327,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkloadsSubmissionList", (string)null);
+                    b.ToTable("WorkloadsSubmissionList");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Models.Workload_Model", b =>
@@ -355,7 +358,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Workloads", (string)null);
+                    b.ToTable("Workloads");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.SubmissionModel", b =>
@@ -399,7 +402,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Submissions", (string)null);
+                    b.ToTable("Submissions");
                 });
 
             modelBuilder.Entity("ML_ASP.Models.Trainee_Model", b =>
@@ -427,7 +430,7 @@ namespace ML_ASP.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trainees", (string)null);
+                    b.ToTable("Trainees");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

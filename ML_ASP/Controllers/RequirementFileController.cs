@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models.Models;
+using ML_ASP.Models.ViewModel;
 using System.Security.Claims;
 
 namespace ML_ASP.Controllers
@@ -9,6 +10,8 @@ namespace ML_ASP.Controllers
     {
         public readonly IUnitOfWork _unit;
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
+
+        public SubmissionVM submissionVM { get; set; }
 
         public RequirementFileController(IUnitOfWork unit, IWebHostEnvironment environment)
         {
@@ -19,7 +22,14 @@ namespace ML_ASP.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var claimIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            var findid = _unit.RequirementFile.GetFirstOrDefault(u => u.UserId == claim.Value); //then next for form
+            var userid = findid.UserId;
+            //form.fileName
+
+            return View(submissionVM);
         }
 
         public ActionResult SubmitDocument(IFormFile postedFiles0, IFormFile postedFiles1, IFormFile postedFiles2,
@@ -30,14 +40,18 @@ namespace ML_ASP.Controllers
             RequirementFile_Model reqFileModel2 = new RequirementFile_Model();
             RequirementFile_Model reqFileModel3 = new RequirementFile_Model();
 
+            var claimIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
             string projectPath = _environment.WebRootPath;
             string uploadFolderName = "RequirementFiles";
             var uploads = Path.Combine(projectPath, uploadFolderName);
 
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
             var userId = claim.Value;
 
+            var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == userId);
+
+            //TODO add function in repository of Requirement Form for updating the properties.
             //-----------------------------------POSTED FILE 0
             if (postedFiles0 != null && postedFiles0.Length > 0)
             {
@@ -66,6 +80,11 @@ namespace ML_ASP.Controllers
                 reqFileModel.FileId = newFileId;
                 reqFileModel.Title = title;
                 reqFileModel.Description = description;
+
+                //----flagging the form
+                userForm.FileName = fileName;
+                userForm.IsSubmitted = true;
+                //TODO dont forget to add it in viewmodel to pass on to razorview, and update other files too.
 
                 _unit.RequirementFile.Add(reqFileModel);
             }
@@ -129,5 +148,6 @@ namespace ML_ASP.Controllers
         {
             return View();
         }
+
     }
 }

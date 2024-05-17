@@ -24,6 +24,7 @@ namespace ML_ASP.DataAccess.Repositories
             WorkloadSubmissionList = new WorkloadSubmissionListRepository(_dbContext);
             Notification = new NotificationRepository(_dbContext);
             RequirementFile = new RequirementFileRepository(_dbContext);
+            RequirementForm = new RequirementFormRepository(_dbContext);
         }
 
         public ISubmissionRepository Submission { get; private set; }
@@ -35,6 +36,7 @@ namespace ML_ASP.DataAccess.Repositories
         public IWorkloadSubmissionListRepository WorkloadSubmissionList { get; private set; }
         public INotificationRepository Notification { get; private set; }
         public IRequirementFileRepository RequirementFile { get; private set; }
+        public IRequirementFormRepository RequirementForm { get; private set; }
 
         public void Save()
         {
