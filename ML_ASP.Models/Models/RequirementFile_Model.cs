@@ -14,14 +14,12 @@ namespace ML_ASP.Models.Models
 
         public string UserId { get; set; }
 
-        public string File_ApplicationForm { get; set; }
+        public string FileId { get; set; }
 
-        public string File_ContractAgreement {  get; set; }
+        public string FileName { get; set; }
 
-        public string File_TimeSheet { get; set; }
+        public string Title {  get; set; }
 
-        public string File_ParentalConsent { get; set; }
-
-        public string File_ProgressReport { get; set; }
+        public string Description { get; set; }
     }
 }
