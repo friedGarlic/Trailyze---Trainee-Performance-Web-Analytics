@@ -11,7 +11,7 @@ namespace ML_ASP.Controllers
         public readonly IUnitOfWork _unit;
         private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
 
-        public SubmissionVM submissionVM { get; set; }
+        public RequirementVM requirementVM { get; set; }
 
         public RequirementFileController(IUnitOfWork unit, IWebHostEnvironment environment)
         {
@@ -25,11 +25,44 @@ namespace ML_ASP.Controllers
             var claimIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            var findid = _unit.RequirementFile.GetFirstOrDefault(u => u.UserId == claim.Value); //then next for form
-            var userid = findid.UserId;
-            //form.fileName
+            //getall var
+            var getAllFile = _unit.RequirementForm.GetAll(u => u.UserId == claim.Value);
+            var userID = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == claim.Value);
 
-            return View(submissionVM);
+            string form1FileName = "";
+            string form1FileName2 = "";
+            string form1FileName3 = "";
+
+            //needs foreach loop
+
+            foreach (var i in getAllFile)
+            {
+                if (i.FormNumber == 1)
+                {
+                    form1FileName = userID.FileId;
+                }
+                if (i.FormNumber == 2)
+                {
+                    form1FileName2 = userID.FileId;
+                }
+                if (i.FormNumber == 3)
+                {
+                    form1FileName3 = userID.FileId;
+                }
+            }
+
+
+            requirementVM = new RequirementVM
+            {
+                FileName1 = form1FileName,
+                FileName2 = form1FileName2,
+                FileName3 = form1FileName3,
+                IsSubmittedFile1 = true,
+                IsSubmittedFile2 = true,
+                IsSubmittedFile3 = true,
+            };
+
+            return View(requirementVM);
         }
 
         public ActionResult SubmitDocument(IFormFile postedFiles0, IFormFile postedFiles1, IFormFile postedFiles2,
@@ -48,8 +81,11 @@ namespace ML_ASP.Controllers
             var uploads = Path.Combine(projectPath, uploadFolderName);
 
             var userId = claim.Value;
-
             var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == userId);
+
+            string fileName = "";
+            string fileName2 = "";
+            string fileName3 = "";
 
             //TODO add function in repository of Requirement Form for updating the properties.
             //-----------------------------------POSTED FILE 0
@@ -60,7 +96,7 @@ namespace ML_ASP.Controllers
 
                 var fileExtension = Path.GetExtension(postedFiles0.FileName);
 
-                var fileName = postedFiles0.FileName;
+                fileName = postedFiles0.FileName;
 
                 if (!Directory.Exists(uploads))
                 {
@@ -82,9 +118,13 @@ namespace ML_ASP.Controllers
                 reqFileModel.Description = description;
 
                 //----flagging the form
+
                 userForm.FileName = fileName;
                 userForm.IsSubmitted = true;
+                userForm.FileId = newFileId;
+
                 //TODO dont forget to add it in viewmodel to pass on to razorview, and update other files too.
+
 
                 _unit.RequirementFile.Add(reqFileModel);
             }
@@ -96,7 +136,7 @@ namespace ML_ASP.Controllers
 
                 var file2Extension = Path.GetExtension(postedFiles1.FileName);
 
-                var fileName2 = postedFiles1.FileName;
+                fileName2 = postedFiles1.FileName;
 
                 string newFileId2 = file2Id + file2Extension;
 
@@ -111,6 +151,10 @@ namespace ML_ASP.Controllers
                 reqFileModel2.Title = title2;
                 reqFileModel2.Description = description2;
 
+                userForm.FileName = fileName2;
+                userForm.IsSubmitted = true;
+                userForm.FileId = newFileId2;
+
                 _unit.RequirementFile.Add(reqFileModel2);
             }
 
@@ -121,7 +165,7 @@ namespace ML_ASP.Controllers
 
                 var file3Extension = Path.GetExtension(postedFiles2.FileName);
 
-                var fileName3 = postedFiles2.FileName;
+                fileName3 = postedFiles2.FileName;
 
                 string newFileId3 = file3Id + file3Extension; using (var fileStream = new FileStream(Path.Combine(uploads, file3Id + file3Extension), FileMode.Create))
                 {
@@ -134,6 +178,10 @@ namespace ML_ASP.Controllers
                 reqFileModel2.Title = title3;
                 reqFileModel2.Description = description3;
 
+                userForm.FileName = fileName3;
+                userForm.IsSubmitted = true;
+                userForm.FileId = newFileId3;
+
                 _unit.RequirementFile.Add(reqFileModel3);
             }
 
@@ -141,7 +189,78 @@ namespace ML_ASP.Controllers
             {
                 _unit.Save();
             }
-            return View(nameof(Index));
+
+            requirementVM = new RequirementVM
+            {
+                FileName1 = fileName,
+                FileName2 = fileName2,
+                FileName3 = fileName3,
+                IsSubmittedFile1 = true,
+                IsSubmittedFile2 = true,
+                IsSubmittedFile3 = true,
+            };
+
+            return View(nameof(Index), requirementVM);
+        }
+
+
+        //------------------------------------------
+        //helper METHODS ---------------------------
+        public ActionResult ViewImage(string fileName)
+        {
+            if (fileName != null)
+            {
+                string path = Path.Combine(_environment.WebRootPath + "\\RequirementFiles", fileName);
+                string contentType = GetContentType(fileName);
+
+                if (System.IO.File.Exists(path))
+                {
+                    return File(System.IO.File.ReadAllBytes(path), contentType);
+                }
+                else
+                {
+                    TempData["failed"] = "File Not Found";
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return RedirectToAction("Dashboard", "Dashboard");
+            }
+        }
+
+        public ActionResult ViewPdf(string fileName)
+        {
+            string path = Path.Combine(_environment.WebRootPath + "\\RequirementFiles", fileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                return File(System.IO.File.ReadAllBytes(path), "application/pdf");
+            }
+            else
+            {
+                TempData["failed"] = "File Not Found";
+                return NotFound();
+            }
+        }
+
+        private string GetContentType(string fileName)
+        {
+            string extension = Path.GetExtension(fileName)?.ToLowerInvariant();
+
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+                case ".png":
+                    return "image/png";
+                case ".gif":
+                    return "image/gif";
+                // add more cases for other image formats as needed
+                default:
+                    return "application/octet-stream";
+            }
         }
 
         public IActionResult PermissionDenied()

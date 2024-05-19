@@ -11,11 +11,22 @@ namespace ML_ASP.DataAccess.Repositories
 {
     public class RequirementFormRepository : Repository<RequirementForm_Model>, IRequirementFormRepository
     {
-        private readonly DbContext _dbContext;
+        private readonly ApplicationDBContext _dbContext;
 
         public RequirementFormRepository(ApplicationDBContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public void UpdateFormState(RequirementForm_Model formModel, int formNumber)
+        {
+            var objFromDb = _dbContext.RequirementForm.FirstOrDefault(u => u.UserId == formModel.UserId && u.FormNumber == formNumber);
+            if(objFromDb != null)
+            {
+                objFromDb.FileName = formModel.FileName;
+                objFromDb.IsSubmitted = formModel.IsSubmitted;
+            }
+
         }
     }
 }

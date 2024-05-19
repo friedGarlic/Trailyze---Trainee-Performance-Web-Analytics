@@ -15,5 +15,9 @@ namespace ML_ASP.Models.Models
         public bool IsSubmitted { get; set; }
 
         public string FileName { get; set; }
+
+        public int FormNumber { get; set; }
+
+        public string? FileId { get; set; }
     }
 }

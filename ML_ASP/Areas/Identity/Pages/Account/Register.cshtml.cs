@@ -214,14 +214,17 @@ namespace ML_ASP.Areas.Identity.Pages.Account
                 formModel.IsSubmitted = false;
                 formModel.UserId = user.Id;
                 formModel.FileName = "Null";
+                formModel.FormNumber = 1;
 
                 formModel2.IsSubmitted = false;
                 formModel2.UserId = user.Id;
                 formModel2.FileName = "Null";
+                formModel2.FormNumber = 2;
 
-                formModel.IsSubmitted = false;
+                formModel3.IsSubmitted = false;
                 formModel3.UserId = user.Id;
                 formModel3.FileName = "Null";
+                formModel3.FormNumber = 3;
 
                 _unit.RequirementForm.Add(formModel);
                 _unit.RequirementForm.Add(formModel2);

@@ -1,4 +1,4 @@
-﻿@model ML_ASP.Models.ViewModel.SubmissionVM
+﻿@model ML_ASP.Models.ViewModel.RequirementVM
 
 @{
     Layout = "_AMasterPage_2";
@@ -17,7 +17,16 @@
         <p>Document Requirements</p>
         <div class="document-item">
             <p>Application Form</p>
-            <button id="addDocumentButton">+ Add Document</button>
+            @if(Model.FileName1 == null)
+            {
+                <button id="addDocumentButton">+ Add Document</button>
+            }
+            else
+            {
+                @* <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a> *@
+                <a href="../RequirementFile/ViewPdf?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a>
+
+            }
             <button> Get PDF </button>
         </div>
         <div class="document-item">
