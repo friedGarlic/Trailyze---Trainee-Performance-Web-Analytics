@@ -11,14 +11,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Net.Http;
 using System.Security.Claims;
-using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using OpenAI_API;
-using OpenAI_API.Completions;
-using System.CodeDom;
-using static Tensorflow.CollectionDef.Types;
-using System.Text;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ML_ASP.Controllers
 {
@@ -27,17 +20,17 @@ namespace ML_ASP.Controllers
 	{
 		private readonly IUnitOfWork _unit;
 		private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _environment;
-		private readonly IHttpClientFactory _httpClientFactory;
+        private readonly UserManager<Account_Model> _userManager;
 
-		public SubmissionVM submissionVM { get; set; }
+        public SubmissionVM submissionVM { get; set; }
 
 		public AdminController(IUnitOfWork unit,
 			Microsoft.AspNetCore.Hosting.IWebHostEnvironment environment,
-			IHttpClientFactory httpClientFactory)
+            UserManager<Account_Model> userManager)
 		{
 			_environment = environment;
 			_unit = unit;
-			_httpClientFactory = httpClientFactory;
+			_userManager = userManager;
 		}
 
 		public IActionResult Index()
@@ -68,7 +61,7 @@ namespace ML_ASP.Controllers
 				  .Select(u => u.Grade)
 				  .ToList();
 
-			
+
 			submissionVM = new SubmissionVM()
 			{
 				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value),
@@ -79,8 +72,17 @@ namespace ML_ASP.Controllers
 			return View(submissionVM);
 		}
 
-		//---------------------ANALYTIC FEATURES METHODS AND GETTERS------------------------------------
-		[Authorize(Roles = SD.Role_Admin)]
+
+        [Authorize(Roles = SD.Role_Admin)]
+        public IActionResult RequirementFile()
+        {
+
+
+            return View();
+        }
+
+        //---------------------ANALYTIC FEATURES METHODS AND GETTERS------------------------------------
+        [Authorize(Roles = SD.Role_Admin)]
 		public IActionResult Analytics()
 		{
 			var getAccounts = _unit.Account.GetAll();
@@ -91,21 +93,22 @@ namespace ML_ASP.Controllers
 			return View(submissionVM);
 		}
 
-		public ActionResult ProfileFilter(string searchName)
-		{
-			var getAccounts = _unit.Account.GetAll();
-			
-			submissionVM = new SubmissionVM()
-			{
-				AccountList = getAccounts,
-				SearchQuery = searchName
-			};
+        public ActionResult ProfileFilter(string searchName)
+        {
+            var getAccounts = _unit.Account.GetAll();
 
-			return View(nameof(Analytics),submissionVM);
-		}
+            submissionVM = new SubmissionVM()
+            {
+                AccountList = getAccounts,
+                SearchQuery = searchName
+            };
 
-		// --------------------METHODS ------------------
-		[Authorize(Roles = SD.Role_Admin)]
+            return View(nameof(Analytics), submissionVM);
+        }
+        // --------------------METHODS ------------------
+
+
+        [Authorize(Roles = SD.Role_Admin)]
 		[HttpPost]
 		public IActionResult UpdateApprovalStatusBulk(List<int> id, List<string> approvalStatus, List<string> userId, List<string> originalApprovalStatus)
 		{
@@ -188,52 +191,6 @@ namespace ML_ASP.Controllers
 			}
 		}
 
-		[HttpPost]
-		public ViewResult GenerateQRCode()  ////////////// currently not used whatsoever
-		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-			QRModel model = new QRModel();
-			if (model.QrCode == null)
-			{
-				var id = _unit.QR.GetFirstOrDefault().Id;
-				var killFile = _unit.QR.GetFirstOrDefault(u => u.Id == id);
-				_unit.QR.Remove(killFile);
-			}
-
-			Random random = new Random();
-			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-			int length = 8;
-			var randomString = new string(Enumerable.Repeat(chars, length)
-				.Select(s => s[random.Next(s.Length)]).ToArray());
-
-			model.QrCode = randomString;
-
-			//simply do 64bit image ang 64bit string using qrcoder and bitmap
-			using (MemoryStream ms = new MemoryStream())
-			{
-				QRCodeGenerator qrGenerator = new QRCodeGenerator();
-				QRCodeData qrData = qrGenerator.CreateQrCode(model.QrCode, QRCodeGenerator.ECCLevel.Q);
-				QRCode qrCode = new QRCode(qrData);
-				using (Bitmap bitmap = qrCode.GetGraphic(20))
-				{
-					bitmap.Save(ms, ImageFormat.Png);
-					model.QrCode = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
-					ViewBag.QRCodeImage = model.QrCode;
-				}
-			}
-
-			_unit.QR.Add(model);
-			_unit.Save();
-
-			submissionVM = new SubmissionVM()
-			{
-				ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
-			};
-			return View(nameof(Admin), submissionVM);
-		}
-
 		[Authorize]
 		[HttpPost]
 		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport, string _course)
@@ -267,14 +224,14 @@ namespace ML_ASP.Controllers
 
 			//temporary validation
 			if (nameOfReminder == null)
-            {
-                return RedirectToAction(nameof(Admin));
-            }
+			{
+				return RedirectToAction(nameof(Admin));
+			}
 			else {
-                _unit.Reminder.Add(reminder_Model);
-                _unit.Save();
-            }
-			
+				_unit.Reminder.Add(reminder_Model);
+				_unit.Save();
+			}
+
 
 			TempData["success"] = "Added Reminder Succesfully!";
 
@@ -288,34 +245,44 @@ namespace ML_ASP.Controllers
 
 		[Authorize]
 		[HttpPost]
-		public IActionResult AddWorkload(string nameOfReminder,DateTime dateTime, string typeOfCourse, string description)
-        {
-            Random rnd = new Random();
-            Workload_Model model = new Workload_Model();
+		public IActionResult AddWorkload(string nameOfReminder, DateTime dateTime, string typeOfCourse, string description)
+		{
+			Random rnd = new Random();
+			Workload_Model model = new Workload_Model();
 
 			model.Name = nameOfReminder;
 			model.Description = description;
 			model.DueDate = dateTime;
 			model.Course = typeOfCourse;
 
-            model.ModelId = rnd.Next(100, 1000);
+			model.ModelId = rnd.Next(100, 1000);
 
-            _unit.Workload.Add(model);
+			_unit.Workload.Add(model);
 
-            foreach (var i in _unit.Account.GetAll())
-            {
-                WorkloadSubmissionList_Model wrkldModel = new();
+			foreach (var i in _unit.Account.GetAll())
+			{
+				WorkloadSubmissionList_Model wrkldModel = new();
 				wrkldModel.SubmissionUserID = i.Id;
-                wrkldModel.WorkloadId = model.ModelId;
+				wrkldModel.WorkloadId = model.ModelId;
 				wrkldModel.IsSubmitted = false;
 
 				_unit.WorkloadSubmissionList.Add(wrkldModel);
-            }
-            _unit.Save();
+			}
+			_unit.Save();
 
-            TempData["success"] = "Added Workload Succesfully!";
+			TempData["success"] = "Added Workload Succesfully!";
 
 			return RedirectToAction(nameof(Admin));
+		}
+
+		[Authorize]
+		public async Task<IActionResult> ChangeRegistrationRole(Account_Model account)
+		{
+            await _userManager.RemoveFromRoleAsync(account, SD.Role_Unregistered);
+
+			await _userManager.AddToRoleAsync(account, SD.Role_User);
+
+            return View(nameof(Index));
 		}
 		//------------------------------ENDPOINT REGIONS ------------------------------//
 		#region API CALLS
@@ -324,6 +291,12 @@ namespace ML_ASP.Controllers
 		public IActionResult GetAll()
 		{
 			var modelList = _unit.Submission.GetAll();
+			return Json(new { data = modelList });
+		}
+
+		public IActionResult GetAllReqFile()
+		{
+			var modelList = _unit.RequirementFile.GetAll();
 			return Json(new { data = modelList });
 		}
 
@@ -366,7 +339,53 @@ namespace ML_ASP.Controllers
 
 			return Json(new { data = sublist });
 		}
-		#endregion
+        #endregion
 
-	}
+        [HttpPost]
+        public ViewResult GenerateQRCode()  ////////////// currently not used whatsoever
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            QRModel model = new QRModel();
+            if (model.QrCode == null)
+            {
+                var id = _unit.QR.GetFirstOrDefault().Id;
+                var killFile = _unit.QR.GetFirstOrDefault(u => u.Id == id);
+                _unit.QR.Remove(killFile);
+            }
+
+            Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            int length = 8;
+            var randomString = new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            model.QrCode = randomString;
+
+            //simply do 64bit image ang 64bit string using qrcoder and bitmap
+            using (MemoryStream ms = new MemoryStream())
+            {
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrData = qrGenerator.CreateQrCode(model.QrCode, QRCodeGenerator.ECCLevel.Q);
+                QRCode qrCode = new QRCode(qrData);
+                using (Bitmap bitmap = qrCode.GetGraphic(20))
+                {
+                    bitmap.Save(ms, ImageFormat.Png);
+                    model.QrCode = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                    ViewBag.QRCodeImage = model.QrCode;
+                }
+            }
+
+            _unit.QR.Add(model);
+            _unit.Save();
+
+            submissionVM = new SubmissionVM()
+            {
+                ReminderList = _unit.Reminder.GetAll(u => u.UserId == claim.Value)
+            };
+            return View(nameof(Admin), submissionVM);
+        }
+
+    }
 }

@@ -46,6 +46,12 @@
 					<span class="text">Time Log</span>
 				</a>
 			</li>
+			<li>
+				<a asp-controller="Admin" asp-action="RequirementFile">
+					<i class='bx bxs-file-pdf'></i>
+					<span class="text">Requirement Files</span>
+				</a>
+			</li>
 		</ul>
 		<ul class="side-menu">
 			<!--<li>
@@ -184,6 +190,7 @@
 @section Scripts{
 	@{
 	<script src="~/js/admin/submissiont_admin.js"></script>
+	<script src="~/js/adminScript.js"></script>
 	}
 	<script>
 		document.getElementById('updateButton').addEventListener('click', function () {

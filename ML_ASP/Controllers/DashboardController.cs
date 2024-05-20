@@ -19,6 +19,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Tensorflow;
+using ML_ASP.Utility;
 
 namespace ML_ASP.Controllers
 {
@@ -38,7 +39,7 @@ namespace ML_ASP.Controllers
             _context = new MLContext(); //was supposed to be DB, but the architecture was applied late
 	} //construction of 2 model are on filemanagement controller
 
-        [Authorize]
+        [Authorize(Roles = SD.Role_User)]
         [HttpGet]
         public IActionResult Dashboard()
         {
@@ -129,6 +130,7 @@ namespace ML_ASP.Controllers
 
 
         // --------- ONLY FOR TIME LOG PURPOSES -----------------
+        [Authorize(Roles = SD.Role_User)]
         [HttpPost]
         [Authorize]
         public IActionResult Dashboard(bool IsTimedIn)

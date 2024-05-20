@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using ML_ASP.Utility
 
 @inject SignInManager<Account_Model> SignInManager
+@inject UserManager<Account_Model> UserManager
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,13 +36,26 @@
                     <li class="nav-item">
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <a class="nav-link text-dark" asp-action="Dashboard" asp-controller="Dashboard">
-                            <span class="material-symbols-outlined">
-                                dashboard
-                            </span>
-                            Trainee Dashboard
-                        </a>
-                    }
+                            var currentUser = await UserManager.GetUserAsync(User);
+                            if (await UserManager.IsInRoleAsync(currentUser, SD.Role_User))
+                            {
+                                <a class="nav-link text-dark" asp-action="Dashboard" asp-controller="Dashboard">
+                                    <span class="material-symbols-outlined">
+                                        dashboard
+                                    </span>
+                                    Trainee Dashboard
+                                </a>
+                            }
+                            else{
+                                <a class="nav-link text-dark" asp-action="Index" asp-controller="RequirementFile">
+                                    <span class="material-symbols-outlined">
+                                        dashboard
+                                    </span>
+                                    Requirement Form
+                                </a>
+                            }
+
+                        }
                     else
                     {
                         <a class="nav-link text-dark d-flex align-items-center" asp-action="Index" asp-controller="Home">

@@ -46,6 +46,12 @@
 					<span class="text">Time Log</span>
 				</a>
 			</li>
+			<li>
+				<a asp-controller="Admin" asp-action="RequirementFile">
+					<i class='bx bxs-file-pdf'></i>
+					<span class="text">Requirement Files</span>
+				</a>
+			</li>
 		</ul>
 		<ul class="side-menu">
 			<!--<li>
@@ -126,6 +132,9 @@
 	</body>
 </html>
 @section Scripts{
+	@{
+		<script src="~/js/adminScript.js"></script>
+	}
 	<script>
 		var gradeList;
 		async function showChatPopup(id) {

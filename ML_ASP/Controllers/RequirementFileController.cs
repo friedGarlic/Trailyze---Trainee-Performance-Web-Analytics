@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ML_ASP.DataAccess.Repositories.IRepositories;
 using ML_ASP.Models.Models;
 using ML_ASP.Models.ViewModel;
+using ML_ASP.Utility;
 using System.Security.Claims;
 
 namespace ML_ASP.Controllers
@@ -20,6 +22,8 @@ namespace ML_ASP.Controllers
 
         }
 
+
+        [Authorize(Roles = SD.Role_Unregistered)]
         public IActionResult Index()
         {
             var claimIdentity = (ClaimsIdentity)User.Identity;
@@ -65,6 +69,7 @@ namespace ML_ASP.Controllers
             return View(requirementVM);
         }
 
+        [Authorize(Roles = SD.Role_Unregistered)]
         public ActionResult SubmitDocument(IFormFile postedFiles0, IFormFile postedFiles1, IFormFile postedFiles2,
             string title, string title2, string title3,
             string description, string description2, string description3)
@@ -88,6 +93,7 @@ namespace ML_ASP.Controllers
             string fileName3 = "";
 
             //TODO add function in repository of Requirement Form for updating the properties.
+
             //-----------------------------------POSTED FILE 0
             if (postedFiles0 != null && postedFiles0.Length > 0)
             {
@@ -109,7 +115,7 @@ namespace ML_ASP.Controllers
                 {
                     postedFiles0.CopyTo(fileStream);
                 }
-                
+
 
                 reqFileModel.FileName = fileName;
                 reqFileModel.UserId = userId;
@@ -309,6 +315,5 @@ namespace ML_ASP.Controllers
         {
             return View();
         }
-
-    }
+	}
 }

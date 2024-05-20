@@ -64,6 +64,8 @@ namespace ML_ASP.Controllers
 			//var modelPath = "C:\\inetpub\\wwwroot\\trailyze\\ModelSession_1\\GradePrediction.zip";
 		}
 
+
+        [Authorize(Roles = SD.Role_User)]
         public IActionResult FileManagement()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -113,6 +115,8 @@ namespace ML_ASP.Controllers
             return RedirectToAction(nameof(FileManagement));
         }
 
+
+        [Authorize(Roles = SD.Role_User)]
         [HttpPost]
 		public IActionResult FileManagement(List<IFormFile> postedFiles, int modelId, DateTime dueDate)
         {
@@ -187,7 +191,6 @@ namespace ML_ASP.Controllers
                     ViewBag.Message += string.Format("<b>{0}</b> uploaded.<br />", fileName);
                 }
 
-                //TODO dont forget this temporary unit test
                 int numWordsInPdf = ML_net.ModelSession_2.Demo.CountSpacesInPdf(filePath);
 
                 var new_data = new Object_DataSet

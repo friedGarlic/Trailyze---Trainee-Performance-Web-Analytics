@@ -122,7 +122,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
                 bool isAdmin = await _userManager.IsInRoleAsync(user, SD.Role_Admin);
 
-                if (user.RegistrationPermission == 0) //pending permission
+                if (user.RegistrationPermission == 0 && !isAdmin) //pending permission
                 {
                     returnUrl ??= Url.Content("~/RequirementFile/Index");
                 }
@@ -130,7 +130,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
                 {
                     returnUrl ??= Url.Content("~/Dashboard/Dashboard");
                 }
-                else if (user.RegistrationPermission == 1) //denied permission, re register, failed registration account will be deleted in 2 days.
+                else if (user.RegistrationPermission == 2) //denied permission, re register, failed registration account will be deleted in 2 days.
                 {
                     returnUrl ??= Url.Content("~/RequirementFile/PermissionDenied");
                 }

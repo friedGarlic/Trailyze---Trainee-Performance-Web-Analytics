@@ -145,6 +145,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
             {
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_User)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Unregistered)).GetAwaiter().GetResult();
             }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -171,7 +172,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
                 user.FullName = Input.FullName;
                 user.Age = Input.Age;
 
-                //REQUIREMENT REGISTRATION:
+                //REQUIREMENT REGISTRATION
                 
                 if (Input.Enrollment != null && Input.Enrollment.Length > 0 && Input.Medical != null && Input.Medical.Length > 0)
                 {
@@ -260,7 +261,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
                     if(Input.Role == null)
                     {
-                        await _userManager.AddToRoleAsync(user, SD.Role_User);
+                        await _userManager.AddToRoleAsync(user, SD.Role_Unregistered);
                     }
                     else
                     {

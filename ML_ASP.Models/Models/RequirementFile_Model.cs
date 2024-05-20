@@ -21,5 +21,7 @@ namespace ML_ASP.Models.Models
         public string? Title {  get; set; }
 
         public string? Description { get; set; }
-    }
+
+		public string? ApprovalStatus { get; set; }
+	}
 }
