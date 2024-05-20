@@ -30,7 +30,7 @@ namespace ML_ASP.Models
         public TimeSpan TotalTime { get; set; }
 
         //profile
-        public string? ImageUrl { get; set; }
+        public string? ImageUrl { get; set; } = "/ProfileImages\\defProf.jpg";
         public string? Course { get; set; }
 
         //CERTIFICATE REQUIREMENTS

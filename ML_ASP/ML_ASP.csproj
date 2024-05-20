@@ -54,8 +54,6 @@
     <Folder Include="Images\" />
     <Folder Include="Uploads\" />
     <Folder Include="Views\Notification\" />
-    <Folder Include="wwwroot\ProfileImages\" />
-    <Folder Include="wwwroot\RequirementFiles\TemplateFiles\" />
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 

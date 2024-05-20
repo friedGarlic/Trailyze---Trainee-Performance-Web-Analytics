@@ -123,9 +123,6 @@ namespace ML_ASP.Controllers
                 userForm.IsSubmitted = true;
                 userForm.FileId = newFileId;
 
-                //TODO dont forget to add it in viewmodel to pass on to razorview, and update other files too.
-
-
                 _unit.RequirementFile.Add(reqFileModel);
             }
 
@@ -227,6 +224,8 @@ namespace ML_ASP.Controllers
                 IsSubmittedFile3 = true,
             };
             //--------------------------------------------------------------------------
+
+            //TODO submit overall file is not yet done, for submitting to admin as permission for full registration to look for document sent using this form.
 
             return View(nameof(Index), requirementVM);
         }
