@@ -32,11 +32,13 @@
 }
 
 body {
+    background-image: url('/assets/bgReg.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
     font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: antiquewhite;
-
 }
 
 .main-content {
@@ -45,6 +47,7 @@ body {
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
+    background-color: navajowhite;
 }
 
 .main-content .green-button{
@@ -54,6 +57,17 @@ body {
     padding: 10px;
     cursor: pointer;
     border-radius: 4px;
+    text-decoration: none;
+}
+
+.main-content .gray-button{
+    background-color: darkslategray;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
 }
 
 .document-item {

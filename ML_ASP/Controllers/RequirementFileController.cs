@@ -190,15 +190,43 @@ namespace ML_ASP.Controllers
                 _unit.Save();
             }
 
+            //--------------------------------------------------------------------------
+            var getAllFile = _unit.RequirementForm.GetAll(u => u.UserId == claim.Value);
+            var userID = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == claim.Value);
+
+            string form1FileName = "";
+            string form1FileName2 = "";
+            string form1FileName3 = "";
+
+            //needs foreach loop
+
+            foreach (var i in getAllFile)
+            {
+                if (i.FormNumber == 1)
+                {
+                    form1FileName = userID.FileId;
+                }
+                if (i.FormNumber == 2)
+                {
+                    form1FileName2 = userID.FileId;
+                }
+                if (i.FormNumber == 3)
+                {
+                    form1FileName3 = userID.FileId;
+                }
+            }
+
+
             requirementVM = new RequirementVM
             {
-                FileName1 = fileName,
-                FileName2 = fileName2,
-                FileName3 = fileName3,
+                FileName1 = form1FileName,
+                FileName2 = form1FileName2,
+                FileName3 = form1FileName3,
                 IsSubmittedFile1 = true,
                 IsSubmittedFile2 = true,
                 IsSubmittedFile3 = true,
             };
+            //--------------------------------------------------------------------------
 
             return View(nameof(Index), requirementVM);
         }
@@ -232,6 +260,21 @@ namespace ML_ASP.Controllers
         public ActionResult ViewPdf(string fileName)
         {
             string path = Path.Combine(_environment.WebRootPath + "\\RequirementFiles", fileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                return File(System.IO.File.ReadAllBytes(path), "application/pdf");
+            }
+            else
+            {
+                TempData["failed"] = "File Not Found";
+                return NotFound();
+            }
+        }
+
+        public ActionResult ViewTemplatePdf(string fileName)
+        {
+            string path = Path.Combine(_environment.WebRootPath + "\\RequirementFiles" + "\\TemplateFiles", fileName);
 
             if (System.IO.File.Exists(path))
             {

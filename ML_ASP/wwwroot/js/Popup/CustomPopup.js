@@ -22,6 +22,7 @@
     function hidePopup() {
         popup.style.display = 'none';
     }
+
     //--2nd
     function showPopup2() {
         popup2.style.display = 'flex';
