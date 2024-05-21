@@ -12,4 +12,8 @@
     <PackageReference Include="MimeKit" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ML_ASP.Models\ML_ASP.Models.csproj" />
+  </ItemGroup>
+
 </Project>

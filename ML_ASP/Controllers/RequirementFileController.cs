@@ -86,6 +86,7 @@ namespace ML_ASP.Controllers
             var uploads = Path.Combine(projectPath, uploadFolderName);
 
             var userId = claim.Value;
+            var userModel = _unit.Account.GetFirstOrDefault(x => x.Id == userId);
             var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == userId);
 
             string fileName = "";
@@ -122,6 +123,7 @@ namespace ML_ASP.Controllers
                 reqFileModel.FileId = newFileId;
                 reqFileModel.Title = title;
                 reqFileModel.Description = description;
+                reqFileModel.UserName = userModel.FullName;
 
                 //----flagging the form
 
@@ -153,8 +155,9 @@ namespace ML_ASP.Controllers
                 reqFileModel2.FileId = newFileId2;
                 reqFileModel2.Title = title2;
                 reqFileModel2.Description = description2;
+				reqFileModel2.UserName = userModel.FullName;
 
-                userForm.FileName = fileName2;
+				userForm.FileName = fileName2;
                 userForm.IsSubmitted = true;
                 userForm.FileId = newFileId2;
 
@@ -180,8 +183,9 @@ namespace ML_ASP.Controllers
                 reqFileModel2.FileId = newFileId3;
                 reqFileModel2.Title = title3;
                 reqFileModel2.Description = description3;
+				reqFileModel3.UserName = userModel.FullName;
 
-                userForm.FileName = fileName3;
+				userForm.FileName = fileName3;
                 userForm.IsSubmitted = true;
                 userForm.FileId = newFileId3;
 

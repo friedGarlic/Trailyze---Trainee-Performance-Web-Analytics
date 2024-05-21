@@ -10,13 +10,14 @@ function loadDataTable() {
 			"url": "/Admin/GetAllReqFile", // Endpoint to fetch data from the controller "Admin"  **IMPORTANT
 		},
 		"columns": [
+			{ "data": "userName"},
 			{ "data": "fileName" },
 			{ "data": "title" },
 			{ "data": "description" },
 			{
 				"data": "approvalStatus",
 				"render": function (data, type, row) {
-					var options = ["Approved", "Declined", "Pending"];
+					var options = ["Pending", "Declined", "Approved"];
 
 					// i dont understand this anymore sadly it got too complicated
 					//dont try to do this again, took too much time, not worth

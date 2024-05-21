@@ -79,34 +79,36 @@
                 </div>
             }
     </div>
-    <div class="col-md-1">
-        <hr class="vertical-line">
-        <p class="m-0">And</p>
-        <hr class="vertical-line">
-    </div>
-    <div class="col-md-4 mx-md-auto ml-sm-5" style="margin-top: 4rem;">
-        <div class="upload-container text-center ">
-            <label> Proof of Enrollment </label>
-            <div class="prediction" style="margin-bottom: 20px;">
-                <input type="file" asp-for="Input.Enrollment" multiple />
-                <span asp-validation-for="Input.Enrollment" class="text-danger"></span>
-            </div>
+        @if (!Model.IsAdminRegistration)
+            {
+                <div class="col-md-1">
+                    <hr class="vertical-line">
+                    <p class="m-0">And</p>
+                    <hr class="vertical-line">
+                </div>
+                <div class="col-md-4 mx-md-auto ml-sm-5" style="margin-top: 4rem;">
+                    <div class="upload-container text-center ">
+                        <label> Proof of Enrollment </label>
+                        <div class="prediction" style="margin-bottom: 20px;">
+                            <input type="file" asp-for="Input.Enrollment" multiple />
+                            <span asp-validation-for="Input.Enrollment" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="upload-container text-center">
+                        <label> Proof of Certificate of Medical </label>
+                        <div class="prediction" style="margin-bottom: 20px;">
+                            <input type="file" asp-for="Input.Medical" multiple />
+                            <span asp-validation-for="Input.Medical" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="upload-container text-center">
+                        <p>Already have an account?
+                            <a style="text-decoration:none;" asp-area="Identity" asp-page="/Account/Login">Sign In</a>
+                        </p>
+                    </div>
+                </div>
+            }
         </div>
-        <div class="upload-container text-center">
-            <label> Proof of Certificate of Medical </label>
-            <div class="prediction" style="margin-bottom: 20px;">
-                <input type="file" asp-for="Input.Medical" multiple />
-                <span asp-validation-for="Input.Medical" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="upload-container text-center">
-            <p>Already have an account?  
-                <a style="text-decoration:none;" asp-area="Identity" asp-page="/Account/Login">Sign In</a>
-            </p>
-        </div>
-            </div>
-    </div>
-
     <button style="margin-top: 1rem;" id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
     </form>
     @* ------------------ *@
@@ -161,11 +163,44 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function () {
+        // Check if admin registration
+        var isAdminRegistration = @Html.Raw(Json.Serialize(Model.IsAdminRegistration));
+
+        if (!isAdminRegistration) {
+            // Apply validation rules for non-admins
+            $("#registerForm").validate({
+                rules: {
+                    "Input.Enrollment": {
+                        required: true
+                    },
+                    "Input.Medical": {
+                        required: true
+                    }
+                },
+                messages: {
+                    "Input.Enrollment": {
+                        required: "Proof of Enrollment is required"
+                    },
+                    "Input.Medical": {
+                        required: "Proof of Certificate of Medical is required"
+                    }
+                }
+            });
+        }
+    });
+</script>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{<partial name="_ValidationScriptsPartial" />}
+    
 }
-
+<style>
+    .error {
+        color: red;
+    }
+</style>
 <style>
     :root {
         --poppins: 'Poppins', sans-serif;

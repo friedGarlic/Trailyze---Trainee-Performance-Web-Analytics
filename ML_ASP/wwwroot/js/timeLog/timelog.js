@@ -16,7 +16,7 @@ function loadDataTable() {
 			{
 				"data": "approvalStatus",
 				"render": function (data, type, row) {
-					var options = ["Approved", "Declined", "Revised"];
+					var options = ["Pending", "Declined", "Revised", "Approved"];
 
 					// i dont understand this anymore sadly it got too complicated
 					var selectHtml = '<select name="approvalStatus">';

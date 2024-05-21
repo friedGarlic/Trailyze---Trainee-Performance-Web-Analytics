@@ -126,10 +126,8 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
             public string? Role { get; set; }
 
-            [Required(ErrorMessage = "Please select a file.")]
             public IFormFile Medical { get; set; }
 
-            [Required(ErrorMessage = "Please select a file.")]
             public IFormFile Enrollment { get; set; }
 
             [ValidateNever]
@@ -236,11 +234,25 @@ namespace ML_ASP.Areas.Identity.Pages.Account
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
+                if (IsAdminRegistration)
+                {
+                    await _userManager.AddToRoleAsync(user, SD.Role_Unregistered);
+                }
+                else if(!IsAdminRegistration)
+                {
+                    await _userManager.AddToRoleAsync(user, SD.Role_Admin);
+                }
+                else
+                {
+                    await _userManager.AddToRoleAsync(user, SD.Role_User);
+                }
+
+
                 if (result.Succeeded)
                 {
                     bool isAdmin = await _userManager.IsInRoleAsync(user, SD.Role_Admin);
 
-                    if (user.RegistrationPermission == 0) //pending permission
+                    if (user.RegistrationPermission == 0 && !isAdmin) //pending permission
                     {
                         returnUrl ??= Url.Content("~/RequirementFile/Index");
                     }
@@ -248,7 +260,7 @@ namespace ML_ASP.Areas.Identity.Pages.Account
                     {
                         returnUrl ??= Url.Content("~/Dashboard/Dashboard");
                     }
-                    else if (user.RegistrationPermission == 1) //denied permission, re register, failed registration account will be deleted in 2 days.
+                    else if (user.RegistrationPermission == 2) //denied permission, re register, failed registration account will be deleted in 2 days.
                     {
                         returnUrl ??= Url.Content("~/RequirementFile/PermissionDenied");
                     }
@@ -258,15 +270,6 @@ namespace ML_ASP.Areas.Identity.Pages.Account
                     }
 
                     _logger.LogInformation("User created a new account with password.");
-
-                    if(Input.Role == null)
-                    {
-                        await _userManager.AddToRoleAsync(user, SD.Role_Unregistered);
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, Input.Role);
-                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
