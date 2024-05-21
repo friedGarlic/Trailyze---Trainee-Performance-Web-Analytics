@@ -69,15 +69,74 @@ namespace ML_ASP.Controllers
             return View(requirementVM);
         }
 
-        [Authorize(Roles = SD.Role_Unregistered)]
-        public ActionResult SubmitDocument(IFormFile postedFiles0, IFormFile postedFiles1, IFormFile postedFiles2,
-            string title, string title2, string title3,
-            string description, string description2, string description3)
+        public IActionResult Step2(IFormFile postedFiles1, string title2, string description2)
         {
-            RequirementFile_Model reqFileModel = new RequirementFile_Model();
-            RequirementFile_Model reqFileModel2 = new RequirementFile_Model();
-            RequirementFile_Model reqFileModel3 = new RequirementFile_Model();
+            var claimIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = claim.Value;
 
+            string projectPath = _environment.WebRootPath;
+            string uploadFolderName = "RequirementFiles";
+            var uploads = Path.Combine(projectPath, uploadFolderName);
+
+            var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == userId);
+            var userModel = _unit.Account.GetFirstOrDefault(x => x.Id == userId);
+            var getAllForm = _unit.RequirementForm.GetAll(x => x.UserId == userId);
+
+            string fileName2 = "";
+            //-----------------------------------POSTED FILE 1
+            if (postedFiles1 != null && postedFiles1.Length > 0)
+            {
+                string file2Id = Guid.NewGuid().ToString();
+
+                var file2Extension = Path.GetExtension(postedFiles1.FileName);
+
+                fileName2 = postedFiles1.FileName;
+
+                string newFileId2 = file2Id + file2Extension;
+
+                using (var fileStream = new FileStream(Path.Combine(uploads, file2Id + file2Extension), FileMode.Create))
+                {
+                    postedFiles1.CopyTo(fileStream);
+                }
+
+                TempData["fileName2"] = fileName2;
+                TempData["userId2"] = userId;
+                TempData["newfileId2"] = newFileId2;
+                TempData["title2"] = title2;
+                TempData["description2"] = description2;
+                TempData["userName2"] = userModel.FullName;
+
+                TempData["UF_filename2"] = fileName2;
+                TempData["UF_isSubmitted2"] = true;
+                TempData["UF_newFileId2"] = newFileId2;
+            }
+            string form1FileName = "";
+            string form1FileName2 = "";
+            string form1FileName3 = "";
+
+            //needs foreach loop
+
+            foreach (var i in getAllForm)
+            {
+                if (i.FormNumber == 2)
+                {
+                    form1FileName2 = userForm.FileId;
+                }
+            }
+
+
+            requirementVM = new RequirementVM
+            {
+                FileName2 = form1FileName,
+                IsSubmittedFile2 = true,
+            };
+
+            return View(nameof(Step2),requirementVM);
+        }
+
+        public IActionResult Step3(IFormFile postedFiles2, string title3, string description3)
+        {
             var claimIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
@@ -88,18 +147,59 @@ namespace ML_ASP.Controllers
             var userId = claim.Value;
             var userModel = _unit.Account.GetFirstOrDefault(x => x.Id == userId);
             var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == userId);
-            var getAllFile = _unit.RequirementForm.GetAll(u => u.UserId == claim.Value);
 
-            string fileName = "";
-            string fileName2 = "";
             string fileName3 = "";
 
-            //TODO add function in repository of Requirement Form for updating the properties.
+            //-----------------------------------POSTED FILE 2
+            if (postedFiles2 != null && postedFiles2.Length > 0)
+            {
+                string file3Id = Guid.NewGuid().ToString();
 
+                var file3Extension = Path.GetExtension(postedFiles2.FileName);
+
+                fileName3 = postedFiles2.FileName;
+
+                string newFileId3 = file3Id + file3Extension; using (var fileStream = new FileStream(Path.Combine(uploads, file3Id + file3Extension), FileMode.Create))
+                {
+                    postedFiles2.CopyTo(fileStream);
+                }
+
+                TempData["fileName3"] = fileName3;
+                TempData["userId3"] = userId;
+                TempData["newFileId3"] = newFileId3;
+                TempData["title3"] = title3;
+                TempData["description3"] = description3;
+                TempData["userName3"] = userModel.FullName;
+
+                TempData["UF_fileName3"] = fileName3;
+                TempData["UF_isSubmitted3"] = true;
+                TempData["UF_newFileId3"] = newFileId3;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        //==============================================
+        [Authorize(Roles = SD.Role_Unregistered)]
+        public ActionResult SubmitDocument(IFormFile postedFiles0, string title, string description)
+        {
+            var claimIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            string projectPath = _environment.WebRootPath;
+            string uploadFolderName = "RequirementFiles";
+            var uploads = Path.Combine(projectPath, uploadFolderName);
+
+            var userId = claim.Value;
+            var userModel = _unit.Account.GetFirstOrDefault(x => x.Id == userId);
+            var getAllFile = _unit.RequirementFile.GetAll(x => x.UserId == userId);
+
+            string fileName = "";
+
+            //TODO add function in repository of Requirement Form for updating the properties.
             //-----------------------------------POSTED FILE 0
             if (postedFiles0 != null && postedFiles0.Length > 0)
             {
-
                 string fileId = Guid.NewGuid().ToString();
 
                 var fileExtension = Path.GetExtension(postedFiles0.FileName);
@@ -118,125 +218,60 @@ namespace ML_ASP.Controllers
                     postedFiles0.CopyTo(fileStream);
                 }
 
-
-                reqFileModel.FileName = fileName;
-                reqFileModel.UserId = userId;
-                reqFileModel.FileId = newFileId;
-                reqFileModel.Title = title;
-                reqFileModel.Description = description;
-                reqFileModel.UserName = userModel.FullName;
+                TempData["fileName"] = fileName;
+                TempData["userId"] = userId;
+                TempData["newFileId"] = newFileId;
+                TempData["title"] = title;
+                TempData["description"] = description;
+                TempData["userName"] = userModel.FullName;
 
                 //----flagging the form
 
-                userForm.FileName = fileName;
-                userForm.IsSubmitted = true;
-                userForm.FileId = newFileId;
-
-                _unit.RequirementFile.Add(reqFileModel);
-            }
-
-            //-----------------------------------POSTED FILE 1
-            if (postedFiles1 != null && postedFiles1.Length > 0)
-            {
-                string file2Id = Guid.NewGuid().ToString();
-
-                var file2Extension = Path.GetExtension(postedFiles1.FileName);
-
-                fileName2 = postedFiles1.FileName;
-
-                string newFileId2 = file2Id + file2Extension;
-
-                using (var fileStream = new FileStream(Path.Combine(uploads, file2Id + file2Extension), FileMode.Create))
-                {
-                    postedFiles1.CopyTo(fileStream);
-                }
-
-                reqFileModel2.FileName = fileName2;
-                reqFileModel2.UserId = userId;
-                reqFileModel2.FileId = newFileId2;
-                reqFileModel2.Title = title2;
-                reqFileModel2.Description = description2;
-				reqFileModel2.UserName = userModel.FullName;
-
-				userForm.FileName = fileName2;
-                userForm.IsSubmitted = true;
-                userForm.FileId = newFileId2;
-
-                _unit.RequirementFile.Add(reqFileModel2);
-            }
-
-            //-----------------------------------POSTED FILE 2
-            if (postedFiles2 != null && postedFiles2.Length > 0)
-            {
-                string file3Id = Guid.NewGuid().ToString();
-
-                var file3Extension = Path.GetExtension(postedFiles2.FileName);
-
-                fileName3 = postedFiles2.FileName;
-
-                string newFileId3 = file3Id + file3Extension; using (var fileStream = new FileStream(Path.Combine(uploads, file3Id + file3Extension), FileMode.Create))
-                {
-                    postedFiles2.CopyTo(fileStream);
-                }
-
-                reqFileModel2.FileName = fileName3;
-                reqFileModel2.UserId = userId;
-                reqFileModel2.FileId = newFileId3;
-                reqFileModel2.Title = title3;
-                reqFileModel2.Description = description3;
-				reqFileModel3.UserName = userModel.FullName;
-
-				userForm.FileName = fileName3;
-                userForm.IsSubmitted = true;
-                userForm.FileId = newFileId3;
-
-                _unit.RequirementFile.Add(reqFileModel3);
+                TempData["UF_fileName"] = fileName;
+                TempData["UF_isSubmitted"] = true;
+                TempData["UF_fileId"] = newFileId;
             }
 
             //--------------------------------------------------------------------------
 
-            string form1FileName = "";
-            string form1FileName2 = "";
-            string form1FileName3 = "";
+            //string form1FileName = "";
+            //string form1FileName2 = "";
+            //string form1FileName3 = "";
 
-            //needs foreach loop
+            ////needs foreach loop
 
-            foreach (var i in getAllFile)
-            {
-                if (i.FormNumber == 1)
-                {
-                    form1FileName = userForm.FileId;
-                }
-                if (i.FormNumber == 2)
-                {
-                    form1FileName2 = userForm.FileId;
-                }
-                if (i.FormNumber == 3)
-                {
-                    form1FileName3 = userForm.FileId;
-                }
-            }
+            //foreach (var i in getAllFile)
+            //{
+            //    if (i.FormNumber == 1)
+            //    {
+            //        form1FileName = userForm.FileId;
+            //    }
+            //    if (i.FormNumber == 2)
+            //    {
+            //        form1FileName2 = userForm.FileId;
+            //    }
+            //    if (i.FormNumber == 3)
+            //    {
+            //        form1FileName3 = userForm.FileId;
+            //    }
+            //}
 
 
-            requirementVM = new RequirementVM
-            {
-                FileName1 = form1FileName,
-                FileName2 = form1FileName2,
-                FileName3 = form1FileName3,
-                IsSubmittedFile1 = true,
-                IsSubmittedFile2 = true,
-                IsSubmittedFile3 = true,
-            };
+            //requirementVM = new RequirementVM
+            //{
+            //    FileName1 = form1FileName,
+            //    IsSubmittedFile1 = true,
+            //};
             //--------------------------------------------------------------------------
 
-            if (postedFiles0 != null || postedFiles1 != null || postedFiles2 != null)
-            {
-                _unit.Save();
-            }
+            //if (postedFiles0 != null || postedFiles1 != null || postedFiles2 != null)
+            //{
+            //    _unit.Save();
+            //}
 
             //TODO submit overall file is not yet done, for submitting to admin as permission for full registration to look for document sent using this form.
 
-            return View(nameof(Index), requirementVM);
+            return RedirectToAction(nameof(Step2));
         }
 
 

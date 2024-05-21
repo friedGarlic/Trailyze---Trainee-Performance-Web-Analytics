@@ -17,6 +17,68 @@
         <p>Document Requirements</p>
         <div class="document-item">
             <p>Application Form</p>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <label>Categories</label>
+            <div class="form-floating mb-2 py-1">
+                <div>
+                    <label for="OffCampus">
+                        <input type="radio" asp-for="AccountInfoModel.Category" value="Off-Campus" id="OffCampus" onclick="toggleSelect('offCampusSelect')" />
+                        Off-Campus
+                    </label>
+                </div>
+                <div>
+                    <label for="InCampus">
+                        <input type="radio" asp-for="AccountInfoModel.Category" value="In-Campus" id="InCampus" onclick="toggleSelect('inCampusSelect')" />
+                        In-Campus
+                    </label>
+                </div>
+                <span asp-validation-for="AccountInfoModel.Category" class="text-danger"></span>
+            </div>
+            <br />
+
+            <div class="form-floating mb-2 py-1" id="inCampusSelect" style="display:none;">
+                <select asp-for="AccountInfoModel.Offices" class="form-control">
+                    <option value="">Please select one of the offices: </option>
+                    <option value="CCIT- DEAN'S OFFICE">CCIT- DEAN'S OFFICE</option>
+                    <option value="PROGRAMS CHAIR'S OFFICE">PROGRAMS CHAIR'S OFFICE</option>
+                    <option value="OJT OFFICE">OJT OFFICE</option>
+                    <option value="CCIT LABORATORY OFFICE">CCIT LABORATORY OFFICE</option>
+                    <option value="SPORT'S DIRECTOR OFFICE">SPORT'S DIRECTOR OFFICE</option>
+                    <option value="COLLEGE OF NURSING">COLLEGE OF NURSING</option>
+                    <option value="COLLEGE OF EDUC">COLLEGE OF EDUC</option>
+                    <option value="DIRECTOR FOR INSTRUCTION OFFICE">DIRECTOR FOR INSTRUCTION OFFICE</option>
+                    <option value="COLLEGE OF ENGINEERING (UNDER COMPUTER ENGINEERING'S OFFICE)">COLLEGE OF ENGINEERING (UNDER COMPUTER ENGINEERING'S OFFICE)</option>
+                    <option value="UMISO">UMISO</option>
+                    <option value="IGP">IGP</option>
+                    <option value="OSA">OSA</option>
+                </select>
+                <span asp-validation-for="AccountInfoModel.Offices" class="text-danger"></span>
+            </div>
+
+            
+            <div class="form-floating mb-2 py-1" id="offCampusSelect" style="display:none;">
+                <select asp-for="AccountInfoModel.OffCampus" class="form-control">
+                    <option value="">Please select one of the options:</option>
+                    <option value="CAAP">CAAP (Civil Authority of the Philippines)</option>
+                    <option value="Fantasy Beach Resort">Fantasy Beach Resort</option>
+                    <option value="IFormat">IFormat (IT COMPANY)</option>
+                    <optgroup label="North">
+                        <option value="Santo Thomas Batangas">Santo Thomas Batangas</option>
+                    </optgroup>
+                    <optgroup label="South">
+                        <option value="LGU BOTOLAN">LGU BOTOLAN</option>
+                        <option value="LGU CABANGAN">LGU CABANGAN</option>
+                        <option value="COMELEC SAN NARCISO">COMELEC SAN NARCISO</option>
+                        <option value="CRYSTAL BEACH RESORT">CRYSTAL BEACH RESORT</option>
+                        <option value="IP TECH(PAMPANGA) WORK FROM HOME">IP TECH (PAMPANGA) WORK FROM HOME</option>
+                        <option value="ECKTO-BOTOLAN/STA CRUZ">ECKTO-BOTOLAN/STA CRUZ</option>
+                    </optgroup>
+                </select>
+                <span asp-validation-for="AccountInfoModel.OffCampus" class="text-danger"></span>
+            </div>
+            <br />
+
             @if(Model.FileName1 == null)
             {
                 <button id="addDocumentButton">+ Add Document</button>
@@ -31,6 +93,7 @@
             }
             <a class="gray-button" href="../RequirementFile/ViewTemplatePdf?fileName=INTERNSHIP-APPLICATION-FORM@x-.pdf" target="_blank" style="margin-bottom: 2px;">Get Template PDF</a>
         </div>
+        @* 
         <div class="document-item">
             <p>Contract Agreement</p>
             @if (Model.FileName2 == null)
@@ -39,7 +102,8 @@
             }
             else
             {
-                @* <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a> *@
+                <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a>
+                notuncluded
                 <button class="green-button" id="addDocumentButton2">+ Add Document</button>
 
                 <a class="green-button" href="../RequirementFile/ViewPdf?fileName=@Model.FileName2" target="_blank" style="margin-bottom: 2px;">View Attached Document</a>
@@ -55,15 +119,15 @@
             }
             else
             {
-                @* <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a> *@
+                <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a>  notuncluded
                 <button class="green-button" id="addDocumentButton3">+ Add Document</button>
 
                 <a class="green-button" href="../RequirementFile/ViewPdf?fileName=@Model.FileName3" target="_blank" style="margin-bottom: 2px;">View Attached Document</a>
 
             }
             <a class="gray-button" href="../RequirementFile/ViewTemplatePdf?fileName=PARENTAL-CONSENT-2@x..pdf" target="_blank" style="margin-bottom: 2px;">Get Template PDF</a>
-        </div>
-        <a asp-action="" asp-controller="" class="green-button" style="margin-bottom: 2px;">Submit</a>
+        </div> *@
+        <a asp-controller="RequirementFile"  asp-action="Step2" class="green-button" style="margin-bottom: 2px;">Next</a>
     </div>
 
     <form method="post" enctype="multipart/form-data" asp-controller="RequirementFile" asp-action="SubmitDocument">
@@ -85,14 +149,10 @@
 
             <div class="prediction" style="margin-bottom: 20px;">
                 <input type="file" id="attachDocumentButton" name="postedFiles0"/>
-                <input type="hidden" name="modelId" />
-                <input type="submit" value="Upload" /> <br />
             </div>
-            <button id="saveButton">Save</button>
         </div>
     </div>
-
-    @*     For document Contract Aggreement     *@
+@* 
     <div id="popup2" class="popup-overlay">
         <div class="popup-content">
             <span class="close-btn2">&times;</span>
@@ -110,13 +170,10 @@
 
             <div class="prediction" style="margin-bottom: 20px;">
                 <input type="file" id="attachDocumentButton2" name="postedFiles1" />
-                <input type="submit" value="Upload" /> <br />
             </div>
-            <button id="saveButton2">Save</button>
         </div>
     </div>
 
-    @*     For document Parental Consent     *@
     <div id="popup3" class="popup-overlay">
         <div class="popup-content">
             <span class="close-btn3">&times;</span>
@@ -133,13 +190,31 @@
             </div>
             <div class="prediction" style="margin-bottom: 20px;">
                 <input type="file" id="attachDocumentButton3" name="postedFiles2" />
-                <input type="submit" value="Upload" /> <br />
             </div>
-            <button id="saveButton3">Save</button>
         </div>
-        </div>
+        </div> *@
     </form>
 
     <script src="~/js/Popup/CustomPopup.js"></script>
 </body>
 </html>
+
+<script>
+    function toggleSelect(selectId) {
+        var select = document.getElementById(selectId);
+        var radios = document.getElementsByName("AccountInfoModel.Category");
+
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                if (radios[i].value === "In-Campus") {
+                    document.getElementById("inCampusSelect").style.display = "block";
+                    document.getElementById("offCampusSelect").style.display = "none";
+                } else if (radios[i].value === "Off-Campus") {
+                    document.getElementById("offCampusSelect").style.display = "block";
+                    document.getElementById("inCampusSelect").style.display = "none";
+                }
+                break;
+            }
+        }
+    }
+</script>

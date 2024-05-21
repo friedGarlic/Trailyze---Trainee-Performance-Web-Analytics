@@ -28,6 +28,8 @@ namespace ML_ASP.DataAccess.Repositories.IRepositories
 
         IRequirementFormRepository RequirementForm { get; }
 
+        IAccountInfoRepository AccountInfo { get; }
+
         void Save();
     }
 }

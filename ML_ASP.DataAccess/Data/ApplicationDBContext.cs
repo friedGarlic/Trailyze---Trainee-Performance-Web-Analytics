@@ -27,5 +27,6 @@ namespace ML_ASP.DataAccess
         public DbSet<Notification_Model> Notification { get; set; }
         public DbSet<RequirementFile_Model> RequirementFile { get; set; }
         public DbSet<RequirementForm_Model> RequirementForm { get; set; }
+        public DbSet<AccountInfo_Model> AccountInfo { get; set; }
     }
 }
