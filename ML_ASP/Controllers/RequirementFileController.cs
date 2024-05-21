@@ -228,27 +228,6 @@ namespace ML_ASP.Controllers
                 IsSubmittedFile3 = true,
             };
             //--------------------------------------------------------------------------
-            if (userModel.Requirements == null)
-            {
-                userModel.Requirements = new List<RequirementFile_Model>();
-            }
-
-            //-----check if a filemodel is changed
-            if(reqFileModel.UserId != null)
-            {
-                userModel.Requirements.Add(reqFileModel);
-            }
-            if (reqFileModel2.UserId != null)
-            {
-                userModel.Requirements.Add(reqFileModel2);
-            }
-            if (reqFileModel3.UserId != null)
-            {
-                userModel.Requirements.Add(reqFileModel3);
-            }
-            //---------------CHECKING ENDS
-
-            _unit.Account.UpdateAccount(userModel);
 
             if (postedFiles0 != null || postedFiles1 != null || postedFiles2 != null)
             {

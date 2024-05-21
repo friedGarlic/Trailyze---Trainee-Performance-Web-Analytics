@@ -192,6 +192,22 @@ namespace ML_ASP.Controllers
 			}
 		}
 
+		[Authorize(Roles = SD.Role_Admin)]
+		public ActionResult RequirementViewPdf2(string id)
+		{
+			string path = Path.Combine(_environment.WebRootPath + "\\RequirementFiles", id);
+
+			if (System.IO.File.Exists(path))
+			{
+				return File(System.IO.File.ReadAllBytes(path), "application/pdf");
+			}
+			else
+			{
+				TempData["failed"] = "File Not Found";
+				return NotFound();
+			}
+		}
+
 		[Authorize]
 		[HttpPost]
 		public ActionResult EditProfile(Guid id, int numberOfHours, int weeklyReport, string _course)
