@@ -12,7 +12,7 @@ namespace ML_ASP.Models.Models
         [Key]
         public int Id { get; set; }
 
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         public string UserId { get; set; }
 
@@ -27,3 +27,5 @@ namespace ML_ASP.Models.Models
 		public string? ApprovalStatus { get; set; }
 	}
 }
+
+//TODO use this to become a list, erase the approval status, add it on the property that is list.

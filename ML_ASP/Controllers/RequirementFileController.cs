@@ -31,7 +31,7 @@ namespace ML_ASP.Controllers
 
             //getall var
             var getAllFile = _unit.RequirementForm.GetAll(u => u.UserId == claim.Value);
-            var userID = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == claim.Value);
+            var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == claim.Value);
 
             string form1FileName = "";
             string form1FileName2 = "";
@@ -43,15 +43,15 @@ namespace ML_ASP.Controllers
             {
                 if (i.FormNumber == 1)
                 {
-                    form1FileName = userID.FileId;
+                    form1FileName = userForm.FileId;
                 }
                 if (i.FormNumber == 2)
                 {
-                    form1FileName2 = userID.FileId;
+                    form1FileName2 = userForm.FileId;
                 }
                 if (i.FormNumber == 3)
                 {
-                    form1FileName3 = userID.FileId;
+                    form1FileName3 = userForm.FileId;
                 }
             }
 
@@ -88,6 +88,7 @@ namespace ML_ASP.Controllers
             var userId = claim.Value;
             var userModel = _unit.Account.GetFirstOrDefault(x => x.Id == userId);
             var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == userId);
+            var getAllFile = _unit.RequirementForm.GetAll(u => u.UserId == claim.Value);
 
             string fileName = "";
             string fileName2 = "";
@@ -192,14 +193,7 @@ namespace ML_ASP.Controllers
                 _unit.RequirementFile.Add(reqFileModel3);
             }
 
-            if (postedFiles0 != null || postedFiles1 != null || postedFiles2 != null)
-            {
-                _unit.Save();
-            }
-
             //--------------------------------------------------------------------------
-            var getAllFile = _unit.RequirementForm.GetAll(u => u.UserId == claim.Value);
-            var userID = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == claim.Value);
 
             string form1FileName = "";
             string form1FileName2 = "";
@@ -211,15 +205,15 @@ namespace ML_ASP.Controllers
             {
                 if (i.FormNumber == 1)
                 {
-                    form1FileName = userID.FileId;
+                    form1FileName = userForm.FileId;
                 }
                 if (i.FormNumber == 2)
                 {
-                    form1FileName2 = userID.FileId;
+                    form1FileName2 = userForm.FileId;
                 }
                 if (i.FormNumber == 3)
                 {
-                    form1FileName3 = userID.FileId;
+                    form1FileName3 = userForm.FileId;
                 }
             }
 
@@ -234,6 +228,32 @@ namespace ML_ASP.Controllers
                 IsSubmittedFile3 = true,
             };
             //--------------------------------------------------------------------------
+            if (userModel.Requirements == null)
+            {
+                userModel.Requirements = new List<RequirementFile_Model>();
+            }
+
+            //-----check if a filemodel is changed
+            if(reqFileModel.UserId != null)
+            {
+                userModel.Requirements.Add(reqFileModel);
+            }
+            if (reqFileModel2.UserId != null)
+            {
+                userModel.Requirements.Add(reqFileModel2);
+            }
+            if (reqFileModel3.UserId != null)
+            {
+                userModel.Requirements.Add(reqFileModel3);
+            }
+            //---------------CHECKING ENDS
+
+            _unit.Account.UpdateAccount(userModel);
+
+            if (postedFiles0 != null || postedFiles1 != null || postedFiles2 != null)
+            {
+                _unit.Save();
+            }
 
             //TODO submit overall file is not yet done, for submitting to admin as permission for full registration to look for document sent using this form.
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using ML_ASP.Models.Models;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -36,6 +37,8 @@ namespace ML_ASP.Models
         //CERTIFICATE REQUIREMENTS
         public string? Medical { get; set; }
         public string? Enrollment { get; set; }
+
+        public List<RequirementFile_Model>? Requirements { get; set; }
 
         //0 - pending, 1 - accepted, 2 - denied;
         public int RegistrationPermission { get; set; } = 0;

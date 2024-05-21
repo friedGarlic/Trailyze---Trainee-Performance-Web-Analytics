@@ -12,6 +12,7 @@ using System.Drawing.Imaging;
 using System.Net.Http;
 using System.Security.Claims;
 using OpenAI_API;
+using ML_ASP.DTO;
 
 namespace ML_ASP.Controllers
 {
@@ -296,9 +297,20 @@ namespace ML_ASP.Controllers
 
 		public IActionResult GetAllReqFile()
 		{
-			var modelList = _unit.RequirementFile.GetAll();
-			return Json(new { data = modelList });
-		}
+			var accountList = _unit.Account.GetAll().ToList();
+			var getAllReqFile = _unit.RequirementFile.GetAll().ToList();
+			foreach (var account in accountList)
+			{
+				// Filter the requirement files for the current account
+				var accountRequirementFiles = getAllReqFile
+					.Where(r => r.UserId == account.Id)  // Assuming AccountId is the foreign key
+					.ToList();
+
+				// Populate the Requirements property of the current account with the filtered requirement files
+				account.Requirements = accountRequirementFiles;
+			}
+			return Json(new { data = accountList });
+        }
 
 		[HttpGet]
 		public async Task<IActionResult> SendToApi()

@@ -18,16 +18,25 @@ namespace ML_ASP.DataAccess.Repositories
 		public AccountRepository(ApplicationDBContext dbContext) : base(dbContext)
 		{
 			_dbContext = dbContext;
-		}
+        }
 
-		public void Update(string imageUrl, string id) //update Image url
-		{
+        public void Update(string imageUrl, string id) //update Image url
+        {
             var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == id);
             if (objFromDb != null)
             {
                 objFromDb.ImageUrl = imageUrl;
             }
-		}
+        }
+
+        public void UpdateAccount(Account_Model accountModel)
+        {
+            var objFromDb = _dbContext.Accounts.FirstOrDefault(u => u.Id == accountModel.Id);
+            if (objFromDb != null)
+            {
+                objFromDb.Requirements = accountModel.Requirements;
+            }
+        }
 
         public void UpdateRequirementFile(string fileEnrollment, string fileMedical, string id)
         {
