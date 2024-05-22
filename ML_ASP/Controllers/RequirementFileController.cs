@@ -68,8 +68,30 @@ namespace ML_ASP.Controllers
 
             return View(requirementVM);
         }
+        public IActionResult Step2()
+        {
 
-        public IActionResult Step2(IFormFile postedFiles1, string title2, string description2)
+            return View();
+        }
+        public IActionResult Step3()
+        {
+
+            return View();
+        }
+
+        public IActionResult Step4()
+        { 
+
+            return View(); 
+        }
+        public IActionResult Step5()
+        {  
+
+            return View(); 
+        }
+
+        //==============================================
+        public IActionResult Step2Submit(IFormFile postedFiles1, string title2, string description2)
         {
             var claimIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -125,17 +147,16 @@ namespace ML_ASP.Controllers
                 }
             }
 
-
             requirementVM = new RequirementVM
             {
                 FileName2 = form1FileName,
                 IsSubmittedFile2 = true,
             };
 
-            return View(nameof(Step2),requirementVM);
+            return View(nameof(Step3),requirementVM);
         }
 
-        public IActionResult Step3(IFormFile postedFiles2, string title3, string description3)
+        public IActionResult Step3Submit(IFormFile postedFiles2, string title3, string description3, string step3)
         {
             var claimIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -147,6 +168,7 @@ namespace ML_ASP.Controllers
             var userId = claim.Value;
             var userModel = _unit.Account.GetFirstOrDefault(x => x.Id == userId);
             var userForm = _unit.RequirementForm.GetFirstOrDefault(u => u.UserId == userId);
+            var getAllForm = _unit.RequirementForm.GetAll(x => x.UserId == userId);
 
             string fileName3 = "";
 
@@ -175,12 +197,35 @@ namespace ML_ASP.Controllers
                 TempData["UF_isSubmitted3"] = true;
                 TempData["UF_newFileId3"] = newFileId3;
             }
+            string form1FileName3 = "";
 
-            return RedirectToAction("Index");
+            //needs foreach loop
+
+            //2views share this controoler becareful on passing in viewmodel
+            foreach (var i in getAllForm)
+            {
+                if (i.FormNumber == 3)
+                {
+                    form1FileName3 = userForm.FileId;
+                }
+            }
+            requirementVM = new RequirementVM
+            {
+                FileName3 = form1FileName3,
+                IsSubmittedFile3 = true,
+            };
+
+            if (step3 == "step3")
+            {
+                return View(nameof(Step4), requirementVM);
+            }
+            else
+            {
+                return View(nameof(Step5), requirementVM);
+            }
+
         }
 
-        //==============================================
-        [Authorize(Roles = SD.Role_Unregistered)]
         public ActionResult SubmitDocument(IFormFile postedFiles0, string title, string description)
         {
             var claimIdentity = (ClaimsIdentity)User.Identity;
@@ -192,7 +237,8 @@ namespace ML_ASP.Controllers
 
             var userId = claim.Value;
             var userModel = _unit.Account.GetFirstOrDefault(x => x.Id == userId);
-            var getAllFile = _unit.RequirementFile.GetAll(x => x.UserId == userId);
+            var userForm = _unit.RequirementForm.GetFirstOrDefault(x => x.UserId == userId);
+            var getAllForm = _unit.RequirementForm.GetAll(x => x.UserId == userId);
 
             string fileName = "";
 
@@ -234,44 +280,42 @@ namespace ML_ASP.Controllers
 
             //--------------------------------------------------------------------------
 
-            //string form1FileName = "";
+            string form1FileName = "";
             //string form1FileName2 = "";
             //string form1FileName3 = "";
 
-            ////needs foreach loop
+            //needs foreach loop
 
-            //foreach (var i in getAllFile)
-            //{
-            //    if (i.FormNumber == 1)
-            //    {
-            //        form1FileName = userForm.FileId;
-            //    }
-            //    if (i.FormNumber == 2)
-            //    {
-            //        form1FileName2 = userForm.FileId;
-            //    }
-            //    if (i.FormNumber == 3)
-            //    {
-            //        form1FileName3 = userForm.FileId;
-            //    }
-            //}
+            foreach (var i in getAllForm)
+            {
+                if (i.FormNumber == 1)
+                {
+                    form1FileName = userForm.FileId;
+                }
+                //if (i.FormNumber == 2)
+                //{
+                //    form1FileName2 = userForm.FileId;
+                //}
+                //if (i.FormNumber == 3)
+                //{
+                //    form1FileName3 = userForm.FileId;
+                //}
+            }
 
 
-            //requirementVM = new RequirementVM
-            //{
-            //    FileName1 = form1FileName,
-            //    IsSubmittedFile1 = true,
-            //};
+            requirementVM = new RequirementVM
+            {
+                FileName1 = form1FileName,
+                IsSubmittedFile1 = true,
+            };
             //--------------------------------------------------------------------------
 
-            //if (postedFiles0 != null || postedFiles1 != null || postedFiles2 != null)
+            //if (postedFiles0 != null)
             //{
             //    _unit.Save();
             //}
 
-            //TODO submit overall file is not yet done, for submitting to admin as permission for full registration to look for document sent using this form.
-
-            return RedirectToAction(nameof(Step2));
+            return View(nameof(Step2), requirementVM);
         }
 
 

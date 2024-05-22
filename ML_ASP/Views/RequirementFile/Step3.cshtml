@@ -13,13 +13,12 @@
     <link rel="stylesheet" href="~/css/CustomPopup.css">
 </head>
 <body>
-
-    <form method="post" enctype="multipart/form-data" asp-controller="RequirementFile" asp-action="Step2Submit">
+    <form method="post" enctype="multipart/form-data" asp-controller="RequirementFile" asp-action="Step3Submit">
     <div class="main-content">
         <p>Document Requirements</p>
 
         <div class="document-item">
-            <p>Parental Consent</p>
+            <p>Notice of Acceptance</p>
             @if (Model.FileName3 == null)
             {
                 <button class="green-button" id="addDocumentButton3">+ Add Document</button>
@@ -56,6 +55,7 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" name="step3" value="step3"/>
         <input type="submit" value="Next" /> <br />
     </form>
 

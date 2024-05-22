@@ -13,28 +13,27 @@
     <link rel="stylesheet" href="~/css/CustomPopup.css">
 </head>
 <body>
+    <form method="post" enctype="multipart/form-data" asp-controller="RequirementFile" asp-action="Step3Submit">
+        <div class="main-content">
+            <p>Document Requirements</p>
 
-    <form method="post" enctype="multipart/form-data" asp-controller="RequirementFile" asp-action="Step2Submit">
-    <div class="main-content">
-        <p>Document Requirements</p>
+            <div class="document-item">
+                <p>Parents Concent</p>
+                @if (Model.FileName3 == null)
+                {
+                    <button class="green-button" id="addDocumentButton3">+ Add Document</button>
+                }
+                else
+                {
+                    @* <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a> *@
+                    <button class="green-button" id="addDocumentButton3">+ Add Document</button>
 
-        <div class="document-item">
-            <p>Parental Consent</p>
-            @if (Model.FileName3 == null)
-            {
-                <button class="green-button" id="addDocumentButton3">+ Add Document</button>
-            }
-            else
-            {
-                @* <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a> *@
-                <button class="green-button" id="addDocumentButton3">+ Add Document</button>
+                    <a class="green-button" href="../RequirementFile/ViewPdf?fileName=@Model.FileName3" target="_blank" style="margin-bottom: 2px;">View Attached Document</a>
 
-                <a class="green-button" href="../RequirementFile/ViewPdf?fileName=@Model.FileName3" target="_blank" style="margin-bottom: 2px;">View Attached Document</a>
-
-            }
-            <a class="gray-button" href="../RequirementFile/ViewTemplatePdf?fileName=PARENTAL-CONSENT-2@x..pdf" target="_blank" style="margin-bottom: 2px;">Get Template PDF</a>
+                }
+                <a class="gray-button" href="../RequirementFile/ViewTemplatePdf?fileName=PARENTAL-CONSENT-2@x..pdf" target="_blank" style="margin-bottom: 2px;">Get Template PDF</a>
+            </div>
         </div>
-    </div>
 
         @*     For document Contract Aggreement     *@
         <div id="popup3" class="popup-overlay">

@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="~/css/CustomPopup.css">
 </head>
 <body>
+
+    <form method="post" enctype="multipart/form-data" asp-controller="RequirementFile" asp-action="SubmitDocument">
     <div class="main-content">
         <p>Document Requirements</p>
         <div class="document-item">
@@ -93,44 +95,8 @@
             }
             <a class="gray-button" href="../RequirementFile/ViewTemplatePdf?fileName=INTERNSHIP-APPLICATION-FORM@x-.pdf" target="_blank" style="margin-bottom: 2px;">Get Template PDF</a>
         </div>
-        @* 
-        <div class="document-item">
-            <p>Contract Agreement</p>
-            @if (Model.FileName2 == null)
-            {
-                <button class="green-button" id="addDocumentButton2">+ Add Document</button>
-            }
-            else
-            {
-                <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a>
-                notuncluded
-                <button class="green-button" id="addDocumentButton2">+ Add Document</button>
-
-                <a class="green-button" href="../RequirementFile/ViewPdf?fileName=@Model.FileName2" target="_blank" style="margin-bottom: 2px;">View Attached Document</a>
-
-            }
-            <a class="gray-button" href="../RequirementFile/ViewTemplatePdf?fileName=INTERNSHIP-CONTRACT-AGREEMENT@x..pdf" target="_blank" style="margin-bottom: 2px;">Get Template PDF</a>
-        </div>
-        <div class="document-item">
-            <p>Parental Consent</p>
-            @if (Model.FileName3 == null)
-            {
-                <button class="green-button" id="addDocumentButton3">+ Add Document</button>
-            }
-            else
-            {
-                <a href="../RequirementFile/ViewImage?fileName=@Model.FileName1" target="_blank" style="margin-bottom: 2px;">View</a>  notuncluded
-                <button class="green-button" id="addDocumentButton3">+ Add Document</button>
-
-                <a class="green-button" href="../RequirementFile/ViewPdf?fileName=@Model.FileName3" target="_blank" style="margin-bottom: 2px;">View Attached Document</a>
-
-            }
-            <a class="gray-button" href="../RequirementFile/ViewTemplatePdf?fileName=PARENTAL-CONSENT-2@x..pdf" target="_blank" style="margin-bottom: 2px;">Get Template PDF</a>
-        </div> *@
-        <a asp-controller="RequirementFile"  asp-action="Step2" class="green-button" style="margin-bottom: 2px;">Next</a>
     </div>
 
-    <form method="post" enctype="multipart/form-data" asp-controller="RequirementFile" asp-action="SubmitDocument">
     @*     For document Application Form    *@
     <div id="popup" class="popup-overlay">
         <div class="popup-content">
@@ -148,51 +114,11 @@
             </div>
 
             <div class="prediction" style="margin-bottom: 20px;">
-                <input type="file" id="attachDocumentButton" name="postedFiles0"/>
+                    <input type="file" id="attachDocumentButton" name="postedFiles0" />
             </div>
         </div>
     </div>
-@* 
-    <div id="popup2" class="popup-overlay">
-        <div class="popup-content">
-            <span class="close-btn2">&times;</span>
-            <h2>Add Document</h2>
-
-            <label for="title2">Title:</label>
-            <input type="text" name="title2" id="title2" placeholder="Provide document title, e.g., 'Risks on site'">
-
-            <label for="description2">Document Description:</label>
-            <textarea id="description2" name="description2" placeholder="Provide document description"></textarea>
-
-            <div>
-                <label for="mandatory">This document is mandatory</label>
-            </div>
-
-            <div class="prediction" style="margin-bottom: 20px;">
-                <input type="file" id="attachDocumentButton2" name="postedFiles1" />
-            </div>
-        </div>
-    </div>
-
-    <div id="popup3" class="popup-overlay">
-        <div class="popup-content">
-            <span class="close-btn3">&times;</span>
-            <h2>Add Document</h2>
-
-            <label for="title3">Title:</label>
-            <input type="text" name="title3" id="title3" placeholder="Provide document title, e.g., 'Document for OJT'">
-
-            <label for="description3">Document Description:</label>
-            <textarea id="description3" name="description3" placeholder="Provide document description"></textarea>
-            
-            <div>
-            <label for="mandatory">This document is mandatory</label>
-            </div>
-            <div class="prediction" style="margin-bottom: 20px;">
-                <input type="file" id="attachDocumentButton3" name="postedFiles2" />
-            </div>
-        </div>
-        </div> *@
+        <input type="submit" value="Next" /> <br />
     </form>
 
     <script src="~/js/Popup/CustomPopup.js"></script>
